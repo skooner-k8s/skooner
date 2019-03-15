@@ -8,12 +8,12 @@ Why might you want to use k8dash instead of the default Kubernetes dashboard?
 * Interates with metrics-server to display realtime metrics
 
 ## Workloads View
-![Dashboard UI workloads page](docs/workloads.png)
+![Dashboard UI workloads page](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/workloads.png)
 
 ## Realtime streaming of status
 Notice how the UI automatically reflects changes to the cluster in realtime after scaling a deployment
 
-![Dashboard UI streaming](docs/k8dash.gif)
+![Dashboard UI streaming](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/k8dash.gif)
 
 ## Prerequisites
 + A running Kubernetes cluster
@@ -23,10 +23,10 @@ Notice how the UI automatically reflects changes to the cluster in realtime afte
 ## Getting Started
 Deploy k8dash with something like the following...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/kubernetes-k8dash.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash.yaml) before running the script below.
 
 ``` bash
-kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/kubernetes-k8dash.yaml
+kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash.yaml
 ```
 
 To access k8dash from your local workstation you must create a secure channel to your Kubernetes cluster. Run the following command:
@@ -83,7 +83,7 @@ kubectl describe secret k8dash-sa-token-xxxxx
 Retrieve the `token` value from the secret and enter it into the login screen to access the dashboard.
 
 ## Running k8dash with OpenId Connect (oidc)
-K8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/kubernetes-k8dash-oidc.yaml) config.
+K8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
 
 To learn more about configuring a cluster for OIDC, check out these great links
 + [https://kubernetes.io/docs/reference/access-authn-authz/authentication/](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
@@ -93,7 +93,7 @@ To learn more about configuring a cluster for OIDC, check out these great links
 
 You can deploy k8dash with oidc support using something like the following script...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/kubernetes-k8dash-oidc.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) before running the script below.
 
 ``` bash
 OIDC_URL=<put your endpoint url here... something like https://accounts.google.com>
@@ -105,7 +105,7 @@ kubectl create secret -n kube-system generic k8dash \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET"
 
-kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/kubernetes-k8dash-oidc.yaml
+kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml
 
 ```
 
