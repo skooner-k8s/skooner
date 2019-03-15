@@ -1,7 +1,7 @@
 import log from '../utils/log';
 
-const {host} = window.location;
-const nonHashedUrl = window.location.href.replace(window.location.hash, '');
+const {host, href, hash, search} = window.location;
+const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const BASE_HTTP_URL = host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 
@@ -37,8 +37,8 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     const token = getToken();
     if (token) opts.headers.Authorization = `Bearer ${token}`;
 
-    const fullUrl = window.url.resolve(BASE_HTTP_URL, path);
-    const response = await fetch(fullUrl, opts);
+    const url = combinePath(BASE_HTTP_URL, path);
+    const response = await fetch(url, opts);
 
     if (!response.ok) {
         const {status, statusText} = response;
@@ -86,8 +86,8 @@ function connectStream(path, cb, onFail, isJson) {
         'base64.binary.k8s.io',
     ];
 
-    const fullUrl = window.url.resolve(BASE_WS_URL, path);
-    const socket = new WebSocket(fullUrl, protocols);
+    const url = combinePath(BASE_WS_URL, path);
+    const socket = new WebSocket(url, protocols);
     socket.onmessage = onMessage;
     socket.onclose = onClose;
     socket.onerror = onError;
@@ -178,4 +178,10 @@ export async function streamResults(url, cb) {
 function push(results, cb) {
     const items = Object.values(results);
     cb(items);
+}
+
+function combinePath(base, path) {
+    if (base.endsWith('/')) base = base.slice(0, -1); // eslint-disable-line no-param-reassign
+    if (path.startsWith('/')) path = path.slice(1); // eslint-disable-line no-param-reassign
+    return `${base}/${path}`;
 }

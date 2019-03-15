@@ -29,15 +29,8 @@ NOTE: never trust a file downloaded from the internet. Make sure to review the c
 kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash.yaml
 ```
 
-To access k8dash from your local workstation you must create a secure channel to your Kubernetes cluster. Run the following command:
+To access k8dash, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following
 
-``` bash
-kubectl proxy
-```
-
-You can then access the ui at [http://localhost:8001/api/v1/namespaces/kube-system/services/http:k8dash:/proxy/](http://localhost:8001/api/v1/namespaces/kube-system/services/http:k8dash:/proxy/)
-
-Alternatively, if you have an ingress server setup, you can simply add a route like the following
 
 ``` yaml
 kind: Ingress
