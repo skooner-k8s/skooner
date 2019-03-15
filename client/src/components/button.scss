@@ -1,0 +1,54 @@
+@import '../scss/settings.scss';
+
+.button, .button:visited {
+	border: none;
+	background: $color-accent;
+	color: $color-white;
+	cursor: pointer;
+	outline: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	padding: 0.5rem;
+	margin: 0.5rem 1px;
+	min-width: 5rem;
+}
+
+.button_negative, .button_negative:visited {
+	background: $color-error;
+	color: $color-white;
+}
+
+.button_clear, .button_clear:visited {
+	background: none;
+
+	padding: 0;
+	margin: 0;
+	min-width: 3rem;
+}
+
+.button:disabled, .button_negative:disabled {
+	background: $color-lightest;
+	color: $color-white;
+	pointer-events: none;
+}
+
+.button_clear:disabled {
+	background: none;
+
+	> svg {
+		fill: $color-lightest;
+	}
+}
+
+.button_working {
+	background: $color-lightest;
+}
+
+.button_label {
+	color: $color-light;
+	font-size: $font-size-small;
+	text-transform: uppercase;
+	margin-top: 3px;
+}

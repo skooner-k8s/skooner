@@ -1,0 +1,17 @@
+@import '../scss/settings.scss';
+
+.contentPanel {
+    box-shadow: 0 0 5px 0 $color-light;
+    margin: 35px 0;
+    padding: 20px;
+    overflow: scroll;
+}
+
+.contentPanel_label {
+    margin-right: 5px;
+}
+
+.contentPanel_warn {
+    color: $color-error;
+    font-weight: bold;
+}

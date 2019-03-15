@@ -1,0 +1,11 @@
+@import '../scss/settings.scss';
+
+.scaleButton_label {
+    color: $color-light;
+}
+
+.scaleButton_input {
+    font-size: $font-size-large;
+    text-align: right;
+    padding: 0.25rem;
+}

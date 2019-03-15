@@ -1,0 +1,75 @@
+@import '../scss/settings.scss';
+
+.menu_group {
+    border-bottom: 1px solid $color-light;
+}
+
+.menu_group:last-child {
+    border-bottom: 0;
+}
+
+.menu_subMenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.8s;
+}
+
+.menu_subMenu a {
+    transform: translateX(-80px);
+    transition: transform 0.33s;
+}
+
+.menu_subMenu a:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.menu_subMenu a:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.menu_subMenu a:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.menu_subMenu a:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.menu_subMenu a:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+.menu_subMenuSelected {
+    max-height: 1000px;
+}
+
+.menu_subMenuSelected a {
+    transform: translateX(0px);
+}
+
+button.menu_item, a.menu_item, a.menu_item:visited {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 12px 0;
+    color: $color-darkest;
+
+    svg {
+        fill: $color-dark;
+        width: 35px;
+        height: 35px;
+    }
+}
+
+a.menu_itemSelected, a.menu_itemSelected:visited {
+    svg {
+        fill: $color-accent;
+    }
+}
+
+.menu_title {
+    font-size: $font-size-small;
+    margin: 5px 0;
+    text-transform: uppercase;
+}

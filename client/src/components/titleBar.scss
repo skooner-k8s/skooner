@@ -1,0 +1,17 @@
+@import '../scss/settings.scss';
+
+#titleBar {
+	height: 55px;
+	background-color: $color-accent;
+	color: $color-white;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	font-size: $font-size-large;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.titleBar_addButton {
+    fill: $color-lightest;
+}

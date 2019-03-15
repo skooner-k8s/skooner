@@ -1,0 +1,19 @@
+
+textarea {
+    white-space: nowrap;
+	color: $color-font;
+	background: transparent;
+	padding: .25rem 0;
+	border: 1px solid transparent;
+    resize: none;
+    outline: none;
+    border-color: $color-lightest;
+	transition-duration: $animation-length;
+    transition-property: border-color, padding;
+
+	&:focus {
+		outline: none !important;
+		// padding: .25rem;
+		border-color: $color-light;
+	}
+}

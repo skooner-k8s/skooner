@@ -1,0 +1,8 @@
+
+input[type="text"], input[type="number"] {
+    outline: none !important;
+	color: $color-font;
+	background: transparent;
+	border: 1px solid transparent;
+	border-color: $color-lightest;
+}

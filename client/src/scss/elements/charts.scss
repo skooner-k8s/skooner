@@ -1,0 +1,64 @@
+
+$ct-series-names: (a, b, c);
+
+$ct-series-colors: (
+    $color-accent,
+    $color-error,
+    $color-light,
+);
+
+.charts {
+    display: flex;
+    justify-content: space-between;
+    margin: 35px 0;
+    text-align: center;
+    height: 200px
+}
+
+.charts_item {
+    color: $color-dark;
+    box-shadow: 0 0 5px 0 $color-dark;
+    background-color: $color-white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: $font-size-xlarge;
+    flex: 1;
+    margin: 0 15px;
+}
+
+.charts_item:first-child {
+    margin-left: 0;
+}
+
+.charts_item:last-child {
+    margin-right: 0;
+}
+
+.charts_itemLabel {
+    font-size: $font-size;
+}
+
+.charts_donut {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+.ct-chart {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.chart_donutLabel {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: -11px;
+    font-size: $font-size-medium;
+}
+
+.chart_innerLabel {
+    color: $color-light;
+    font-size: $font-size-small;
+}
