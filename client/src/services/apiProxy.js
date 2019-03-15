@@ -1,7 +1,8 @@
 import log from '../utils/log';
 
 const {host} = window.location;
-const BASE_HTTP_URL = host === 'localhost:4653' ? 'http://localhost:4654' : window.location;
+const nonHashedUrl = window.location.href.replace(window.location.hash, '');
+const BASE_HTTP_URL = host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 
 function getToken() {
@@ -30,18 +31,19 @@ export function logout() {
     window.location.reload();
 }
 
-export async function request(url, params, autoLogoutOnAuthError = true) {
+export async function request(path, params, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
     if (token) opts.headers.Authorization = `Bearer ${token}`;
 
-    const response = await fetch(`${BASE_HTTP_URL}${url}`, opts);
+    const fullUrl = window.url.resolve(BASE_HTTP_URL, path);
+    const response = await fetch(fullUrl, opts);
 
     if (!response.ok) {
         const {status, statusText} = response;
         if (autoLogoutOnAuthError && (status === 401 || status === 403)) {
-            log.error('Logging out due to auth error', {status, statusText, url});
+            log.error('Logging out due to auth error', {status, statusText, path});
             logout();
         }
 
@@ -73,7 +75,7 @@ export function stream(url, cb, isJson = true) {
     }
 }
 
-function connectStream(url, cb, onFail, isJson) {
+function connectStream(path, cb, onFail, isJson) {
     let isClosing = false;
 
     const token = getToken();
@@ -84,7 +86,8 @@ function connectStream(url, cb, onFail, isJson) {
         'base64.binary.k8s.io',
     ];
 
-    const socket = new WebSocket(`${BASE_WS_URL}${url}`, protocols);
+    const fullUrl = window.url.resolve(BASE_WS_URL, path);
+    const socket = new WebSocket(fullUrl, protocols);
     socket.onmessage = onMessage;
     socket.onclose = onClose;
     socket.onerror = onError;
@@ -104,12 +107,12 @@ function connectStream(url, cb, onFail, isJson) {
     function onClose(...args) {
         if (isClosing) return;
 
-        log.warn('Socket closed unexpectedly', {url, args});
+        log.warn('Socket closed unexpectedly', {path, args});
         onFail();
     }
 
     function onError(err) {
-        log.error('Error in api stream', {err, url});
+        log.error('Error in api stream', {err, path});
     }
 }
 

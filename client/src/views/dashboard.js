@@ -48,7 +48,6 @@ export default class Dashboard extends Base {
 function filterEvents(events, filter) {
     if (!events) return null;
 
-    // TODO: make the table sortable
     return _.sortBy(events, x => -Date.parse(x.metadata.creationTimestamp))
         .slice(0, 1000)
         .filter(x => test(filter, x.involvedObject.name, x.involvedObject.namespace, x.message));
