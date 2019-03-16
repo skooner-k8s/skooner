@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import api from '../services/api';
@@ -43,7 +44,7 @@ export default class ServiceAccount extends Base {
                         <div>
                             <MetadataFields item={item} />
                             <Field name='Secrets'>
-                                {item.secrets.map(x => (
+                                {_.map(item.secrets, x => (
                                     <div key={x.name}>
                                         <a href={`#/secret/${namespace}/${x.name}`}>{x.name}</a>
                                     </div>

@@ -41,8 +41,8 @@ export default class Menu extends Base {
                 {/* Security */}
                 <Group>
                     <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' />
-                    <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrolebinding']} />
-                    <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrole']} />
+                    <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} />
+                    <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} />
                     <MenuItem title='Secrets' path='secret' resource='Secret' />
                 </Group>
 

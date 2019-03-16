@@ -44,7 +44,7 @@ export default class PersistentVolumes extends Base {
                                         href={`#/persistentvolume/${x.metadata.name}`}
                                     />
                                     <td>{x.status.phase}</td>
-                                    <td>{x.spec.capacity.storage}</td>
+                                    <td>{x.spec.capacity && x.spec.capacity.storage}</td>
                                 </tr>
                             )) : (
                                 <NoResults items={filtered} filter={filter} colSpan='5' />

@@ -1,9 +1,10 @@
+import _ from 'lodash';
 import React from 'react';
 import Field from './field';
 
 const ContainersPanel = ({spec}) => (
     <>
-        {spec && spec.containers && spec.containers.map(item => (
+        {spec && _.map(spec.containers, item => (
             <div key={item.name} className='contentPanel'>
                 <Field name='Container'>{item.name}</Field>
                 <Field name='Image'>{item.image}</Field>
@@ -24,15 +25,15 @@ const ContainersPanel = ({spec}) => (
 
                 {item.resources && item.resources.requests && (
                     <>
-                        <Field name='Cpu Request'>{item.resources.requests && item.resources.requests.cpu}</Field>
-                        <Field name='Memory Request'>{item.resources.requests && item.resources.requests.memory}</Field>
+                        <Field name='Cpu Request'>{item.resources.requests.cpu}</Field>
+                        <Field name='Memory Request'>{item.resources.requests.memory}</Field>
                     </>
                 )}
 
                 {item.resources && item.resources.limits && (
                     <>
-                        <Field name='Cpu Limit'>{item.resources.limits && item.resources.limits.cpu}</Field>
-                        <Field name='Memory Limit'>{item.resources.limits && item.resources.limits.memory}</Field>
+                        <Field name='Cpu Limit'>{item.resources.limits.cpu}</Field>
+                        <Field name='Memory Limit'>{item.resources.limits.memory}</Field>
                     </>
                 )}
 

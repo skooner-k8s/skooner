@@ -46,7 +46,7 @@ export default class PodsPanel extends Base {
                                 />
                                 {!skipNodeName && <td>{x.spec.nodeName}</td>}
                                 <td>{x.status.phase}</td>
-                                <td>{x.spec.containers.length}</td>
+                                <td>{(x.spec.containers || []).length}</td>
                                 <td>{_.sumBy(x.status.containerStatuses, 'restartCount')}</td>
                                 <td><Cpu item={x} metrics={metrics} /></td>
                                 <td><Ram item={x} metrics={metrics} /></td>

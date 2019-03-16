@@ -8,7 +8,7 @@ import log from './utils/log';
 
 const genericError = (
     <div id='content'>
-        <Error messages={['There was an error and this content was unable to be displayed.']} />;
+        <Error messages={['There was an error and this content was unable to be displayed.']} />
     </div>
 );
 

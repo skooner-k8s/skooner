@@ -36,9 +36,7 @@ export default class Pod extends Base {
         const {namespace, name} = this.props;
         const {item, metrics, events} = this.state || {};
 
-        const errors = item && item.status.conditions
-            .filter(x => !!x.message)
-            .map(x => x.message);
+        const errors = getErrors(item);
 
         const filteredEvents = filterByOwner(events, item);
 
@@ -62,7 +60,7 @@ export default class Pod extends Base {
                     </>
                 </ItemHeader>
 
-                {errors && <Error messages={errors} />}
+                {errors && !!errors.length && <Error messages={errors} />}
 
                 <div className='charts'>
                     <div className='charts_item'>
@@ -99,7 +97,7 @@ export default class Pod extends Base {
                             <Field name='Conditions'>
                                 {_.map(item.status.conditions, x => (
                                     <div key={x.type}>
-                                        <span>{x.type}</span> • <span>{x.status}</span>
+                                        <span>{x.type}</span> • <span>{x.status}</span> • <span>{x.message}</span>
                                     </div>
                                 ))}
                             </Field>
@@ -163,4 +161,12 @@ function Ram({item, metrics}) {
             availableSuffix={requestedRam.unit}
         />
     );
+}
+
+function getErrors(item) {
+    if (!item) return [];
+    if (item.status.message) return [item.status.message];
+    if (item.status.conditions) return item.status.conditions.map(x => x.message).filter(x => !!x);
+
+    return null;
 }

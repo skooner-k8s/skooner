@@ -65,8 +65,8 @@ export default class Ingress extends Base {
                                     <tr key={`${rule.host}:${path.path}`}>
                                         <td>{rule.host}</td>
                                         <td>{path.path}</td>
-                                        <td>{path.backend.serviceName}</td>
-                                        <td>{path.backend.servicePort}</td>
+                                        <td>{path.backend && path.backend.serviceName}</td>
+                                        <td>{path.backend && path.backend.servicePort}</td>
                                     </tr>
                                 ))}
                                 </>

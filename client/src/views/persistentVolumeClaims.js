@@ -52,7 +52,7 @@ export default class PersistentVolumeClaims extends Base {
                                     <td>{x.spec.storageClassName}</td>
                                     <td>{x.spec.accessModes.join(' • ')}</td>
                                     <td>{x.spec.volumeName}</td>
-                                    <td>{x.status.capacity.storage}</td>
+                                    <td>{x.status.capacity && x.status.capacity.storage}</td>
                                 </tr>
                             )) : (
                                 <NoResults colSpan='9' items={filtered} filter={filter} />

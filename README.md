@@ -109,3 +109,19 @@ K8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubato
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
+
+
+# Development
+K8dash is made up of 2 parts. The server and the client.
+
+### Server
+To run the server, run `npm i` from the `/server` directory to install dependencies and then `npm start` to run the server.
+The server is a simple express.js server that is primarily responsible for proxying requests to the Kubernetes api server.
+During development, the server will use whatever is configured in `~/.kube/config` to connect the desired cluster.
+
+### Client
+For the client, move to the `/client` directory, run `npm i` and then `npm start`. The client is a React application with minimal other dependencies.
+
+## License
+
+[Apache License 2.0](https://raw.githubusercontent.com/herbrandson/k8dash/master/LICENSE)

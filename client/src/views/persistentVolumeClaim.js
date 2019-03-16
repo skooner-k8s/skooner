@@ -54,7 +54,7 @@ export default class PersistentVolumeClaim extends Base {
                                 </a>
                             </Field>
                             <Field name='Modes' value={item.spec.accessModes.join(' • ')} />
-                            <Field name='Capacity' value={item.status.capacity.storage} />
+                            <Field name='Capacity' value={item.status.capacity && item.status.capacity.storage} />
                         </div>
                     )}
                 </div>

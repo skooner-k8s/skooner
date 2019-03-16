@@ -47,15 +47,23 @@ function logging(req, res, next) {
 }
 
 async function getOidc(req, res) {
-    const authEndpoint = await getOidcEndpoint();
-    res.json({authEndpoint});
+    try {
+        const authEndpoint = await getOidcEndpoint();
+        res.json({authEndpoint});
+    } catch (err) {
+        next(err);
+    }
 }
 
-async function postOidc(req, res) {
-    const body = await toString(req);
-    const {code, redirectUri} = JSON.parse(body);
-    const token = await oidcAuthenticate(code, redirectUri);
-    res.json({token});
+async function postOidc(req, res, next) {
+    try {
+        const body = await toString(req);
+        const {code, redirectUri} = JSON.parse(body);
+        const token = await oidcAuthenticate(code, redirectUri);
+        res.json({token});
+    } catch (err) {
+        next(err);
+    }
 }
 
 function onError(err, req, res) {

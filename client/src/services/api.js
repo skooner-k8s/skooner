@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {request, stream, streamResult, streamResults} from './apiProxy';
+import {request, stream, streamResult, streamResults, getToken} from './apiProxy';
 import log from '../utils/log';
 
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
@@ -39,7 +39,14 @@ const apis = {
 };
 
 function testAuth() {
-    return request('/api/v1/namespaces', null, false);
+    const token = getToken();
+    const body = {
+        apiVerstion: 'authentication.k8s.io/v1',
+        kind: 'TokenReview',
+        spec: {token},
+    };
+
+    return post('/apis/authentication.k8s.io/v1/tokenreviews', body, false);
 }
 
 async function apply(body) {
@@ -151,16 +158,16 @@ function logs(namespace, name, container, cb) {
     }
 }
 
-function post(url, json) {
+function post(url, json, autoLogoutOnAuthError = true) {
     const body = JSON.stringify(json);
     const opts = {method: 'POST', body, headers: JSON_HEADERS};
-    return request(url, opts);
+    return request(url, opts, autoLogoutOnAuthError);
 }
 
-function put(url, json) {
+function put(url, json, autoLogoutOnAuthError = true) {
     const body = JSON.stringify(json);
     const opts = {method: 'PUT', body, headers: JSON_HEADERS};
-    return request(url, opts);
+    return request(url, opts, autoLogoutOnAuthError);
 }
 
 function del(url) {

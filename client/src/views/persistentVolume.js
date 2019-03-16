@@ -49,14 +49,16 @@ export default class PersistentVolume extends Base {
                                 </a>
                             </Field>
                             <Field name='Claim'>
-                                <a href={`#/persistentvolumeclaim/${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}>
-                                    {`${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}
-                                </a>
+                                {item.spec.claimRef && (
+                                    <a href={`#/persistentvolumeclaim/${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}>
+                                        {`${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}
+                                    </a>
+                                )}
                             </Field>
-                            <Field name='Access Modes' value={item.spec.accessModes.join(' • ')} />
-                            <Field name='Capacity' value={item.spec.capacity.storage} />
+                            <Field name='Access Modes' value={item.spec.accessModes && item.spec.accessModes.join(' • ')} />
+                            <Field name='Capacity' value={item.spec.capacity && item.spec.capacity.storage} />
                             <Field name='Reclaim Policy' value={item.spec.persistentVolumeReclaimPolicy} />
-                            <Field name='Local Path' value={item.spec.local.path} />
+                            <Field name='Local Path' value={item.spec.local && item.spec.local.path} />
                         </div>
                     )}
                 </div>

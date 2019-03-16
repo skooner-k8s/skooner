@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
@@ -45,8 +46,8 @@ export default class Ingresses extends Base {
                                         includeNamespace={true}
                                         href={`#/ingress/${x.metadata.namespace}/${x.metadata.name}`}
                                     />
-                                    <td>{x.spec.rules.map(y => y.host).join(' • ')}</td>
-                                    <td>{x.spec.rules.flatMap(y => y.http.paths).map(y => y.path).join(' • ')}</td>
+                                    <td>{_.map(x.spec.rules, y => y.host).join(' • ')}</td>
+                                    <td>{_.flatMap(x.spec.rules, y => y.http.paths).map(y => y.path).join(' • ')}</td>
                                 </tr>
                             )) : (
                                 <NoResults items={filtered} filter={filter} colSpan='6' />

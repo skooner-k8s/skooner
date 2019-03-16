@@ -75,7 +75,7 @@ export default class Nodes extends Base {
                                         {objectMap(x.metadata.labels)}
                                     </td>
                                     <td>
-                                        {x.status.conditions.find(y => y.type === 'Ready').status}
+                                        {x.status.conditions && (x.status.conditions.find(y => y.type === 'Ready') || {}).status}
                                     </td>
                                     <td>
                                         <CpuChart item={x} metrics={filteredMetrics} />

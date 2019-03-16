@@ -35,8 +35,7 @@ export default class Workloads extends Base {
         const {cronJobs, daemonSets, deployments, jobs, statefulSets, filter = '', sortBy, sortDirection} = this.state || {};
         const items = [cronJobs, daemonSets, deployments, jobs, statefulSets];
 
-        let filtered = filterControllers(filter, items);
-        filtered = _.orderBy(filtered, [sortBy], [sortDirection]);
+        const filtered = filterControllers(filter, items, sortBy, sortDirection);
 
         const controllerCount = filtered && filtered.length;
         const pendingControllerCount = getPendingControllerCount(filtered);
@@ -133,14 +132,14 @@ function getExpectedCount({spec, status}) {
     return spec.replicas || status.currentNumberScheduled || 0;
 }
 
-function filterControllers(filter, items) {
+function filterControllers(filter, items, sortBy, sortDirection) {
     const results = items.flat();
 
     if (results.length && items.some(x => !x)) return null;
 
     return _(results)
         .flatten()
-        .sortBy('metadata.name')
+        .orderBy([sortBy], [sortDirection])
         .filter(x => test(filter, x.metadata.name))
         .value();
 }

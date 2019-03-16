@@ -5,7 +5,7 @@ const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const BASE_HTTP_URL = host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 
-function getToken() {
+export function getToken() {
     return localStorage.authToken;
 }
 

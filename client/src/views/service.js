@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
@@ -65,7 +66,7 @@ export default class Service extends Base {
                                     </thead>
 
                                     <tbody>
-                                        {hasResults(ports) ? item.spec.ports.map(x => (
+                                        {hasResults(ports) ? _.map(item.spec.ports, x => (
                                             <tr key={x.port}>
                                                 <td>{x.name}</td>
                                                 <td>{x.port}</td>
