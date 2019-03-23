@@ -8,6 +8,8 @@ const apis = {
     apply,
     testAuth,
     logs,
+    swagger,
+    exec,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
 
@@ -146,9 +148,20 @@ function apiScaleFactory(apiType, kind) {
     }
 }
 
-function logs(namespace, name, container, cb) {
-    const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&tailLines=2000&follow=true`;
-    return stream(url, transformer, false);
+function swagger() {
+    return request('/openapi/v2');
+}
+
+function exec(namespace, name, container, cb) {
+    const url = `/api/v1/namespaces/${namespace}/pods/${name}/exec?container=${container}&command=sh&stdin=1&stderr=1&stdout=1&tty=1`;
+    const protocols = ['v4.channel.k8s.io', 'v3.channel.k8s.io', 'v2.channel.k8s.io', 'channel.k8s.io'];
+    return stream(url, cb, false, protocols);
+}
+
+function logs(namespace, name, container, showPrevious, cb) {
+    const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&previous=${showPrevious}&tailLines=2000&follow=true`;
+    const {cancel} = stream(url, transformer, false);
+    return cancel;
 
     function transformer(item) {
         if (!item) return; // For some reason, this api returns a lot of empty strings

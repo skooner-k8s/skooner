@@ -36,6 +36,7 @@
 
 .button_clear:disabled {
 	background: none;
+	color: $color-lightest;
 
 	> svg {
 		fill: $color-lightest;

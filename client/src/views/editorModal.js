@@ -4,23 +4,48 @@ import Modal from 'react-modal';
 import yamljs from 'yamljs';
 import Base from '../components/base';
 import Button from '../components/button';
+import Doc from '../components/doc';
+import getDocDefinitions from '../services/docs';
+import LightBulbSvg from '../art/lightBulbSvg';
+import EditSvg from '../art/editSvg';
 
 export default class EditorModal extends Base {
-    constructor(props) {
-        super(props);
+    state = {
+        showDocs: false,
+    };
 
-        const body = props.body ? yamljs.stringify(props.body, 10) : undefined;
-        this.state = {body};
+    async componentDidMount() {
+        this.findDocs(this.props.body);
+    }
+
+    async onEdit(yaml) {
+        this.setState({yaml});
+
+        try {
+            const body = yamljs.parse(yaml);
+            this.findDocs(body);
+        } catch (err) {
+            // Do nothing here. The current yaml can't be parsed
+        }
     }
 
     async add() {
         const {onSave} = this.props;
-        const {body = ''} = this.state;
+        const {yaml = ''} = this.state;
 
-        const json = yamljs.parse(body);
+        const json = yamljs.parse(yaml);
         const shouldClose = await onSave(json);
 
         if (shouldClose) this.close();
+    }
+
+    async findDocs(body) {
+        if (!body || !body.apiVersion || !body.kind) return;
+
+        const result = await getDocDefinitions(body.apiVersion, body.kind);
+        if (!result) return;
+
+        this.setState({properties: result.properties});
     }
 
     close() {
@@ -32,22 +57,49 @@ export default class EditorModal extends Base {
     }
 
     render() {
-        const {body} = this.state || {};
+        const {properties, showDocs} = this.state || {};
+        const {body} = this.props;
+
+        const yaml = body && yamljs.stringify(body, 10, 2);
 
         return (
             <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>
-                <div>
-                    <textarea
-                        className='editorModal_input'
-                        defaultValue={body}
-                        placeholder="Enter some yaml here, y'all..."
-                        onChange={x => this.setState({body: x.target.value})}
-                        spellCheck='false'
-                    />
+                <div className='editorModal'>
+                    <div className='editorModal_edit'>
+                        {showDocs ? (
+                            <div className='editorModal_docs'>
+                                {properties ? (
+                                    <Doc properties={properties} />
+                                ) : (
+                                    <div className='editorModal_noDocs'>
+                                        <h3>No Docs Found</h3>
+                                        <div>Please enter yaml that includes an `api version` and `kind` to display help. For example</div>
+                                        <pre>kind: ConfigMap</pre>
+                                        <pre>apiVersion: v1</pre>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <textarea
+                                className='editorModal_input'
+                                defaultValue={yaml}
+                                placeholder="Enter some yaml here, y'all..."
+                                onChange={x => this.onEdit(x.target.value)}
+                                spellCheck='false'
+                            />
+                        )}
 
-                    <div className='modal_actions'>
-                        <Button className='button' onClick={() => this.add()}>Save</Button>
-                        <Button className='button button_negative' onClick={() => this.close()}>Cancel</Button>
+                        <div className='modal_actions'>
+                            <Button className='button button_clear' onClick={() => this.setState(x => ({showDocs: !x.showDocs}))}>
+                                {showDocs ? <EditSvg /> : <LightBulbSvg />}
+                                <span className='button_label'>
+                                    {showDocs ? 'Edit' : 'View Docs'}
+                                </span>
+                            </Button>
+                            <div className='editorModal_spacer'></div>
+                            <Button className='button' onClick={() => this.add()}>Save</Button>
+                            <Button className='button button_negative' onClick={() => this.close()}>Cancel</Button>
+                        </div>
                     </div>
                 </div>
             </Modal>

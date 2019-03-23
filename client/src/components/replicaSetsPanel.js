@@ -19,7 +19,7 @@ export default class ReplicaSetsPanel extends Base {
                             <th>Generations</th>
                             <th className='replicaSetsPanel_replicas'>
                                 Replicas
-                                <label className='replicaSetsPanel_checkbox'>
+                                <label>
                                     <Switch
                                         checked={activeOnly}
                                         onChange={x => this.setState({activeOnly: x})}

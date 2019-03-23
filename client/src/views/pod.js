@@ -9,6 +9,7 @@ import MetadataFields from '../components/metadataFields';
 import Field from '../components/field';
 import api from '../services/api';
 import LogsSvg from '../art/logsSvg';
+import ExecSvg from '../art/execSvg';
 import {goTo} from '../router';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
@@ -47,6 +48,11 @@ export default class Pod extends Base {
                         <Button title='Logs' className='button button_clear' onClick={() => goTo(`pod/${namespace}/${name}/logs`)}>
                             <LogsSvg />
                             <span className='button_label'>Logs</span>
+                        </Button>
+
+                        <Button title='Exec' className='button button_clear' onClick={() => goTo(`pod/${namespace}/${name}/exec`)}>
+                            <ExecSvg />
+                            <span className='button_label'>Exec</span>
                         </Button>
 
                         <SaveButton

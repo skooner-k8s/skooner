@@ -55,27 +55,36 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     return response.json();
 }
 
-export function stream(url, cb, isJson = true) {
-    const current = {};
+export function stream(url, cb, isJson = true, additionalProtocols) {
+    let connection;
+    let isCancelled;
+
     connect();
 
-    return cancel;
+    return {cancel, getSocket};
+
+    function getSocket() {
+        return connection.socket;
+    }
 
     function cancel() {
-        if (current.cancelHandler) current.cancelHandler();
+        if (connection) connection.close();
+        isCancelled = true;
     }
 
     function connect() {
-        current.cancelHandler = connectStream(url, cb, onFail, isJson);
+        connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
     }
 
     function onFail() {
+        if (isCancelled) return;
+
         log.info('Reconnecting in 3 seconds', {url});
         setTimeout(connect, 3000);
     }
 }
 
-function connectStream(path, cb, onFail, isJson) {
+function connectStream(path, cb, onFail, isJson, additionalProtocols = []) {
     let isClosing = false;
 
     const token = getToken();
@@ -84,28 +93,37 @@ function connectStream(path, cb, onFail, isJson) {
     const protocols = [
         `base64url.bearer.authorization.k8s.io.${encodedToken}`,
         'base64.binary.k8s.io',
+        ...additionalProtocols,
     ];
 
     const url = combinePath(BASE_WS_URL, path);
     const socket = new WebSocket(url, protocols);
-    socket.onmessage = onMessage;
-    socket.onclose = onClose;
-    socket.onerror = onError;
+    socket.binaryType = 'arraybuffer';
+    socket.addEventListener('message', onMessage);
+    socket.addEventListener('close', onClose);
+    socket.addEventListener('error', onError);
 
-    return close;
+    return {close, socket};
 
     function close() {
         isClosing = true;
         socket.close();
     }
 
-    function onMessage({data}) {
-        const item = isJson ? JSON.parse(data) : data;
+    function onMessage(body) {
+        if (isClosing) return;
+
+        const item = isJson ? JSON.parse(body.data) : body.data;
         cb(item);
     }
 
     function onClose(...args) {
         if (isClosing) return;
+        isClosing = true;
+
+        socket.removeEventListener('message', onMessage);
+        socket.removeEventListener('close', onClose);
+        socket.removeEventListener('error', onError);
 
         log.warn('Socket closed unexpectedly', {path, args});
         onFail();
@@ -123,7 +141,8 @@ export async function streamResult(url, name, cb) {
     const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
     const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
-    return stream(watchUrl, x => cb(x.object));
+    const {cancel} = stream(watchUrl, x => cb(x.object));
+    return cancel;
 }
 
 export async function streamResults(url, cb) {
@@ -134,7 +153,8 @@ export async function streamResults(url, cb) {
     add();
 
     const watchUrl = `${url}?watch=1&resourceVersion=${metadata.resourceVersion}`;
-    return stream(watchUrl, update);
+    const {cancel} = stream(watchUrl, update);
+    return cancel;
 
     function add() {
         for (const item of items) {

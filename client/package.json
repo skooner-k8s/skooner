@@ -14,7 +14,9 @@
     "react-modal": "^3.8.1",
     "react-scripts": "2.1.5",
     "react-switch": "^4.1.0",
+    "swagger-parser": "^6.0.5",
     "uuid": "^3.3.2",
+    "xterm": "^3.12.0",
     "yamljs": "^0.3.0"
   },
   "scripts": {

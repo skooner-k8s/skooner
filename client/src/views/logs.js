@@ -1,14 +1,20 @@
+import './logs.scss';
 import _ from 'lodash';
 import React from 'react';
+import Switch from 'react-switch';
 import Base from '../components/base';
 import InputFilter from '../components/inputFilter';
 import Loading from '../components/loading';
 import api from '../services/api';
 
 export default class Logs extends Base {
+    state = {
+        showPrevious: false,
+        items: [],
+    };
+
     constructor() {
         super();
-        this.state = {items: []};
 
         // From the lodash docs: "If leading and trailing options are true, func is invoked
         // on the trailing edge of the timeout only if the debounced function is invoked more
@@ -33,11 +39,22 @@ export default class Logs extends Base {
 
     setContainer(container) {
         if (this.state.container === container) return;
+        this.startLogsStream(container, this.state.showPrevious);
+    }
+
+    setShowPrevious(showPrevious) {
+        if (this.state.showPrevious === showPrevious) return;
+        this.startLogsStream(this.state.container, showPrevious);
+    }
+
+    startLogsStream(container, showPrevious) {
+        if (!container) return;
 
         const {namespace, name} = this.props;
-        this.setState({container, items: []});
+        this.setState({container, showPrevious, items: []});
+
         this.registerApi({
-            items: api.logs(namespace, name, container, items => this.onLogs(items)),
+            items: api.logs(namespace, name, container, showPrevious, items => this.onLogs(items)),
         });
     }
 
@@ -54,7 +71,7 @@ export default class Logs extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {items, container, containers, filter = ''} = this.state || {};
+        const {items, container, containers, filter = '', showPrevious = false} = this.state || {};
 
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
@@ -73,6 +90,18 @@ export default class Logs extends Base {
                             <option key={x}>{x}</option>
                         ))}
                     </select>
+
+                    <label className='logs_showPrevious'>
+                        <Switch
+                            checked={showPrevious}
+                            onChange={x => this.setShowPrevious(x)}
+                            uncheckedIcon={false}
+                            checkedIcon={false}
+                            width={20}
+                            height={10}
+                        />
+                        <div className='logs_showPreviouslabel'>Previous</div>
+                    </label>
 
                     <InputFilter
                         filter={filter}

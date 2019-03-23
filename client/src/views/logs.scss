@@ -1,0 +1,13 @@
+@import '../scss/settings.scss';
+
+.logs_showPrevious {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.logs_showPreviouslabel {
+    font-size: $font-size-small;
+}
