@@ -3,9 +3,15 @@ import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import {MetadataColumns, MetadataHeaders, NoResults, hasResults} from '../components/listViewHelpers';
+import {defaultSortInfo} from '../components/sorter';
+import {MetadataColumns, MetadataHeaders, TableBody} from '../components/listViewHelpers';
 
 export default class ConfigMaps extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({items: null});
 
@@ -15,7 +21,7 @@ export default class ConfigMaps extends Base {
     }
 
     render() {
-        const {items, filter = ''} = this.state || {};
+        const {items, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
@@ -31,25 +37,19 @@ export default class ConfigMaps extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders
-                                    includeNamespace={true}
-                                />
+                                <MetadataHeaders includeNamespace={true} sort={sort} />
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        includeNamespace={true}
-                                        href={`#/configmap/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                </tr>
-                            )) : (
-                                <NoResults colSpan='4' items={filtered} filter={filter} />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} colSpan='4' sort={sort} row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    includeNamespace={true}
+                                    href={`#/configmap/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

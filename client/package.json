@@ -13,6 +13,7 @@
     "react-dom": "^16.8.2",
     "react-modal": "^3.8.1",
     "react-scripts": "2.1.5",
+    "react-select": "^2.4.2",
     "react-switch": "^4.1.0",
     "swagger-parser": "^6.0.5",
     "uuid": "^3.3.2",

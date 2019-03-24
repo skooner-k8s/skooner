@@ -1,27 +1,42 @@
 import React from 'react';
 import moment from 'moment';
-import {NoResults, hasResults} from './listViewHelpers';
+import {TableBody} from './listViewHelpers';
 import log from '../utils/log';
 import ResourceSvg from '../art/resourceSvg';
+import Sorter, {sortByDate} from './sorter';
 
-export default function EventsPanel({items, filter, shortList}) {
+export default function EventsPanel({items, filter, shortList, sort}) {
     return (
         <div className='contentPanel'>
             <table>
                 <thead>
                     <tr>
-                        <th className='th_icon'></th>
-                        <th>Time</th>
+                        <th className='th_icon'>
+                            <Sorter field='involvedObject.kind' sort={sort}>Type</Sorter>
+                        </th>
+                        <th>
+                            <Sorter field={sortByDate} sort={sort}>Time</Sorter>
+                        </th>
                         {!shortList && (
-                            <th>Name</th>
+                            <th>
+                                <Sorter field={sortByName} sort={sort}>Name</Sorter>
+                            </th>
                         )}
-                        <th>Reason</th>
-                        <th>Message</th>
+                        <th>
+                            <Sorter field='reason' sort={sort}>Reason</Sorter>
+                        </th>
+                        <th>
+                            <Sorter field='message' sort={sort}>Message</Sorter>
+                        </th>
                     </tr>
                 </thead>
 
-                <tbody>
-                    {hasResults(items) ? items.map(x => (
+                <TableBody
+                    items={items}
+                    filter={filter}
+                    colSpan={shortList ? 4 : 5}
+                    sort={sort}
+                    row={x => (
                         <tr key={x.metadata.name}>
                             <td className='td_icon'>
                                 <ResourceSvg
@@ -37,13 +52,15 @@ export default function EventsPanel({items, filter, shortList}) {
                             <td>{x.reason}</td>
                             <td>{x.message}</td>
                         </tr>
-                    )) : (
-                        <NoResults items={items} filter={filter} colSpan={shortList ? 4 : 5} />
                     )}
-                </tbody>
+                />
             </table>
         </div>
     );
+}
+
+function sortByName({involvedObject}) {
+    return `${involvedObject.namespace}:${involvedObject.name}`;
 }
 
 function getTypeClass(type) {

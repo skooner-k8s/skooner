@@ -1,11 +1,17 @@
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
+import Sorter, {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 
 export default class Secrets extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({items: null});
 
@@ -15,7 +21,7 @@ export default class Secrets extends Base {
     }
 
     render() {
-        const {items, filter = ''} = this.state || {};
+        const {items, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
@@ -31,25 +37,21 @@ export default class Secrets extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders includeNamespace={true} />
-                                <th>Type</th>
+                                <MetadataHeaders sort={sort} includeNamespace={true} />
+                                <th><Sorter field='type' sort={sort}>Type</Sorter></th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        includeNamespace={true}
-                                        href={`#/secret/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                    <td>{x.type}</td>
-                                </tr>
-                            )) : (
-                                <NoResults colSpan='5' items={filtered} filter={filter} />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='5' row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    includeNamespace={true}
+                                    href={`#/secret/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                                <td>{x.type}</td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

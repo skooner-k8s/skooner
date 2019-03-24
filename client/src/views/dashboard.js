@@ -1,12 +1,17 @@
-import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
 import test from '../utils/filterHelper';
+import {defaultSortInfo, sortByDate} from '../components/sorter';
 
 export default class Dashboard extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this, sortByDate),
+    };
+
     componentDidMount() {
         this.registerApi({
             events: api.event.list(null, events => this.setState({events})),
@@ -16,8 +21,7 @@ export default class Dashboard extends Base {
     }
 
     render() {
-        const {events, nodes, pods, filter = ''} = this.state || {};
-
+        const {events, nodes, pods, sort, filter} = this.state;
         const filteredEvents = filterEvents(events, filter);
 
         return (
@@ -39,7 +43,7 @@ export default class Dashboard extends Base {
                     </div>
                 </div>
 
-                <EventsPanel items={filteredEvents} filter={filter} />
+                <EventsPanel items={filteredEvents} filter={filter} sort={sort} />
             </div>
         );
     }
@@ -48,7 +52,7 @@ export default class Dashboard extends Base {
 function filterEvents(events, filter) {
     if (!events) return null;
 
-    return _.sortBy(events, x => -Date.parse(x.metadata.creationTimestamp))
-        .slice(0, 1000)
-        .filter(x => test(filter, x.involvedObject.name, x.involvedObject.namespace, x.message));
+    return events
+        .filter(x => test(filter, x.involvedObject.name, x.involvedObject.namespace, x.message))
+        .slice(0, 1000);
 }

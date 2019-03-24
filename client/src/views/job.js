@@ -12,12 +12,18 @@ import PodsPanel from '../components/podsPanel';
 import RamChart from '../components/ramChart';
 import SaveButton from '../components/saveButton';
 import api from '../services/api';
-import {getPodMetrics} from '../utils/metricsHelpers';
+import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
+import {defaultSortInfo} from '../components/sorter';
 
 const service = api.job;
 
 export default class Job extends Base {
+    state = {
+        podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
+        eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
+    }
+
     componentDidMount() {
         const {namespace, name} = this.props;
 
@@ -31,7 +37,7 @@ export default class Job extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {item, pods, events, metrics} = this.state || {};
+        const {item, pods, events, metrics, podsSort, eventsSort} = this.state;
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
@@ -77,8 +83,19 @@ export default class Job extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
-                <PodsPanel items={filteredPods} metrics={filteredMetrics} skipNamespace={true} />
-                <EventsPanel shortList={true} items={filteredEvents} />
+
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={filteredMetrics}
+                    skipNamespace={true}
+                />
+
+                <EventsPanel
+                    shortList={true}
+                    sort={eventsSort}
+                    items={filteredEvents}
+                />
             </div>
         );
     }

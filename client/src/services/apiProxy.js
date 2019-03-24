@@ -55,6 +55,111 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     return response.json();
 }
 
+export async function streamResult(url, name, cb) {
+    let isCancelled = false;
+    let socket;
+    run();
+
+    return cancel;
+
+    async function run() {
+        try {
+            const item = await request(`${url}/${name}`);
+
+            if (isCancelled) return;
+            cb(item);
+
+            const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
+            const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
+
+            socket = stream(watchUrl, x => cb(x.object));
+        } catch (err) {
+            log.error('Error in api request', {err, url});
+        }
+    }
+
+    function cancel() {
+        if (isCancelled) return;
+        isCancelled = true;
+
+        if (socket) socket.cancel();
+    }
+}
+
+export async function streamResults(url, cb) {
+    const results = {};
+    let isCancelled = false;
+    let socket;
+    run();
+
+    return cancel;
+
+    async function run() {
+        try {
+            const {kind, items, metadata} = await request(url);
+            if (isCancelled) return;
+
+            add(items, kind);
+
+            const watchUrl = `${url}?watch=1&resourceVersion=${metadata.resourceVersion}`;
+            socket = stream(watchUrl, update);
+        } catch (err) {
+            log.error('Error in api request', {err, url});
+        }
+    }
+
+    function cancel() {
+        if (isCancelled) return;
+        isCancelled = true;
+
+        if (socket) socket.cancel();
+    }
+
+    function add(items, kind) {
+        const fixedKind = kind.slice(0, -4); // Trim off the word "List" from the end of the string
+        for (const item of items) {
+            item.kind = fixedKind;
+            results[item.metadata.uid] = item;
+        }
+
+        push();
+    }
+
+    function update({type, object}) {
+        object.actionType = type; // eslint-disable-line no-param-reassign
+
+        switch (type) {
+            case 'ADDED':
+                results[object.metadata.uid] = object;
+                break;
+            case 'MODIFIED': {
+                const existing = results[object.metadata.uid];
+                const currentVersion = parseInt(existing.metadata.resourceVersion, 10);
+                const newVersion = parseInt(object.metadata.resourceVersion, 10);
+                if (currentVersion < newVersion) {
+                    Object.assign(existing, object);
+                }
+                break;
+            }
+            case 'DELETED':
+                delete results[object.metadata.uid];
+                break;
+            case 'ERROR':
+                log.error('Error in update', {type, object});
+                break;
+            default:
+                log.error('Unknown update type', type);
+        }
+
+        push();
+    }
+
+    function push() {
+        const values = Object.values(results);
+        cb(values);
+    }
+}
+
 export function stream(url, cb, isJson = true, additionalProtocols) {
     let connection;
     let isCancelled;
@@ -132,72 +237,6 @@ function connectStream(path, cb, onFail, isJson, additionalProtocols = []) {
     function onError(err) {
         log.error('Error in api stream', {err, path});
     }
-}
-
-export async function streamResult(url, name, cb) {
-    const item = await request(`${url}/${name}`);
-    cb(item);
-
-    const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
-    const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
-
-    const {cancel} = stream(watchUrl, x => cb(x.object));
-    return cancel;
-}
-
-export async function streamResults(url, cb) {
-    const results = {};
-
-    const {kind, items, metadata} = await request(url);
-    const fixedKind = kind.slice(0, -4); // Trim off the word "List" from the end of the string
-    add();
-
-    const watchUrl = `${url}?watch=1&resourceVersion=${metadata.resourceVersion}`;
-    const {cancel} = stream(watchUrl, update);
-    return cancel;
-
-    function add() {
-        for (const item of items) {
-            item.kind = fixedKind;
-            results[item.metadata.uid] = item;
-        }
-
-        push(results, cb);
-    }
-
-    function update({type, object}) {
-        object.actionType = type; // eslint-disable-line no-param-reassign
-
-        switch (type) {
-            case 'ADDED':
-                results[object.metadata.uid] = object;
-                break;
-            case 'MODIFIED': {
-                const existing = results[object.metadata.uid];
-                const currentVersion = parseInt(existing.metadata.resourceVersion, 10);
-                const newVersion = parseInt(object.metadata.resourceVersion, 10);
-                if (currentVersion < newVersion) {
-                    Object.assign(existing, object);
-                }
-                break;
-            }
-            case 'DELETED':
-                delete results[object.metadata.uid];
-                break;
-            case 'ERROR':
-                log.error('Error in update', {type, object});
-                break;
-            default:
-                log.error('Unknown update type', type);
-        }
-
-        push(results, cb);
-    }
-}
-
-function push(results, cb) {
-    const items = Object.values(results);
-    cb(items);
 }
 
 function combinePath(base, path) {

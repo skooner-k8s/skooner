@@ -1,4 +1,5 @@
 import React from 'react';
+import Select from 'react-select';
 import Base from './base';
 import api from '../services/api';
 
@@ -22,21 +23,23 @@ export default class NamespaceFilter extends Base {
     }
 
     render() {
-        const {namespace, namespaces = []} = this.state;
+        const {namespace = '', namespaces = []} = this.state;
+
+        const options = namespaces.map(x => ({value: x.metadata.name, label: x.metadata.name}));
+        options.unshift({value: '', label: 'All Namespaces'});
+
+        const value = options.find(x => x.value === namespace);
 
         return (
-            <select
-                value={namespace}
-                className='select_namespace'
-                onChange={x => this.setNamespace(x.target.value)}
-            >
-                <>
-                    <option value=''>All Namespaces</option>
-                    {namespaces.map(x => (
-                        <option key={x.metadata.name}>{x.metadata.name}</option>
-                    ))}
-                </>
-            </select>
+            <div className='select_namespace'>
+                <Select
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    value={value}
+                    onChange={x => this.setNamespace(x.value)}
+                    options={options}
+                />
+            </div>
         );
     }
 }

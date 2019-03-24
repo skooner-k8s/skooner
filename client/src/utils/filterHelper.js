@@ -1,7 +1,9 @@
 
 export default function test(filter = '', ...values) {
-    const lowerCaseFilter = filter.toLowerCase();
-    return values.some(x => (x || '').toLowerCase().includes(lowerCaseFilter));
+    const value = filter.toLowerCase();
+    return values
+        .filter(x => !!x)
+        .some(x => x.toLowerCase().includes(value));
 }
 
 export function filterByOwner(items, owner) {

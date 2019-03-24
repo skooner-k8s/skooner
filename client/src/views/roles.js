@@ -1,12 +1,17 @@
-import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
+import {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 
 export default class Roles extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     componentDidMount() {
         this.registerApi({
             role: api.role.list(null, roles => this.setState({roles})),
@@ -15,14 +20,14 @@ export default class Roles extends Base {
     }
 
     render() {
-        const {roles, clusterRoles, filter = ''} = this.state || {};
+        const {roles, clusterRoles, sort, filter} = this.state;
 
         let items;
         if (roles || clusterRoles) {
             items = [...roles || [], ...clusterRoles || []];
         }
 
-        const filtered = items && _.sortBy(items, 'metadata.name').filter(x => test(filter, x.metadata.name));
+        const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
             <div id='content'>
@@ -36,25 +41,21 @@ export default class Roles extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders includeNamespace={true} />
+                                <MetadataHeaders sort={sort} includeNamespace={true} />
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        includeNamespace={true}
-                                        href={x.kind === 'ClusterRole'
-                                            ? `#/clusterrole/${x.metadata.name}`
-                                            : `#/role/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                </tr>
-                            )) : (
-                                <NoResults items={filtered} filter={filter} colSpan='4' />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    includeNamespace={true}
+                                    href={x.kind === 'ClusterRole'
+                                        ? `#/clusterrole/${x.metadata.name}`
+                                        : `#/role/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

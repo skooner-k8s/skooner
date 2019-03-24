@@ -15,7 +15,21 @@ const Account = () => (
 
 
         <div className='contentPanel'>
+            <h3>Current User</h3>
             <pre>{getJson()}</pre>
+        </div>
+
+        <div className='contentPanel'>
+            <h3>Learn More</h3>
+            <div>Follow K8dash on <a href='https://github.com/herbrandson/k8dash'>GitHub</a></div>
+            <div>or at <a href='https://cloud.docker.com/u/herbrandson/repository/docker/herbrandson/k8dash'>DockerHub</a></div>
+        </div>
+
+        <div className='contentPanel'>
+            <h3>Special Thanks</h3>
+            <div>Icons made by <a href='https://www.flaticon.com/authors/dave-gandy' title='Dave Gandy'>Dave Gandy</a></div>
+            <div>from <a href='https://www.flaticon.com/' title='Flaticon'>www.flaticon.com</a></div>
+            <div>is licensed by <a href='http://creativecommons.org/licenses/by/3.0/' title='Creative Commons BY 3.0'>CC 3.0 BY</a></div>
         </div>
     </div>
 );

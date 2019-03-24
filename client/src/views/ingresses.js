@@ -2,11 +2,17 @@ import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import {defaultSortInfo} from '../components/sorter';
 
 export default class Ingresses extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({items: null});
 
@@ -16,8 +22,8 @@ export default class Ingresses extends Base {
     }
 
     render() {
-        const {items, filter = ''} = this.state || {};
-        const filtered = items && items.filter(x => test(filter, x.metadata.name));
+        const {items, sort, filter} = this.state;
+        const filtered = items && items.filter(x => test(filter, x.metadata.name, getHosts(x, ' '), getPaths(x, ' ')));
 
         return (
             <div id='content'>
@@ -32,30 +38,37 @@ export default class Ingresses extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders includeNamespace={true} />
+                                <MetadataHeaders includeNamespace={true} sort={sort} />
                                 <th>Hosts</th>
                                 <th>Paths</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        includeNamespace={true}
-                                        href={`#/ingress/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                    <td>{_.map(x.spec.rules, y => y.host).join(' • ')}</td>
-                                    <td>{_.flatMap(x.spec.rules, y => y.http.paths).map(y => y.path).join(' • ')}</td>
-                                </tr>
-                            )) : (
-                                <NoResults items={filtered} filter={filter} colSpan='6' />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='6' row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    includeNamespace={true}
+                                    href={`#/ingress/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                                <td>{getHosts(x, ' • ')}</td>
+                                <td>{getPaths(x, ' • ')}</td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>
         );
     }
+}
+
+function getHosts({spec}, join) {
+    return _.map(spec.rules, y => y.host)
+        .join(join);
+}
+
+function getPaths({spec}, join) {
+    return _.flatMap(spec.rules, x => x.http.paths)
+        .map(x => x.path)
+        .join(join);
 }

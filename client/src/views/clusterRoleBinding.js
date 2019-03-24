@@ -5,14 +5,19 @@ import ItemHeader from '../components/itemHeader';
 import Field from '../components/field';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import {NoResults, hasResults} from '../components/listViewHelpers';
+import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 import ResourceSvg from '../art/resourceSvg';
+import Sorter, {defaultSortInfo} from '../components/sorter';
 
 const service = api.clusterRoleBinding;
 
 export default class ClusterRoleBinding extends Base {
+    state = {
+        sort: defaultSortInfo(this, 'name'),
+    };
+
     componentDidMount() {
         const {name} = this.props;
 
@@ -23,7 +28,7 @@ export default class ClusterRoleBinding extends Base {
 
     render() {
         const {name} = this.props;
-        const {item} = this.state || {};
+        const {item, sort} = this.state;
         const subjects = item && item.subjects;
 
         return (
@@ -60,30 +65,34 @@ export default class ClusterRoleBinding extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <th className='th_icon'></th>
-                                <th>Name</th>
-                                <th>Namespace</th>
-                                <th>Api Group</th>
+                                <th className='th_icon'>
+                                    <Sorter sort={sort} field='kind'>Type</Sorter>
+                                </th>
+                                <th>
+                                    <Sorter sort={sort} field='name'>Name</Sorter>
+                                </th>
+                                <th>
+                                    <Sorter sort={sort} field='namespace'>Namespace</Sorter>
+                                </th>
+                                <th>
+                                    <Sorter sort={sort} field='apiGroup'>Api Group</Sorter>
+                                </th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(subjects) ? subjects.map(x => (
-                                <tr key={x.name}>
-                                    <td>
-                                        <ResourceSvg resource={x.kind} />
-                                        <div className='td_iconLabel'>{x.kind}</div>
-                                    </td>
-                                    <td>
-                                        {x.kind === 'ServiceAccount' ? (<a href={getSubjectHref(x)}>{x.name}</a>) : x.name}
-                                    </td>
-                                    <td>{x.namespace}</td>
-                                    <td>{x.apiGroup}</td>
-                                </tr>
-                            )) : (
-                                <NoResults items={subjects} colSpan='4' />
-                            )}
-                        </tbody>
+                        <TableBody items={subjects} colSpan='4' sort={sort} row={x => (
+                            <tr key={x.name}>
+                                <td>
+                                    <ResourceSvg resource={x.kind} />
+                                    <div className='td_iconLabel'>{x.kind}</div>
+                                </td>
+                                <td>
+                                    {x.kind === 'ServiceAccount' ? (<a href={getSubjectHref(x)}>{x.name}</a>) : x.name}
+                                </td>
+                                <td>{x.namespace}</td>
+                                <td>{x.apiGroup}</td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

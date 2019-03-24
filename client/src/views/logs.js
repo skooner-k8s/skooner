@@ -2,6 +2,7 @@ import './logs.scss';
 import _ from 'lodash';
 import React from 'react';
 import Switch from 'react-switch';
+import Select from 'react-select';
 import Base from '../components/base';
 import InputFilter from '../components/inputFilter';
 import Loading from '../components/loading';
@@ -71,25 +72,28 @@ export default class Logs extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {items, container, containers, filter = '', showPrevious = false} = this.state || {};
+        const {items, container, containers = [], filter = '', showPrevious = false} = this.state || {};
 
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
+
+        const options = containers.map(x => ({value: x, label: x}));
+        const selected = options.find(x => x.value === container);
 
         return (
             <div id='content'>
                 <div id='header'>
                     <span className='header_label'>{['Pod Logs', namespace, name].join(' • ')}</span>
 
-                    <select
-                        value={container}
-                        className='select_namespace'
-                        onChange={x => this.setContainer(x.target.value)}
-                    >
-                        {containers && containers.map(x => (
-                            <option key={x}>{x}</option>
-                        ))}
-                    </select>
+                    <div className='select_namespace'>
+                        <Select
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            value={selected}
+                            onChange={x => this.setContainer(x.value)}
+                            options={options}
+                        />
+                    </div>
 
                     <label className='logs_showPrevious'>
                         <Switch

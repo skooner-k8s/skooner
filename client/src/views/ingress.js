@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import Base from '../components/base';
 import api from '../services/api';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import {NoResults, hasResults} from '../components/listViewHelpers';
+import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 
@@ -58,9 +58,8 @@ export default class Ingress extends Base {
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(rules) ? rules.map(rule => (
-                                <>
+                        <TableBody items={rules} colSpan='4' row={rule => (
+                            <Fragment key={rule.host}>
                                 {rule.http.paths.map(path => (
                                     <tr key={`${rule.host}:${path.path}`}>
                                         <td>{rule.host}</td>
@@ -69,11 +68,8 @@ export default class Ingress extends Base {
                                         <td>{path.backend && path.backend.servicePort}</td>
                                     </tr>
                                 ))}
-                                </>
-                            )) : (
-                                <NoResults colSpan='4' items={rules} />
-                            )}
-                        </tbody>
+                            </Fragment>
+                        )} />
                     </table>
                 </div>
             </div>

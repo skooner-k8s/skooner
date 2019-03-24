@@ -9,3 +9,9 @@
 .replicaSetsPanel_label {
     font-size: $font-size-small;
 }
+
+.replicaSetsPanel_switch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

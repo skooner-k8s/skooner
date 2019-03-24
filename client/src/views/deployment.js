@@ -15,11 +15,18 @@ import SaveButton from '../components/saveButton';
 import ScaleButton from '../components/scaleButton';
 import api from '../services/api';
 import {filterByOwner, filterByOwners} from '../utils/filterHelper';
-import {getPodMetrics} from '../utils/metricsHelpers';
+import getPodMetrics from '../utils/metricsHelpers';
+import {defaultSortInfo} from '../components/sorter';
 
 const service = api.deployment;
 
 export default class Deployment extends Base {
+    state = {
+        replicaSetsSort: defaultSortInfo(x => this.setState({replicaSetsSort: x})),
+        podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
+        eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
+    };
+
     componentDidMount() {
         const {namespace, name} = this.props;
 
@@ -34,7 +41,16 @@ export default class Deployment extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {item, events, replicaSets, pods, metrics} = this.state || {};
+        const {
+            item,
+            events,
+            replicaSets,
+            pods,
+            metrics,
+            replicaSetsSort,
+            podsSort,
+            eventsSort,
+        } = this.state;
 
         const filteredEvents = filterByOwner(events, item);
         const filteredReplicaSets = filterByOwner(replicaSets, item);
@@ -84,9 +100,25 @@ export default class Deployment extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
-                <ReplicaSetsPanel items={filteredReplicaSets} includeNamespace={false} />
-                <PodsPanel items={filteredPods} metrics={filteredMetrics} skipNamespace={true} />
-                <EventsPanel shortList={true} items={filteredEvents} />
+
+                <ReplicaSetsPanel
+                    items={filteredReplicaSets}
+                    sort={replicaSetsSort}
+                    includeNamespace={false}
+                />
+
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={filteredMetrics}
+                    skipNamespace={true}
+                />
+
+                <EventsPanel
+                    shortList={true}
+                    sort={eventsSort}
+                    items={filteredEvents}
+                />
             </div>
         );
     }

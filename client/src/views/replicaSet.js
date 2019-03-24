@@ -13,12 +13,18 @@ import PodsPanel from '../components/podsPanel';
 import RamChart from '../components/ramChart';
 import SaveButton from '../components/saveButton';
 import ScaleButton from '../components/scaleButton';
-import {getPodMetrics} from '../utils/metricsHelpers';
+import {defaultSortInfo} from '../components/sorter';
+import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 
 const service = api.replicaSet;
 
 export default class ReplicaSet extends Base {
+    state = {
+        podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
+        eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
+    };
+
     componentDidMount() {
         const {namespace, name} = this.props;
 
@@ -32,7 +38,7 @@ export default class ReplicaSet extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {item, pods, metrics, events} = this.state || {};
+        const {item, pods, metrics, events, podsSort, eventsSort} = this.state;
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
@@ -81,8 +87,8 @@ export default class ReplicaSet extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
-                <PodsPanel items={filteredPods} metrics={filteredMetrics} skipNamespace={true} />
-                <EventsPanel shortList={true} items={filteredEvents} />
+                <PodsPanel items={filteredPods} sort={podsSort} metrics={filteredMetrics} skipNamespace={true} />
+                <EventsPanel shortList={true} sort={eventsSort} items={filteredEvents} />
             </div>
         );
     }

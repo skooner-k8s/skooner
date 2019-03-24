@@ -2,10 +2,16 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import ReplicaSetsPanel from '../components/replicaSetsPanel';
+import {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 
 export default class ReplicaSets extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({items: null});
 
@@ -15,7 +21,7 @@ export default class ReplicaSets extends Base {
     }
 
     render() {
-        const {items, filter = ''} = this.state || {};
+        const {items, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
@@ -27,7 +33,7 @@ export default class ReplicaSets extends Base {
                     onNamespaceChange={x => this.setNamespace(x)}
                 />
 
-                <ReplicaSetsPanel items={filtered} filter={filter} />
+                <ReplicaSetsPanel items={filtered} sort={sort} filter={filter} />
             </div>
         );
     }

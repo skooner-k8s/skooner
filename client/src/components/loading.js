@@ -4,7 +4,7 @@ import './loading.scss';
 
 const Loading = ({text}) => (
     <div className='loading'>
-        <LoadingSvg />
+        <LoadingSvg className='loading_svg' />
         <span className='loading_text'>{text != null ? text : 'Loading...'}</span>
     </div>
 );

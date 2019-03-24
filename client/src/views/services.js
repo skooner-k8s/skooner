@@ -1,11 +1,17 @@
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
+import {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 
 export default class Services extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({items: null});
 
@@ -15,7 +21,7 @@ export default class Services extends Base {
     }
 
     render() {
-        const {items, filter = ''} = this.state || {};
+        const {items, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
@@ -31,23 +37,19 @@ export default class Services extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders includeNamespace={true} />
+                                <MetadataHeaders sort={sort} includeNamespace={true} />
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        includeNamespace={true}
-                                        href={`#/service/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                </tr>
-                            )) : (
-                                <NoResults colSpan='4' items={filtered} filter={filter} />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    includeNamespace={true}
+                                    href={`#/service/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

@@ -2,6 +2,23 @@ import _ from 'lodash';
 
 const RAM_TYPES = ['Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei'];
 
+export const TO_GB = 1024 * 1024 * 1024;
+export const TO_ONE_CPU = 1000000000;
+
+export function parseDiskSpace(value) {
+    if (!value) return 0;
+
+    const number = parseInt(value, 10);
+    if (value.endsWith('Ki')) return number * 1024;
+    if (value.endsWith('Mi')) return number * 1024 * 1024;
+    if (value.endsWith('Gi')) return number * 1024 * 1024 * 1024;
+    if (value.endsWith('Ti')) return number * 1024 * 1024 * 1024 * 1024;
+    if (value.endsWith('Pi')) return number * 1024 * 1024 * 1024 * 1024 * 1024;
+    if (value.endsWith('Ei')) return number * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+
+    return number;
+}
+
 export function parseRam(value) {
     if (!value) return 0;
 

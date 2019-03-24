@@ -1,5 +1,6 @@
 import 'xterm/dist/xterm.css';
 import React from 'react';
+import Select from 'react-select';
 import {Terminal} from 'xterm';
 import Base from '../components/base';
 import api from '../services/api';
@@ -29,7 +30,7 @@ export default class Exec extends Base {
         const {namespace, name} = this.props;
         const exec = api.exec(namespace, name, container, items => this.onData(items));
 
-        this.socket = exec.getSocket();
+        this.socket = exec.getSocket(); // TODO: this won't work if the socket failes
         this.registerApi({cancel: exec.cancel});
 
         if (this.xterm) this.xterm.reset();
@@ -68,22 +69,25 @@ export default class Exec extends Base {
 
     render() {
         const {namespace, name} = this.props;
-        const {container, containers} = this.state || {};
+        const {container, containers = []} = this.state || {};
+
+        const options = containers.map(x => ({value: x, label: x}));
+        const selected = options.find(x => x.value === container);
 
         return (
             <div id='content'>
                 <div id='header'>
                     <span className='header_label'>{['Pod Logs', namespace, name].join(' • ')}</span>
 
-                    <select
-                        value={container}
-                        className='select_namespace'
-                        onChange={x => this.setContainer(x.target.value)}
-                    >
-                        {containers && containers.map(x => (
-                            <option key={x}>{x}</option>
-                        ))}
-                    </select>
+                    <div className='select_namespace'>
+                        <Select
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            value={selected}
+                            options={options}
+                            onChange={x => this.setContainer(x.value)}
+                        />
+                    </div>
                 </div>
 
                 <div id='xterm' ref={x => this.onXTermRef(x)} className='contentPanel'>

@@ -103,7 +103,11 @@ function metrics(url, cb) {
         }
     }
 
-    return () => clearInterval(handel);
+    return cancel;
+
+    function cancel() {
+        clearInterval(handel);
+    }
 }
 
 function apiFactory(apiType, kind) {

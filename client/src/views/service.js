@@ -1,8 +1,7 @@
-import _ from 'lodash';
 import React from 'react';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
-import {NoResults, hasResults} from '../components/listViewHelpers';
+import {TableBody} from '../components/listViewHelpers';
 import Base from '../components/base';
 import DeleteButton from '../components/deleteButton';
 import Field from '../components/field';
@@ -65,18 +64,14 @@ export default class Service extends Base {
                                         </tr>
                                     </thead>
 
-                                    <tbody>
-                                        {hasResults(ports) ? _.map(item.spec.ports, x => (
-                                            <tr key={x.port}>
-                                                <td>{x.name}</td>
-                                                <td>{x.port}</td>
-                                                <td>{x.protocol}</td>
-                                                <td>{x.targetPort}</td>
-                                            </tr>
-                                        )) : (
-                                            <NoResults colSpan='4' items={ports} />
-                                        )}
-                                    </tbody>
+                                    <TableBody items={ports} colSpan='4' row={x => (
+                                        <tr key={x.port}>
+                                            <td>{x.name}</td>
+                                            <td>{x.port}</td>
+                                            <td>{x.protocol}</td>
+                                            <td>{x.targetPort}</td>
+                                        </tr>
+                                    )} />
                                 </table>
                             </Field>
                         </div>

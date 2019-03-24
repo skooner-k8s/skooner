@@ -1,25 +1,49 @@
+import _ from 'lodash';
 import React from 'react';
 import moment from 'moment';
 import Loading from './loading';
-import Sorter from './sorter';
+import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
 
-export function MetadataHeaders({includeNamespace, sortBy, sortDirection, onSort}) {
+export function objectMap(items = {}) {
+    return Object.entries(items).map(([key, value]) => (
+        <div key={key}>
+            <span>{key}</span> • <span title={value}>{value.length <= 50 ? value : `${value.substr(0, 50)}...`}</span>
+        </div>
+    ));
+}
+
+export function TableBody({items, filter, colSpan, sort, row}) {
+    if (items && sort) {
+        const {field, direction} = sort;
+        items = _.orderBy(items, [field], [direction]); // eslint-disable-line no-param-reassign
+    }
+
+    return (
+        <tbody>
+            {items && items.length > 0 ? items.map(row) : (
+                <NoResults items={items} filter={filter} colSpan={colSpan} />
+            )}
+        </tbody>
+    );
+}
+
+export function MetadataHeaders({includeNamespace, sort}) {
     return (
         <>
             <th className='th_icon'>
-                <Sorter text='Type' field='kind' sortBy={sortBy} sortDirection={sortDirection} onSort={onSort} />
+                <Sorter field='kind' sort={sort}>Type</Sorter>
             </th>
             <th>
-                <Sorter text='Name' field='metadata.name' sortBy={sortBy} sortDirection={sortDirection} onSort={onSort} />
+                <Sorter field='metadata.name' sort={sort}>Name</Sorter>
             </th>
             {includeNamespace && (
                 <th>
-                    <Sorter text='Namespace' field='metadata.namespace' sortBy={sortBy} sortDirection={sortDirection} onSort={onSort} />
+                    <Sorter field='metadata.namespace' sort={sort}>Namespace</Sorter>
                 </th>
             )}
             <th>
-                <Sorter text='Age' field='metadata.creationTimestamp' sortBy={sortBy} sortDirection={sortDirection} onSort={onSort} />
+                <Sorter field={sortByDate} sort={sort}>Age</Sorter>
             </th>
         </>
     );
@@ -36,7 +60,7 @@ export function MetadataColumns({item, href, includeNamespace, isError}) {
                 <div className='td_iconLabel'>{item.kind}</div>
             </td>
             <td>
-                <a href={href}>{item.metadata.name}</a>
+                {href ? (<a href={href}>{item.metadata.name}</a>) : item.metadata.name}
             </td>
 
             {includeNamespace && (
@@ -52,11 +76,7 @@ export function MetadataColumns({item, href, includeNamespace, isError}) {
     );
 }
 
-export function hasResults(items) {
-    return !!items && items.length > 0;
-}
-
-export function NoResults({items, filter, colSpan}) {
+function NoResults({items, filter, colSpan}) {
     if (!items) {
         return (
             <tr>
@@ -80,12 +100,4 @@ export function NoResults({items, filter, colSpan}) {
             </tr>
         );
     }
-}
-
-export function objectMap(items = {}) {
-    return Object.entries(items).map(([key, value]) => (
-        <div key={key}>
-            <span>{key}</span> • <span title={value}>{value.length <= 50 ? value : `${value.substr(0, 50)}...`}</span>
-        </div>
-    ));
 }

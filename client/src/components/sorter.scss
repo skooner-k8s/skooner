@@ -7,6 +7,7 @@
 }
 
 .sorter_arrows {
+    margin-top: -2px;
     margin-left: 3px;
     display: flex;
     flex-direction: column;
@@ -17,8 +18,8 @@
 
     svg {
         fill: $color-light;
-        width: 8px;
-        height: 8px;
+        width: 6px;
+        height: 6px;
     }
 }
 

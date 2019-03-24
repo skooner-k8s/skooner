@@ -3,12 +3,18 @@ import React from 'react';
 import Base from '../components/base';
 import Chart from '../components/chart';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
+import Sorter, {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import Working from '../components/working';
 
 export default class Workloads extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     setNamespace(namespace) {
         this.setState({
             cronJobs: null,
@@ -32,10 +38,10 @@ export default class Workloads extends Base {
     }
 
     render() {
-        const {cronJobs, daemonSets, deployments, jobs, statefulSets, filter = '', sortBy, sortDirection} = this.state || {};
+        const {cronJobs, daemonSets, deployments, jobs, statefulSets, sort, filter} = this.state;
         const items = [cronJobs, daemonSets, deployments, jobs, statefulSets];
 
-        const filtered = filterControllers(filter, items, sortBy, sortDirection);
+        const filtered = filterControllers(filter, items);
 
         const controllerCount = filtered && filtered.length;
         const pendingControllerCount = getPendingControllerCount(filtered);
@@ -75,30 +81,22 @@ export default class Workloads extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders
-                                    sortBy={sortBy}
-                                    sortDirection={sortDirection}
-                                    onSort={(x, y) => this.setState({sortBy: x, sortDirection: y})}
-                                />
-                                <th>Pods</th>
+                                <MetadataHeaders sort={sort}/>
+                                <th><Sorter field={getExpectedCount} sort={sort}>Pods</Sorter></th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        href={`#/workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
-                                    />
-                                    <td>
-                                        <Status item={x} />
-                                    </td>
-                                </tr>
-                            )) : (
-                                <NoResults items={filtered} filter={filter} colSpan='4' />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    href={`#/workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
+                                />
+                                <td>
+                                    <Status item={x} />
+                                </td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>
@@ -132,14 +130,13 @@ function getExpectedCount({spec, status}) {
     return spec.replicas || status.currentNumberScheduled || 0;
 }
 
-function filterControllers(filter, items, sortBy, sortDirection) {
+function filterControllers(filter, items) {
     const results = items.flat();
 
     if (results.length && items.some(x => !x)) return null;
 
     return _(results)
         .flatten()
-        .orderBy([sortBy], [sortDirection])
         .filter(x => test(filter, x.metadata.name))
         .value();
 }

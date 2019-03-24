@@ -5,7 +5,7 @@ import api from '../services/api';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import {NoResults, hasResults} from '../components/listViewHelpers';
+import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 
@@ -59,18 +59,14 @@ export default class Role extends Base {
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(rules) ? rules.map((x, i) => (
-                                <tr key={i}>
-                                    <td>{_.map(x.resources, toDiv)}</td>
-                                    <td>{_.map(x.resourceNames, toDiv)}</td>
-                                    <td>{_.map(x.verbs, toDiv)}</td>
-                                    <td>{_.map(x.apiGroups, toDiv)}</td>
-                                </tr>
-                            )) : (
-                                <NoResults items={rules} colSpan='4' />
-                            )}
-                        </tbody>
+                        <TableBody items={rules} colSpan='4' row={(x, i) => (
+                            <tr key={i}>
+                                <td>{_.map(x.resources, toDiv)}</td>
+                                <td>{_.map(x.resourceNames, toDiv)}</td>
+                                <td>{_.map(x.verbs, toDiv)}</td>
+                                <td>{_.map(x.apiGroups, toDiv)}</td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

@@ -2,12 +2,15 @@ import './replicaSetsPanel.scss';
 import React from 'react';
 import Switch from 'react-switch';
 import Base from './base';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from './listViewHelpers';
+import Sorter from './sorter';
+import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 
 export default class ReplicaSetsPanel extends Base {
+    state = {activeOnly: true};
+
     render() {
-        const {items, filter, includeNamespace = true} = this.props;
-        const {activeOnly = true} = this.state || {};
+        const {items, sort, filter, includeNamespace = true} = this.props;
+        const {activeOnly} = this.state;
         const filtered = filterItems(activeOnly, items);
 
         return (
@@ -15,11 +18,13 @@ export default class ReplicaSetsPanel extends Base {
                 <table>
                     <thead>
                         <tr>
-                            <MetadataHeaders includeNamespace={includeNamespace} />
-                            <th>Generations</th>
+                            <MetadataHeaders sort={sort} includeNamespace={includeNamespace} />
+                            <th>
+                                <Sorter field='status.observedGeneration' sort={sort}>Generations</Sorter>
+                            </th>
                             <th className='replicaSetsPanel_replicas'>
-                                Replicas
-                                <label>
+                                <Sorter field='spec.replicas' sort={sort}>Replicas</Sorter>
+                                <label className='replicaSetsPanel_switch'>
                                     <Switch
                                         checked={activeOnly}
                                         onChange={x => this.setState({activeOnly: x})}
@@ -34,8 +39,12 @@ export default class ReplicaSetsPanel extends Base {
                         </tr>
                     </thead>
 
-                    <tbody>
-                        {hasResults(filtered) ? filtered.map(x => (
+                    <TableBody
+                        items={filtered}
+                        filter={filter}
+                        sort={sort}
+                        colSpan={5 + !!includeNamespace}
+                        row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
@@ -45,14 +54,8 @@ export default class ReplicaSetsPanel extends Base {
                                 <td>{x.status.observedGeneration}</td>
                                 <td>{x.spec.replicas} / {x.status.replicas}</td>
                             </tr>
-                        )) : (
-                            <NoResults
-                                colSpan={5 + includeNamespace}
-                                items={filtered}
-                                filter={filter}
-                            />
                         )}
-                    </tbody>
+                    />
                 </table>
             </div>
         );

@@ -1,20 +1,26 @@
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from '../components/listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
+import Sorter, {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 
 export default class Namespaces extends Base {
+    state = {
+        filter: '',
+        sort: defaultSortInfo(this),
+    };
+
     componentDidMount() {
         this.registerApi({
-            namespaces: api.namespace.list(namespaces => this.setState({namespaces})),
+            items: api.namespace.list(items => this.setState({items})),
         });
     }
 
     render() {
-        const {namespaces, filter = ''} = this.state || {};
-        const filtered = namespaces && namespaces.filter(x => test(filter, x.metadata.name));
+        const {items, sort, filter} = this.state;
+        const filtered = items && items.filter(x => test(filter, x.metadata.name));
 
         return (
             <div id='content'>
@@ -28,24 +34,22 @@ export default class Namespaces extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders />
-                                <th>Status</th>
+                                <MetadataHeaders sort={sort} />
+                                <th>
+                                    <Sorter field='status.phase' sort={sort}>Status</Sorter>
+                                </th>
                             </tr>
                         </thead>
 
-                        <tbody>
-                            {hasResults(filtered) ? filtered.map(x => (
-                                <tr key={x.metadata.uid}>
-                                    <MetadataColumns
-                                        item={x}
-                                        href={`#/namespace/${x.metadata.name}`}
-                                    />
-                                    <td>{x.status.phase}</td>
-                                </tr>
-                            )) : (
-                                <NoResults items={filtered} filter={filter} colSpan='4' />
-                            )}
-                        </tbody>
+                        <TableBody items={filtered} filter={filter} colSpan='4' sort={sort} row={x => (
+                            <tr key={x.metadata.uid}>
+                                <MetadataColumns
+                                    item={x}
+                                    href={`#/namespace/${x.metadata.name}`}
+                                />
+                                <td>{x.status.phase}</td>
+                            </tr>
+                        )} />
                     </table>
                 </div>
             </div>

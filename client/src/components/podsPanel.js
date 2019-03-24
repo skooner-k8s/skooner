@@ -2,24 +2,29 @@ import './podsPanel.scss';
 import React from 'react';
 import _ from 'lodash';
 import Base from './base';
-import {MetadataHeaders, MetadataColumns, NoResults, hasResults} from './listViewHelpers';
+import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
+import Sorter from './sorter';
 import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
 
 export default class PodsPanel extends Base {
     render() {
-        const {items, filter, metrics, skipNamespace, skipNodeName} = this.props;
-        const colSpan = 9 + !skipNamespace + !skipNodeName;
+        const {items, metrics, sort, filter, skipNamespace, skipNodeName} = this.props;
+        const col = 8 + !skipNamespace + !skipNodeName;
 
         return (
             <div className='contentPanel'>
                 <table>
                     <thead>
                         <tr>
-                            <MetadataHeaders includeNamespace={!skipNamespace} />
-                            {!skipNodeName && <th>Node</th>}
-                            <th>Status</th>
-                            <th>Containers</th>
-                            <th>Restarts</th>
+                            <MetadataHeaders sort={sort} includeNamespace={!skipNamespace} />
+                            {!skipNodeName && (
+                                <th><Sorter field='spec.nodeName' sort={sort}>Node</Sorter></th>
+                            )}
+                            <th><Sorter field='status.phase' sort={sort}>Status</Sorter></th>
+                            <th><Sorter field={getContainerCount} sort={sort}>Containers</Sorter></th>
+                            <th><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
+
+                            {/* TODO: support sorting by metrics */}
                             <th>
                                 Cpu
                                 <div className='podsPanel_label'>
@@ -35,30 +40,34 @@ export default class PodsPanel extends Base {
                         </tr>
                     </thead>
 
-                    <tbody>
-                        {hasResults(items) ? items.map(x => (
-                            <tr key={x.metadata.uid}>
-                                <MetadataColumns
-                                    item={x}
-                                    isError={x.status.phase !== 'Running'}
-                                    includeNamespace={!skipNamespace}
-                                    href={`#/pod/${x.metadata.namespace}/${x.metadata.name}`}
-                                />
-                                {!skipNodeName && <td>{x.spec.nodeName}</td>}
-                                <td>{x.status.phase}</td>
-                                <td>{(x.spec.containers || []).length}</td>
-                                <td>{_.sumBy(x.status.containerStatuses, 'restartCount')}</td>
-                                <td><Cpu item={x} metrics={metrics} /></td>
-                                <td><Ram item={x} metrics={metrics} /></td>
-                            </tr>
-                        )) : (
-                            <NoResults items={items} filter={filter} colSpan={colSpan} />
-                        )}
-                    </tbody>
+                    <TableBody items={items} filter={filter} sort={sort} colSpan={col} row={x => (
+                        <tr key={x.metadata.uid}>
+                            <MetadataColumns
+                                item={x}
+                                isError={x.status.phase !== 'Running'}
+                                includeNamespace={!skipNamespace}
+                                href={`#/pod/${x.metadata.namespace}/${x.metadata.name}`}
+                            />
+                            {!skipNodeName && <td>{x.spec.nodeName}</td>}
+                            <td>{x.status.phase}</td>
+                            <td>{getContainerCount(x)}</td>
+                            <td>{getRestartCount(x)}</td>
+                            <td><Cpu item={x} metrics={metrics} /></td>
+                            <td><Ram item={x} metrics={metrics} /></td>
+                        </tr>
+                    )} />
                 </table>
             </div>
         );
     }
+}
+
+function getContainerCount({spec}) {
+    return spec.containers ? spec.containers.length : 0;
+}
+
+function getRestartCount({status}) {
+    return _.sumBy(status.containerStatuses, 'restartCount');
 }
 
 function Cpu({item, metrics}) {

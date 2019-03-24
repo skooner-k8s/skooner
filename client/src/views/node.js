@@ -8,8 +8,13 @@ import MetadataFields from '../components/metadataFields';
 import PodsPanel from '../components/podsPanel';
 import {parseCpu, parseRam} from '../utils/unitHelpers';
 import Chart from '../components/chart';
+import {defaultSortInfo} from '../components/sorter';
 
 export default class Node extends Base {
+    state = {
+        podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
+    };
+
     componentDidMount() {
         const {name} = this.props;
 
@@ -26,7 +31,7 @@ export default class Node extends Base {
 
     render() {
         const {name} = this.props;
-        const {item, pods, metrics, podMetrics} = this.state || {};
+        const {item, pods, metrics, podMetrics, podsSort} = this.state;
 
         const filteredPods = pods && pods.filter(x => x.spec.nodeName === name);
 
@@ -74,7 +79,12 @@ export default class Node extends Base {
                     )}
                 </div>
 
-                <PodsPanel items={filteredPods} metrics={podMetrics} skipNodeName={true} />
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={podMetrics}
+                    skipNodeName={true}
+                />
             </div>
         );
     }
