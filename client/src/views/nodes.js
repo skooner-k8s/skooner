@@ -3,6 +3,8 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import Chart from '../components/chart';
+import NodeStatusChart from '../components/nodeStatusChart';
+import LoadingChart from '../components/loadingChart';
 import {MetadataHeaders, MetadataColumns, TableBody, objectMap} from '../components/listViewHelpers';
 import Sorter, {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
@@ -42,18 +44,9 @@ export default class Nodes extends Base {
                 />
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <div>{filtered && filtered.length}</div>
-                        <div className='charts_itemLabel'>Nodes</div>
-                    </div>
-                    <div className='charts_item'>
-                        <CpuTotalsChart items={filtered} metrics={filteredMetrics} />
-                        <div className='charts_itemLabel'>Cpu Cores Used</div>
-                    </div>
-                    <div className='charts_item'>
-                        <RamTotalsChart items={filtered} metrics={filteredMetrics} />
-                        <div className='charts_itemLabel'>GB Ram Used</div>
-                    </div>
+                    <NodeStatusChart items={filtered} />
+                    <CpuTotalsChart items={filtered} metrics={filteredMetrics} />
+                    <RamTotalsChart items={filtered} metrics={filteredMetrics} />
                 </div>
 
                 <div className='contentPanel'>
@@ -97,15 +90,29 @@ function getReadyStatus({status}) {
 
 function CpuTotalsChart({items, metrics}) {
     const totals = getNodeCpuTotals(items, metrics);
-    return totals && (
-        <Chart used={totals.used} available={totals.available} />
+    return (
+        <div className='charts_item'>
+            {totals ? (
+                <Chart used={totals.used} available={totals.available} />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>Cpu Cores Used</div>
+        </div>
     );
 }
 
 function RamTotalsChart({items, metrics}) {
     const totals = getNodeRamTotals(items, metrics);
-    return totals && (
-        <Chart used={totals.used} available={totals.available} />
+    return (
+        <div className='charts_item'>
+            {totals ? (
+                <Chart used={totals.used} available={totals.available} />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>GB Ram Used</div>
+        </div>
     );
 }
 

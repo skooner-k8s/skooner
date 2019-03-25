@@ -1,16 +1,18 @@
+import _ from 'lodash';
 import React from 'react';
 import api from '../services/api';
 import Base from '../components/base';
-import Chart from '../components/chart';
 import ContainersPanel from '../components/containersPanel';
 import CpuChart from '../components/cpuChart';
+import ReplicasChart from '../components/replicasChart';
+import RamChart from '../components/ramChart';
 import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
+import Field from '../components/field';
 import PodsPanel from '../components/podsPanel';
-import RamChart from '../components/ramChart';
 import SaveButton from '../components/saveButton';
 import ScaleButton from '../components/scaleButton';
 import {defaultSortInfo} from '../components/sorter';
@@ -66,14 +68,7 @@ export default class ReplicaSet extends Base {
                 </ItemHeader>
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <Chart
-                            used={item && item.status.readyReplicas}
-                            pending={item && item.status.unavailableReplicas}
-                            available={item && item.status.replicas}
-                        />
-                        <div className='charts_itemLabel'>Replicas</div>
-                    </div>
+                    <ReplicasChart item={item} />
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
                 </div>
@@ -82,13 +77,34 @@ export default class ReplicaSet extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
+
+                            <Field name='Owned By'>
+                                {_.map(item.metadata.ownerReferences, x => (
+                                    <div key={x.uid}>
+                                        <a href={`#/${x.kind !== 'ReplicaSet' ? 'workload/' : ''}${x.kind.toLowerCase()}/${namespace}/${x.name}`}>
+                                            {`${x.kind.toLowerCase()}/${namespace}/${x.name}`}
+                                        </a>
+                                    </div>
+                                ))}
+                            </Field>
                         </div>
                     )}
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
-                <PodsPanel items={filteredPods} sort={podsSort} metrics={filteredMetrics} skipNamespace={true} />
-                <EventsPanel shortList={true} sort={eventsSort} items={filteredEvents} />
+
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={filteredMetrics}
+                    skipNamespace={true}
+                />
+
+                <EventsPanel
+                    shortList={true}
+                    sort={eventsSort}
+                    items={filteredEvents}
+                />
             </div>
         );
     }

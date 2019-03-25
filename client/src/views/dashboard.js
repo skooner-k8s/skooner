@@ -3,8 +3,13 @@ import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
+import NodeStatusChart from '../components/nodeStatusChart';
 import test from '../utils/filterHelper';
 import {defaultSortInfo, sortByDate} from '../components/sorter';
+import PodStatusChart from '../components/podStatusChart';
+import CpuChart from '../components/cpuChart';
+import RamChart from '../components/ramChart';
+import getPodMetrics from '../utils/metricsHelpers';
 
 export default class Dashboard extends Base {
     state = {
@@ -16,13 +21,15 @@ export default class Dashboard extends Base {
         this.registerApi({
             events: api.event.list(null, events => this.setState({events})),
             pods: api.pod.list(null, pods => this.setState({pods})),
+            podMetrics: api.metrics.pods(null, podMetrics => this.setState({podMetrics})),
             nodes: api.node.list(nodes => this.setState({nodes})),
         });
     }
 
     render() {
-        const {events, nodes, pods, sort, filter} = this.state;
+        const {events, pods, podMetrics, nodes, sort, filter} = this.state;
         const filteredEvents = filterEvents(events, filter);
+        const filteredPodMetrics = getPodMetrics(pods, podMetrics);
 
         return (
             <div id='content'>
@@ -33,14 +40,10 @@ export default class Dashboard extends Base {
                 />
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <div>{nodes && nodes.length}</div>
-                        <div className='charts_itemLabel'>Total Nodes</div>
-                    </div>
-                    <div className='charts_item'>
-                        <div>{pods && pods.length}</div>
-                        <div className='charts_itemLabel'>Total Pods</div>
-                    </div>
+                    <NodeStatusChart items={nodes} />
+                    <PodStatusChart items={pods} />
+                    <CpuChart items={pods} metrics={filteredPodMetrics} />
+                    <RamChart items={pods} metrics={filteredPodMetrics} />
                 </div>
 
                 <EventsPanel items={filteredEvents} filter={filter} sort={sort} />
@@ -54,5 +57,5 @@ function filterEvents(events, filter) {
 
     return events
         .filter(x => test(filter, x.involvedObject.name, x.involvedObject.namespace, x.message))
-        .slice(0, 1000);
+        .slice(0, 250);
 }

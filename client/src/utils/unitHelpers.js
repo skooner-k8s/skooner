@@ -3,6 +3,7 @@ import _ from 'lodash';
 const RAM_TYPES = ['Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei'];
 
 export const TO_GB = 1024 * 1024 * 1024;
+export const TO_ONE_M_CPU = 1000000;
 export const TO_ONE_CPU = 1000000000;
 
 export function parseDiskSpace(value) {

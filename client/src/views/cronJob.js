@@ -60,7 +60,7 @@ export default class CronJob extends Base {
 
                 <div className='charts'>
                     <div className='charts_item'>
-                        <div>{(item && item.status.active) ? item.status.active.length : 0}</div>
+                        <div className='charts_number'>{(item && item.status.active) ? item.status.active.length : 0}</div>
                         <div className='charts_itemLabel'>Active</div>
                     </div>
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />

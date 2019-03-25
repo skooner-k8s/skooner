@@ -9,13 +9,13 @@ import ScaleButton from '../components/scaleButton';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
-import Chart from '../components/chart';
 import RamChart from '../components/ramChart';
 import CpuChart from '../components/cpuChart';
 import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo} from '../components/sorter';
+import ReplicasChart from '../components/replicasChart';
 
 const service = api.statefulSet;
 
@@ -66,13 +66,7 @@ export default class StatefulSet extends Base {
                 </ItemHeader>
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <Chart
-                            used={item && item.status.readyReplicas}
-                            available={item && item.status.replicas}
-                        />
-                        <div className='charts_itemLabel'>Replicas</div>
-                    </div>
+                    <ReplicasChart item={item} />
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
                 </div>

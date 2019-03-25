@@ -9,6 +9,7 @@ import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import PodsPanel from '../components/podsPanel';
 import Chart from '../components/chart';
+import LoadingChart from '../components/loadingChart';
 import RamChart from '../components/ramChart';
 import CpuChart from '../components/cpuChart';
 import getPodMetrics from '../utils/metricsHelpers';
@@ -60,11 +61,15 @@ export default class DaemonSet extends Base {
 
                 <div className='charts'>
                     <div className='charts_item'>
-                        <Chart
-                            used={item && item.status.numberAvailable}
-                            pending={item && item.status.numberUnavailable}
-                            available={item && item.status.desiredNumberScheduled}
-                        />
+                        {item ? (
+                            <Chart
+                                used={item.status.numberAvailable}
+                                pending={item.status.numberUnavailable}
+                                available={item.status.desiredNumberScheduled}
+                            />
+                        ) : (
+                            <LoadingChart />
+                        )}
                         <div className='charts_itemLabel'>Replicas</div>
                     </div>
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />

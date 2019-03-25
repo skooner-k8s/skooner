@@ -33,6 +33,8 @@ export default class ReplicaSets extends Base {
                     onNamespaceChange={x => this.setNamespace(x)}
                 />
 
+                {/* TODO: put charts here */}
+
                 <ReplicaSetsPanel items={filtered} sort={sort} filter={filter} />
             </div>
         );

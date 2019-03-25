@@ -61,7 +61,8 @@ export default class Job extends Base {
 
                 <div className='charts'>
                     <div className='charts_item'>
-                        <div>
+                        {/* TODO: put a chart here */}
+                        <div className='charts_number'>
                             {item && (item.status.active || 0)}
                             <span> / </span>
                             {item && (item.status.succeeded || 0)}

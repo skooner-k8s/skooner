@@ -17,8 +17,9 @@ import EventsPanel from '../components/eventsPanel';
 import ContainersPanel from '../components/containersPanel';
 import {objectMap} from '../components/listViewHelpers';
 import {filterByOwner} from '../utils/filterHelper';
-import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
-import Chart from '../components/chart';
+import getPodMetrics from '../utils/metricsHelpers';
+import CpuChart from '../components/cpuChart';
+import RamChart from '../components/ramChart';
 
 const service = api.pod;
 
@@ -38,8 +39,8 @@ export default class Pod extends Base {
         const {item, metrics, events} = this.state || {};
 
         const errors = getErrors(item);
-
         const filteredEvents = filterByOwner(events, item);
+        const filteredMetrics = getPodMetrics(item && [item], metrics && [metrics]);
 
         return (
             <div id='content'>
@@ -70,17 +71,11 @@ export default class Pod extends Base {
 
                 <div className='charts'>
                     <div className='charts_item'>
-                        <div>{item && item.spec.containers.length}</div>
+                        <div className='charts_number'>{item && item.spec.containers.length}</div>
                         <div className='charts_itemLabel'>Containers</div>
                     </div>
-                    <div className='charts_item'>
-                        <Cpu item={item} metrics={metrics} />
-                        <div className='charts_itemLabel'>Cpu Used</div>
-                    </div>
-                    <div className='charts_item'>
-                        <Ram item={item} metrics={metrics} />
-                        <div className='charts_itemLabel'>Ram Used</div>
-                    </div>
+                    <CpuChart items={item && [item]} metrics={filteredMetrics} />
+                    <RamChart items={item && [item]} metrics={filteredMetrics} />
                 </div>
 
                 <div className='contentPanel'>
@@ -103,7 +98,13 @@ export default class Pod extends Base {
                             <Field name='Conditions'>
                                 {_.map(item.status.conditions, x => (
                                     <div key={x.type}>
-                                        <span>{x.type}</span> • <span>{x.status}</span> • <span>{x.message}</span>
+                                        <span>
+                                            {
+                                                [x.type, x.status, x.message]
+                                                    .filter(y => !!y)
+                                                    .join(' • ')
+                                            }
+                                        </span>
                                     </div>
                                 ))}
                             </Field>
@@ -122,51 +123,6 @@ export default class Pod extends Base {
             </div>
         );
     }
-}
-
-function Cpu({item, metrics}) {
-    if (!item || !metrics) return null;
-
-    const actual = _.sumBy(metrics.containers, x => parseCpu(x.usage.cpu));
-    const podContainers = _.filter(item.spec.containers, x => x.resources && x.resources.requests);
-    const requested = _.sumBy(podContainers, x => parseCpu(x.resources.requests.cpu));
-
-    const actualCpu = unparseCpu(actual);
-    const requestedCpu = unparseCpu(requested);
-
-    return (
-        <Chart
-            decimals={2}
-            used={actualCpu.value}
-            usedSuffix={actualCpu.unit}
-            available={requestedCpu.value}
-            availableSuffix={requestedCpu.unit}
-        />
-    );
-}
-
-function Ram({item, metrics}) {
-    if (!item || !metrics) return null;
-
-    const actual = _.sumBy(metrics.containers, x => parseRam(x.usage.memory));
-    const requested = _.sumBy(item.spec.containers, (x) => {
-        if (!x.resources.requests) return 0;
-        return parseRam(x.resources.requests.memory);
-    });
-
-    const actualRam = unparseRam(actual);
-    const requestedRam = unparseRam(requested);
-
-    // TODO: this will break if the units don't match
-    return (
-        <Chart
-            decimals={2}
-            used={actualRam.value}
-            usedSuffix={actualRam.unit}
-            available={requestedRam.value}
-            availableSuffix={requestedRam.unit}
-        />
-    );
 }
 
 function getErrors(item) {

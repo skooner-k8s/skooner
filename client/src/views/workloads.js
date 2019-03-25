@@ -8,6 +8,7 @@ import Sorter, {defaultSortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import Working from '../components/working';
+import LoadingChart from '../components/loadingChart';
 
 export default class Workloads extends Base {
     state = {
@@ -43,12 +44,6 @@ export default class Workloads extends Base {
 
         const filtered = filterControllers(filter, items);
 
-        const controllerCount = filtered && filtered.length;
-        const pendingControllerCount = getPendingControllerCount(filtered);
-
-        const currentPodCount = _.sumBy(filtered, getCurrentCount);
-        const expectedPodCount = _.sumBy(filtered, getExpectedCount);
-
         return (
             <div id='content'>
                 <Filter
@@ -59,22 +54,8 @@ export default class Workloads extends Base {
                 />
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <Chart
-                            used={controllerCount - pendingControllerCount}
-                            pending={pendingControllerCount}
-                            available={controllerCount}
-                        />
-                        <div className='charts_itemLabel'>Controllers</div>
-                    </div>
-                    <div className='charts_item'>
-                        <Chart
-                            used={currentPodCount}
-                            pending={expectedPodCount - currentPodCount}
-                            available={expectedPodCount}
-                        />
-                        <div className='charts_itemLabel'>Pods</div>
-                    </div>
+                    <ControllerStatusChart items={filtered} />
+                    <PodStatusChart items={filtered} />
                 </div>
 
                 <div className='contentPanel'>
@@ -104,22 +85,51 @@ export default class Workloads extends Base {
     }
 }
 
-function Status({item}) {
-    const current = getCurrentCount(item);
-    const expected = getExpectedCount(item);
-    const text = `${current} / ${expected}`;
-
-    return (current === expected) ? (<span>{text}</span>) : <Working className='contentPanel_warn' text={text} />;
-}
-
-function getPendingControllerCount(items) {
+function ControllerStatusChart({items}) {
     const workingItems = _.filter(items, (item) => {
         const current = getCurrentCount(item);
         const expected = getExpectedCount(item);
         return current !== expected;
     });
 
-    return workingItems.length;
+    const count = items && items.length;
+    const pending = workingItems.length;
+
+    return (
+        <div className='charts_item'>
+            {items ? (
+                <Chart used={count - pending} pending={pending} available={count} />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>Controllers</div>
+        </div>
+    );
+}
+
+function PodStatusChart({items}) {
+    const current = _.sumBy(items, getCurrentCount);
+    const expected = _.sumBy(items, getExpectedCount);
+
+    return (
+        <div className='charts_item'>
+            {items ? (
+                <Chart used={current} pending={expected - current} available={expected} />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>Pods</div>
+        </div>
+    );
+}
+
+function Status({item}) {
+    const current = getCurrentCount(item);
+    const expected = getExpectedCount(item);
+    const text = `${current} / ${expected}`;
+
+    if (current === expected) return <span>{text}</span>;
+    return <Working className='contentPanel_warn' text={text} />;
 }
 
 function getCurrentCount({status}) {

@@ -4,7 +4,7 @@ import ChartistGraph from 'react-chartist';
 
 const options = {
     donut: true,
-    donutWidth: 20,
+    donutWidth: 23,
     donutSolid: true,
     startAngle: 0,
     showLabel: false,

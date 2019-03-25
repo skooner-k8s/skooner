@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import Chart from './chart';
+import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
 
 export default function RamChart({items, metrics}) {
@@ -8,7 +9,11 @@ export default function RamChart({items, metrics}) {
 
     return (
         <div className='charts_item'>
-            <Chart used={totals && totals.used} available={totals && totals.available} />
+            {totals ? (
+                <Chart used={totals && totals.used} available={totals && totals.available} />
+            ) : (
+                <LoadingChart />
+            )}
             <div className='charts_itemLabel'>Requested Ram Use</div>
         </div>
     );

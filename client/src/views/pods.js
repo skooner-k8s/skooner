@@ -1,11 +1,14 @@
-import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import CpuChart from '../components/cpuChart';
+import RamChart from '../components/ramChart';
 import PodsPanel from '../components/podsPanel';
+import PodStatusChart from '../components/podStatusChart';
 import {defaultSortInfo} from '../components/sorter';
+import getPodMetrics from '../utils/metricsHelpers';
 
 export default class Pods extends Base {
     state = {
@@ -27,8 +30,7 @@ export default class Pods extends Base {
     render() {
         const {items, metrics, namespace, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
-        const fixedMetrics = _.keyBy(metrics, 'metadata.name');
-        const skipNamespace = !!namespace;
+        const filteredMetrics = getPodMetrics(filtered, metrics);
 
         return (
             <div id='content'>
@@ -39,14 +41,18 @@ export default class Pods extends Base {
                     onNamespaceChange={x => this.setNamespace(x)}
                 />
 
-                {/* TODO: put charts here */}
+                <div className='charts'>
+                    <PodStatusChart items={filtered} />
+                    <CpuChart items={filtered} metrics={filteredMetrics} />
+                    <RamChart items={filtered} metrics={filteredMetrics} />
+                </div>
 
                 <PodsPanel
                     items={filtered}
                     filter={filter}
                     sort={sort}
-                    metrics={fixedMetrics}
-                    skipNamespace={skipNamespace}
+                    metrics={filteredMetrics}
+                    skipNamespace={!!namespace}
                 />
             </div>
         );

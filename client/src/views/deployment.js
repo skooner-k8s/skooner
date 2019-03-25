@@ -1,6 +1,5 @@
 import React from 'react';
 import Base from '../components/base';
-import Chart from '../components/chart';
 import ContainersPanel from '../components/containersPanel';
 import CpuChart from '../components/cpuChart';
 import DeleteButton from '../components/deleteButton';
@@ -17,6 +16,7 @@ import api from '../services/api';
 import {filterByOwner, filterByOwners} from '../utils/filterHelper';
 import getPodMetrics from '../utils/metricsHelpers';
 import {defaultSortInfo} from '../components/sorter';
+import ReplicasChart from '../components/replicasChart';
 
 const service = api.deployment;
 
@@ -79,14 +79,7 @@ export default class Deployment extends Base {
                 </ItemHeader>
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <Chart
-                            used={item && item.status.readyReplicas}
-                            pending={item && item.status.unavailableReplicas}
-                            available={item && item.status.replicas}
-                        />
-                        <div className='charts_itemLabel'>Replicas</div>
-                    </div>
+                    <ReplicasChart item={item} />
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
                 </div>

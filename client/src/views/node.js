@@ -1,14 +1,16 @@
 import _ from 'lodash';
 import React from 'react';
-import Base from '../components/base';
 import api from '../services/api';
+import Base from '../components/base';
+import Chart from '../components/chart';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
+import LoadingChart from '../components/loadingChart';
 import MetadataFields from '../components/metadataFields';
 import PodsPanel from '../components/podsPanel';
-import {parseCpu, parseRam} from '../utils/unitHelpers';
-import Chart from '../components/chart';
 import {defaultSortInfo} from '../components/sorter';
+import {parseCpu, parseRam, TO_GB, TO_ONE_M_CPU} from '../utils/unitHelpers';
+import PodStatusChart from '../components/podStatusChart';
 
 export default class Node extends Base {
     state = {
@@ -35,40 +37,14 @@ export default class Node extends Base {
 
         const filteredPods = pods && pods.filter(x => x.spec.nodeName === name);
 
-        const usedCpu = metrics && parseCpu(metrics.usage.cpu) / 1000000;
-        const availableCpu = item && parseCpu(item.status.capacity.cpu) / 1000000;
-
-        const oneGb = 1024 * 1024 * 1024;
-        const usedRam = metrics && parseRam(metrics.usage.memory) / oneGb;
-        const availableRam = item && parseRam(item.status.capacity.memory) / oneGb;
-
         return (
             <div id='content'>
                 <ItemHeader title={['Node', name]} />
 
                 <div className='charts'>
-                    <div className='charts_item'>
-                        <div>{filteredPods && filteredPods.length}</div>
-                        <div className='charts_itemLabel'>Pods</div>
-                    </div>
-                    <div className='charts_item'>
-                        <Chart
-                            used={usedCpu}
-                            usedSuffix='m'
-                            available={availableCpu}
-                            availableSuffix='m'
-                        />
-                        <div className='charts_itemLabel'>Cpu Used</div>
-                    </div>
-                    <div className='charts_item'>
-                        <Chart
-                            used={usedRam}
-                            usedSuffix='Gi'
-                            available={availableRam}
-                            availableSuffix='Gi'
-                        />
-                        <div className='charts_itemLabel'>Ram Used</div>
-                    </div>
+                    <PodStatusChart items={filteredPods} />
+                    <CpuChart item={item} metrics={metrics} />
+                    <RamChart item={item} metrics={metrics} />
                 </div>
 
                 <div className='contentPanel'>
@@ -88,4 +64,46 @@ export default class Node extends Base {
             </div>
         );
     }
+}
+
+function CpuChart({item, metrics}) {
+    const usedCpu = metrics && parseCpu(metrics.usage.cpu) / TO_ONE_M_CPU;
+    const availableCpu = item && parseCpu(item.status.capacity.cpu) / TO_ONE_M_CPU;
+
+    return (
+        <div className='charts_item'>
+            {item && metrics ? (
+                <Chart
+                    used={usedCpu}
+                    usedSuffix='m'
+                    available={availableCpu}
+                    availableSuffix='m'
+                />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>Cpu Used</div>
+        </div>
+    );
+}
+
+function RamChart({item, metrics}) {
+    const usedRam = metrics && parseRam(metrics.usage.memory) / TO_GB;
+    const availableRam = item && parseRam(item.status.capacity.memory) / TO_GB;
+
+    return (
+        <div className='charts_item'>
+            {item && metrics ? (
+                <Chart
+                    used={usedRam}
+                    usedSuffix='Gi'
+                    available={availableRam}
+                    availableSuffix='Gi'
+                />
+            ) : (
+                <LoadingChart />
+            )}
+            <div className='charts_itemLabel'>Ram Used</div>
+        </div>
+    )
 }
