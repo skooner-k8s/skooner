@@ -66,28 +66,27 @@ export default class EditorModal extends Base {
             <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>
                 <div className='editorModal'>
                     <div className='editorModal_edit'>
-                        {showDocs ? (
-                            <div className='editorModal_docs'>
-                                {properties ? (
-                                    <Doc properties={properties} />
-                                ) : (
-                                    <div className='editorModal_noDocs'>
-                                        <h3>No Docs Found</h3>
-                                        <div>Please enter yaml that includes an `api version` and `kind` to display help. For example</div>
-                                        <pre>kind: ConfigMap</pre>
-                                        <pre>apiVersion: v1</pre>
-                                    </div>
-                                )}
-                            </div>
-                        ) : (
-                            <textarea
-                                className='editorModal_input'
-                                defaultValue={yaml}
-                                placeholder="Enter some yaml here, y'all..."
-                                onChange={x => this.onEdit(x.target.value)}
-                                spellCheck='false'
-                            />
-                        )}
+                        <textarea
+                            hidden={showDocs}
+                            className='editorModal_input'
+                            defaultValue={yaml}
+                            placeholder="Enter some yaml here, y'all..."
+                            onChange={x => this.onEdit(x.target.value)}
+                            spellCheck='false'
+                        />
+
+                        <div hidden={!showDocs} className='editorModal_docs'>
+                            {properties ? (
+                                <Doc properties={properties} />
+                            ) : (
+                                <div className='editorModal_noDocs'>
+                                    <h3>No Docs Found</h3>
+                                    <div>Please enter yaml that includes an `api version` and `kind` to display help. For example</div>
+                                    <pre>kind: ConfigMap</pre>
+                                    <pre>apiVersion: v1</pre>
+                                </div>
+                            )}
+                        </div>
 
                         <div className='modal_actions'>
                             <Button className='button button_clear' onClick={() => this.setState(x => ({showDocs: !x.showDocs}))}>
