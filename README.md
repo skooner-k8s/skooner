@@ -1,19 +1,17 @@
-# k8dash
+# K8Dash - Kubernetes Dashboard
 
-K8dash is a dashboard for monitoring and managing Kubernetes clusters. It heavily utilizes [metrics server](https://github.com/kubernetes-incubator/metrics-server) to quickly and easily visualize the health of nodes and pods. K8dash also utilizes the streaming apis provided by Kubernetes to update cluster state and metrics in real time. No need to refresh pages to monitor status updates.
+K8Dash is the easiest way to manage your Kubernetes cluster. Why?
+* Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
+* Blazing fast and Always Live: no need to refresh pages to see the latest
+* Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
+* Easy CRUD and scaling: plus inline API docs to easily understand what each field does
+* Simple OpenID integration: no special proxies required
+* Simple installation: use the provided yaml resources to have K8Dash up and running in under 1 minute (no, seriously)
 
-Why might you want to use k8dash instead of the default Kubernetes dashboard?
-* Streaming updates. No need to refresh pages to see latest status
-* Full OpenID integration out-of-the-box. No need to configure an authenticating proxy to sit in front.
-* Interates with metrics-server to display realtime metrics
 
-## Workloads View
-![Dashboard UI workloads page](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/workloads.png)
+## Click the video below to see K8Dash in action
+[![K8Dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "K8Dash - Kubernetes Dashboard")
 
-## Realtime streaming of status
-Notice how the UI automatically reflects changes to the cluster in realtime after scaling a deployment
-
-![Dashboard UI streaming](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/k8dash.gif)
 
 ## Prerequisites
 + A running Kubernetes cluster

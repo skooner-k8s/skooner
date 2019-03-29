@@ -134,11 +134,17 @@ export async function streamResults(url, cb) {
                 break;
             case 'MODIFIED': {
                 const existing = results[object.metadata.uid];
-                const currentVersion = parseInt(existing.metadata.resourceVersion, 10);
-                const newVersion = parseInt(object.metadata.resourceVersion, 10);
-                if (currentVersion < newVersion) {
-                    Object.assign(existing, object);
+
+                if (existing) {
+                    const currentVersion = parseInt(existing.metadata.resourceVersion, 10);
+                    const newVersion = parseInt(object.metadata.resourceVersion, 10);
+                    if (currentVersion < newVersion) {
+                        Object.assign(existing, object);
+                    }
+                } else {
+                    results[object.metadata.uid] = object;
                 }
+
                 break;
             }
             case 'DELETED':
