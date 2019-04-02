@@ -34,7 +34,7 @@ export default class Dashboard extends Base {
         return (
             <div id='content'>
                 <Filter
-                    text='Cluser Overview'
+                    text='Cluster Overview'
                     filter={filter}
                     onChange={x => this.setState({filter: x})}
                 />
