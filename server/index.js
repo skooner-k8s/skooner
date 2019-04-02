@@ -10,6 +10,7 @@ const {Issuer} = require('openid-client');
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
+const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 console.log('OIDC_URL: ', OIDC_URL || 'None');
 
 process.on('uncaughtException', err => {
@@ -82,7 +83,7 @@ async function getOidcEndpoint(redirectUri) { // TODO: gotta pass this in from
     if (!OIDC_URL) return;
 
     const provider = await getOidcProvider();
-    return provider.authorizationUrl({redirect_uri: redirectUri, scope: 'openid email'});
+    return provider.authorizationUrl({redirect_uri: redirectUri, scope: OIDC_SCOPES});
 }
 
 async function oidcAuthenticate(code, redirectUri) {
