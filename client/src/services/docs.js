@@ -1,7 +1,7 @@
 import Swagger from 'swagger-parser';
 import apis from './api';
 
-const docsPromise = getDocs(); // Don't wait here. Just kick off the request
+let docsPromise;
 
 async function getDocs() {
     const docs = await apis.swagger();
@@ -9,6 +9,10 @@ async function getDocs() {
 }
 
 export default async function getDocDefinitions(apiVersion, kind) {
+    if (!docsPromise) {
+        docsPromise = getDocs(); // Don't wait here. Just kick off the request
+    }
+
     const {definitions} = await docsPromise;
 
     let [group, version] = apiVersion.split('/');
