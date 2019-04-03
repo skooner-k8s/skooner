@@ -1,0 +1,32 @@
+
+table {
+	width: 100%;
+	border-spacing: 3px;
+}
+
+thead > tr > th {
+	color: $color-light;
+	font-weight: normal;
+	text-transform: uppercase;
+	text-align: left;
+	padding: 1rem;
+	border-bottom: 1px solid $color-light;
+}
+
+td {
+	padding: 0.75rem;
+}
+
+.th_icon {
+	width: 20px;
+}
+
+.td_icon {
+	text-align: center;
+}
+
+.td_iconLabel {
+    font-size: $font-size-small;
+    margin-top: -2px;
+    text-transform: uppercase;
+}

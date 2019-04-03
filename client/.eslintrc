@@ -1,0 +1,49 @@
+{
+    "extends": ["airbnb-base","plugin:react/recommended"],
+    "env": {
+        "browser": true,
+        "jest": true
+    },
+    "plugins": ["react"],
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "jsx": true
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "eqeqeq": [
+            "error",
+            "always",
+            {
+                "null": "ignore"
+            }
+        ],
+        "object-curly-spacing": [
+            "error",
+            "never"
+        ],
+        "object-curly-newline": [
+            "error",
+            {
+                "consistent": true
+            }
+        ],
+        "no-use-before-define": [
+            "error",
+            {
+                "functions": false
+            }
+        ],
+        "no-await-in-loop": "off",
+        "no-restricted-syntax": "off",
+        "no-plusplus": "off",
+        "class-methods-use-this": "off",
+        "react/prop-types": "off"
+    }
+}

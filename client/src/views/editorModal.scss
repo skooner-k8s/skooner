@@ -1,0 +1,34 @@
+@import '../scss/settings.scss';
+
+.editorModal {
+    display: flex;
+    width: 75vw;
+    max-width: 800px;
+    height: 75vh;
+    max-height: 600px;
+}
+
+.editorModal_edit {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.editorModal_input {
+    margin: 0px;
+    padding: 10px;
+    flex: 1;
+}
+
+.editorModal_docs {
+    flex: 1;
+    overflow: scroll;
+}
+
+.editorModal_noDocs {
+    text-align: center;
+}
+
+.editorModal_spacer {
+    flex: 1;
+}

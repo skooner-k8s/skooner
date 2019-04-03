@@ -1,0 +1,45 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "chartist": "^0.10.1",
+    "director": "^1.2.8",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "node-sass": "^4.11.0",
+    "react": "^16.8.2",
+    "react-chartist": "^0.13.3",
+    "react-dom": "^16.8.2",
+    "react-modal": "^3.8.1",
+    "react-scripts": "2.1.5",
+    "react-select": "^2.4.2",
+    "react-switch": "^4.1.0",
+    "swagger-parser": "^6.0.5",
+    "uuid": "^3.3.2",
+    "xterm": "^3.12.0",
+    "yamljs": "^0.3.0"
+  },
+  "scripts": {
+    "start": "PORT=4653 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">5%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4"
+  }
+}

@@ -1,0 +1,38 @@
+@import '../scss/settings.scss';
+
+ul.doc_group {
+    margin: 0;
+    padding-inline-start: 15px;
+}
+
+.doc_item {
+    margin: 5px;
+    list-style-type: none;
+}
+
+.doc_itemType {
+    font-size: $font-size-small;
+    color: $color-dark;
+}
+
+.doc_description {
+    margin-left: 10px;
+    color: $color-dark;
+    font-size: 8pt;
+}
+
+svg.doc_arrow {
+    width: 6px;
+    height: 6px;
+    cursor: pointer;
+    fill: $color-dark;
+    margin-right: 3px;
+    transform: rotate(-90deg);
+
+	transition-duration: $animation-length;
+	transition-property: transform;
+}
+
+svg.doc_arrowExpanded {
+    transform: rotate(0deg);
+}

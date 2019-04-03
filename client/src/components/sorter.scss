@@ -1,0 +1,36 @@
+@import '../scss/settings.scss';
+
+.sorter {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.sorter_arrows {
+    margin-top: -2px;
+    margin-left: 3px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+
+	transition-duration: $animation-length;
+	transition-property: opacity;
+
+    svg {
+        fill: $color-light;
+        width: 6px;
+        height: 6px;
+    }
+}
+
+.sorter:hover .sorter_arrows {
+    opacity: 1;
+}
+
+.sorter_active {
+    opacity: 1;
+}
+
+svg.sorter_active {
+    fill: $color-darkest;
+}

@@ -1,0 +1,12 @@
+@import '../scss/settings.scss';
+
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+svg.loading_svg {
+    width: 30px;
+    height: 30px;
+}

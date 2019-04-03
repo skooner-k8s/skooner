@@ -1,0 +1,9 @@
+@import '../scss/settings.scss';
+
+.contentPanel.error {
+    color: $color-error;
+    font-weight: bold;
+    padding: 50px;
+    font-size: $font-size-large;
+    text-align: center;
+}
