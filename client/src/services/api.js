@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {request, stream, streamResult, streamResults, getToken} from './apiProxy';
+import {request, stream, streamResult, streamResults} from './apiProxy';
 import log from '../utils/log';
 
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
@@ -40,15 +40,9 @@ const apis = {
     roleBinding: apiFactoryWithNamespace('/apis/rbac.authorization.k8s.io/v1', 'rolebindings'),
 };
 
-function testAuth() {
-    const token = getToken();
-    const body = {
-        apiVerstion: 'authentication.k8s.io/v1',
-        kind: 'TokenReview',
-        spec: {token},
-    };
-
-    return post('/apis/authentication.k8s.io/v1/tokenreviews', body, false);
+async function testAuth() {
+    const spec = {resourceAttributes: {}};
+    return post('apis/authorization.k8s.io/v1/selfsubjectaccessreviews', {spec}, false);
 }
 
 async function apply(body) {

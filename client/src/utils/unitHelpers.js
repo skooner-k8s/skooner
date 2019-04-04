@@ -52,6 +52,7 @@ export function parseCpu(value) {
 
     const number = parseInt(value, 10);
     if (value.endsWith('n')) return number;
+    if (value.endsWith('u')) return number * 1000;
     if (value.endsWith('m')) return number * 1000 * 1000;
     return number * 1000 * 1000 * 1000;
 }

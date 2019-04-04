@@ -7,6 +7,24 @@ import Sorter from './sorter';
 import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
 
 export default class PodsPanel extends Base {
+    constructor(props) {
+        super(props);
+        this.sortByCpu = this.sortByCpu.bind(this);
+        this.sortByRam = this.sortByRam.bind(this);
+    }
+
+    sortByCpu(item) {
+        const actual = getCpuUsage(item, this.props.metrics);
+        const requested = getCpuRequest(item);
+        return actual / requested;
+    }
+
+    sortByRam(item) {
+        const actual = getRamUsage(item, this.props.metrics);
+        const requested = getRamRequest(item);
+        return actual / requested;
+    }
+
     render() {
         const {items, metrics, sort, filter, skipNamespace, skipNodeName} = this.props;
         const col = 8 + !skipNamespace + !skipNodeName;
@@ -23,19 +41,21 @@ export default class PodsPanel extends Base {
                             <th><Sorter field='status.phase' sort={sort}>Status</Sorter></th>
                             <th><Sorter field={getContainerCount} sort={sort}>Containers</Sorter></th>
                             <th><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
-
-                            {/* TODO: support sorting by metrics */}
                             <th>
-                                Cpu
-                                <div className='podsPanel_label'>
-                                    actual vs. request
-                                </div>
+                                <Sorter field={this.sortByCpu} sort={sort}>
+                                    Cpu
+                                    <div className='podsPanel_label'>
+                                        actual vs. request
+                                    </div>
+                                </Sorter>
                             </th>
                             <th>
-                                Ram
-                                <div className='podsPanel_label'>
-                                    actual vs. request
-                                </div>
+                                <Sorter field={this.sortByRam} sort={sort}>
+                                    Ram
+                                    <div className='podsPanel_label'>
+                                        actual vs. request
+                                    </div>
+                                </Sorter>
                             </th>
                         </tr>
                     </thead>
@@ -71,47 +91,37 @@ function getRestartCount({status}) {
 }
 
 function Cpu({item, metrics}) {
-    if (!item || !metrics) return null;
-
-    const {containers} = metrics[item.metadata.name] || {};
+    const containers = getContainerMetrics(item, metrics);
     if (!containers) return null;
 
-    const actual = _.sumBy(containers, x => parseCpu(x.usage.cpu));
-    const podContainers = item.spec.containers.filter(x => x.resources && x.resources.requests);
-    const requested = _.sumBy(podContainers, x => parseCpu(x.resources.requests.cpu));
+    const actual = getCpuUsage(item, metrics);
+    const requested = getCpuRequest(item);
+    return <Chart actual={actual} requested={requested} unparser={unparseCpu} />;
+}
 
-    const isWarning = requested && (actual > requested);
-    const actualCpu = unparseCpu(actual);
-    const requestedCpu = unparseCpu(requested);
-    const percent = requested ? _.round(actual / requested * 100, 1) : 100;
+function getCpuUsage(item, metrics) {
+    const containers = getContainerMetrics(item, metrics);
+    return _.sumBy(containers, x => parseCpu(x.usage.cpu));
+}
 
-    return (
-        <div className={isWarning ? 'contentPanel_warn' : undefined}>
-            <div>{requested ? `${percent}%` : 'N/A'}</div>
-            <div className='podsPanel_label'>
-                <span>{actualCpu.value}{actualCpu.unit}</span>
-                <span> of </span>
-                <span>{requestedCpu.value}{requestedCpu.unit}</span>
-            </div>
-        </div>
-    );
+function getCpuRequest(item) {
+    const podContainers = _.filter(item.spec.containers, x => x.resources && x.resources.requests);
+    return _.sumBy(podContainers, x => parseCpu(x.resources.requests.cpu));
 }
 
 function Ram({item, metrics}) {
-    if (!item || !metrics) return null;
-
-    const {containers} = metrics[item.metadata.name] || {};
+    const containers = getContainerMetrics(item, metrics);
     if (!containers) return null;
 
-    const actual = _.sumBy(containers, x => parseRam(x.usage.memory));
-    const requested = _.sumBy(item.spec.containers, (x) => {
-        if (!x.resources.requests) return 0;
-        return parseRam(x.resources.requests.memory);
-    });
+    const actual = getRamUsage(item, metrics);
+    const requested = getRamRequest(item);
+    return <Chart actual={actual} requested={requested} unparser={unparseRam} />;
+}
 
+function Chart({actual, requested, unparser}) {
     const isWarning = requested && (actual > requested);
-    const actualRam = unparseRam(actual);
-    const requestedRam = unparseRam(requested);
+    const actualRam = unparser(actual);
+    const requestedRam = unparser(requested);
     const percent = requested ? _.round(actual / requested * 100, 1) : 100;
 
     return (
@@ -124,4 +134,22 @@ function Ram({item, metrics}) {
             </div>
         </div>
     );
+}
+
+function getRamUsage(item, metrics) {
+    const containers = getContainerMetrics(item, metrics);
+    return _.sumBy(containers, x => parseRam(x.usage.memory));
+}
+
+function getRamRequest(item) {
+    return _.sumBy(item.spec.containers, (x) => {
+        if (!x.resources.requests) return 0;
+        return parseRam(x.resources.requests.memory);
+    });
+}
+
+function getContainerMetrics(item, metrics) {
+    if (!item || !metrics) return null;
+    const metric = metrics[item.metadata.name] || {};
+    return metric.containers;
 }

@@ -10,7 +10,9 @@ const options = {
     showLabel: false,
 };
 
-export default function Chart({used = 0, usedSuffix, available = 0, availableSuffix, pending = 0, decimals = 1}) { // eslint-disable-line max-len
+export default function Chart(props) {
+    const {used = 0, usedSuffix, available = 0, availableSuffix, pending = 0, decimals = 1} = props;
+
     const fixedUsed = _.round(used, decimals);
     const fixedPending = _.round(pending, decimals);
     const fixedAvailable = _.round(available, decimals);
