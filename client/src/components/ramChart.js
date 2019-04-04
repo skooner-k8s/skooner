@@ -6,15 +6,22 @@ import {parseRam, TO_GB} from '../utils/unitHelpers';
 
 export default function RamChart({items, metrics}) {
     const totals = getPodRamTotals(items, metrics);
+    const decimals = totals && totals.used > 10 ? 1 : 2;
 
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart used={totals && totals.used} available={totals && totals.available} />
+                <Chart
+                    decimals={decimals}
+                    used={totals && totals.used}
+                    usedSuffix='Gb'
+                    available={totals && totals.available}
+                    availableSuffix='Gb'
+                />
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Requested Ram Use</div>
+            <div className='charts_itemLabel'>Ram Used</div>
         </div>
     );
 }

@@ -58,10 +58,8 @@ export default class Nodes extends Base {
                                 <th><Sorter field={getReadyStatus} sort={sort}>Ready</Sorter></th>
                                 <th>Cpu</th>
                                 <th>Ram</th>
-
-                                {/* TODO: support sorting by cpu/ram
-                                <th><Sorter field='' sort={sort}>Cpu</Sorter></th>
-                                <th><Sorter field='' sort={sort}>Ram</Sorter></th> */}
+                                {/* <th><Sorter field={sortByCpu} sort={sort}>Cpu</Sorter></th>
+                                <th><Sorter field={sortByRam} sort={sort}>Ram</Sorter></th> */}
                             </tr>
                         </thead>
 
@@ -80,6 +78,23 @@ export default class Nodes extends Base {
         );
     }
 }
+
+// TODO: get sortying by cpu/ram working
+// function sortByCpu(item) {
+//     const used = getCpuUsed(item, filteredMetrics);
+//     if (used == null) return null;
+
+//     const available = getCpuAvailable(item);
+//     return used / available;
+// }
+
+// function sortByRam(item) {
+//     const used = getRamUsed(item, filteredMetrics);
+//     if (used == null) return null;
+
+//     const available = getRamAvailable(item);
+//     return used / available;
+// }
 
 function getReadyStatus({status}) {
     if (!status.conditions) return null;
@@ -117,29 +132,52 @@ function RamTotalsChart({items, metrics}) {
 }
 
 function CpuChart({item, metrics}) {
-    if (!item || !metrics) return null;
+    const used = getCpuUsed(item, metrics);
+    if (used == null) return null;
 
-    const {usage} = metrics[item.metadata.name] || {};
+    const available = getCpuAvailable(item);
+    return <Percent used={used} available={available} />;
+}
+
+function getCpuUsed(item, metrics) {
+    const usage = getUsage(item, metrics);
     if (!usage) return null;
 
-    const totalUsed = parseCpu(usage.cpu) / 1000000;
-    const totalAvailable = parseCpu(item.status.capacity.cpu) / 1000000;
-    const percent = _.round(totalUsed / totalAvailable * 100, 1);
+    return parseCpu(usage.cpu) / 1000000;
+}
 
-    return (<span>{`${percent}%`}</span>);
+function getCpuAvailable(item) {
+    return parseCpu(item.status.capacity.cpu) / 1000000;
 }
 
 function RamChart({item, metrics}) {
-    if (!item || !metrics) return null;
+    const used = getRamUsed(item, metrics);
+    if (used == null) return null;
 
-    const {usage} = metrics[item.metadata.name] || {};
+    const available = getRamAvailable(item);
+    return <Percent used={used} available={available} />;
+}
+
+function getRamUsed(item, metrics) {
+    const usage = getUsage(item, metrics);
     if (!usage) return null;
 
-    const totalUsed = parseRam(usage.memory);
-    const totalAvailable = parseRam(item.status.capacity.memory);
-    const percent = _.round(totalUsed / totalAvailable * 100, 1);
+    return parseRam(usage.memory);
+}
 
+function getRamAvailable(item) {
+    return parseRam(item.status.capacity.memory);
+}
+
+function Percent({used, available}) {
+    const percent = _.round(used / available * 100, 1);
     return (<span>{`${percent}%`}</span>);
+}
+
+function getUsage(item, metrics) {
+    if (!item || !metrics) return null;
+    const result = metrics[item.metadata.name] || {};
+    return result && result.usage;
 }
 
 function getNodeMetrics(nodes, metrics) {

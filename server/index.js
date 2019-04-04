@@ -27,9 +27,11 @@ const target = kc.getCurrentCluster().server;
 const agent = new https.Agent({ca: opts.ca});
 const proxySettings = {target, agent, secure: false, ws: true, onError};
 
+logClusterInfo();
+
 const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
-app.use(cors());
+app.use(cors()); // TODO: remove in production builds
 
 app.use(logging);
 app.use('/', express.static('public'));
@@ -79,11 +81,11 @@ function handleErrors(err, req, res, next) {
     next();
 }
 
-async function getOidcEndpoint(redirectUri) { // TODO: gotta pass this in from
+async function getOidcEndpoint() {
     if (!OIDC_URL) return;
 
     const provider = await getOidcProvider();
-    return provider.authorizationUrl({redirect_uri: redirectUri, scope: OIDC_SCOPES});
+    return provider.authorizationUrl({scope: OIDC_SCOPES});
 }
 
 async function oidcAuthenticate(code, redirectUri) {
@@ -95,4 +97,21 @@ async function oidcAuthenticate(code, redirectUri) {
 async function getOidcProvider() {
     const issuer = await Issuer.discover(OIDC_URL);
     return new issuer.Client({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET});
+}
+
+async function logClusterInfo() {
+    try {
+        const versionClient = kc.makeApiClient(k8s.VersionApi);
+        const versionResponse = await versionClient.getCode();
+        const versionJson = JSON.stringify(versionResponse.body, null, 4);
+        console.log('Version Info: ', versionJson);
+
+        const apisClient = kc.makeApiClient(k8s.ApisApi);
+        const apisResponse = await apisClient.getAPIVersions();
+        const apis = apisResponse.body.groups.map(x => x.preferredVersion.groupVersion).sort();
+        const apisJson = JSON.stringify(apis, null, 4);
+        console.log('Available APIs:', apisJson);
+    } catch (err) {
+        console.error('Error getting cluster info', err);
+    }
 }

@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
+import moment from 'moment';
 import api from '../services/api';
 import Base from '../components/base';
 import Chart from '../components/chart';
@@ -11,6 +12,7 @@ import PodsPanel from '../components/podsPanel';
 import {defaultSortInfo} from '../components/sorter';
 import {parseCpu, parseRam, TO_GB, TO_ONE_M_CPU} from '../utils/unitHelpers';
 import PodStatusChart from '../components/podStatusChart';
+import Field from '../components/field';
 
 export default class Node extends Base {
     state = {
@@ -51,9 +53,44 @@ export default class Node extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
+                            <Field name='Kernel Version' value={item.status.nodeInfo.kernelVersion} />
+                            <Field name='OS Image' value={item.status.nodeInfo.osImage} />
+                            <Field name='OS' value={item.status.nodeInfo.operatingSystem} />
+                            <Field name='Architecture' value={item.status.nodeInfo.architecture} />
+                            <Field name='Container Runtime' value={item.status.nodeInfo.containerRuntimeVersion} />
+                            <Field name='Kubelet' value={item.status.nodeInfo.kubeletVersion} />
+                            <Field name='Kube Proxy' value={item.status.nodeInfo.kubeProxyVersion} />
                         </div>
                     )}
                 </div>
+
+                <div className='contentPanel'>
+                    {!item ? <Loading /> : (
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Condition</th>
+                                    <th>Status</th>
+                                    <th>Transition</th>
+                                    <th>Reason</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {_.map(item.status.conditions, x => (
+                                    <tr key={x.type}>
+                                        <td>{x.type}</td>
+                                        <td>{x.status}</td>
+                                        <td>{moment(x.lastTransitionTime).fromNow()}</td>
+                                        <td>{x.reason}</td>
+                                        <td>{x.message}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+
 
                 <PodsPanel
                     items={filteredPods}

@@ -14,6 +14,10 @@ const LOGIN_MESSAGE = 'Invalid credentials';
 const ERROR_MESSAGE = 'Error occured attempting to login';
 
 export default class Auth extends Base {
+    state = {
+        token: '',
+    };
+
     async componentDidMount() {
         const url = new URL(window.location.href);
         const code = url.searchParams.get('code');
@@ -46,10 +50,10 @@ export default class Auth extends Base {
                             className='auth_input'
                             placeholder='Enter your auth token here...'
                             spellCheck='false'
-                            defaultValue={token}
+                            value={token}
                             onChange={x => this.setState({token: x.target.value})}
                         />
-                        <Button className='button auth_button' onClick={() => login(token)}>
+                        <Button disabled={!token} className='button auth_button' onClick={() => login(token)}>
                             Go
                         </Button>
                     </>
@@ -95,7 +99,14 @@ async function oidcLogin(code, returnedState) {
 async function login(token) {
     try {
         setToken(token);
-        await api.testAuth();
+
+        const result = await api.testAuth();
+        log.info('Auth', result);
+
+        if (!result || !result.status || !result.status.allowed) {
+            throw new Error('Invalid login');
+        }
+
         window.location.reload();
     } catch (err) {
         log.error('Login Failed', err);

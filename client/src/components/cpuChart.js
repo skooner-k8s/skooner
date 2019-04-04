@@ -6,15 +6,20 @@ import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 
 export default function CpuChart({items, metrics}) {
     const totals = getPodCpuTotals(items, metrics);
+    const decimals = totals && totals.used > 10 ? 1 : 2;
 
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart decimals={2} used={totals.used} available={totals.available} />
+                <Chart
+                    decimals={decimals}
+                    used={totals.used}
+                    available={totals.available}
+                />
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Requested Cpu Use</div>
+            <div className='charts_itemLabel'>Cores Used</div>
         </div>
     );
 }
