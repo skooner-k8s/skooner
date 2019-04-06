@@ -100,7 +100,16 @@ kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kub
 
 ```
 
+## Running k8dash with NodePort
+If you do not have an ingress server setup, you can utilize a NodePort service as configured in the [kubernetes-k8dash-nodeport.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
 
+This will map the k8dash port 4654 to a randomly selected port on the running node. The assigned port can be found using
+```
+$ kubectl get svc --namespace=kube-system
+
+NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+k8dash     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
+```
 
 ## Metrics
 K8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
