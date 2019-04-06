@@ -20,8 +20,8 @@ export default class Logs extends Base {
         // From the lodash docs: "If leading and trailing options are true, func is invoked
         // on the trailing edge of the timeout only if the debounced function is invoked more
         // than once during the wait timeout."
-        const options = {leading: true, trailing: true, maxWait: 500};
-        this.debouncedRefreshLogs = _.debounce(this.refreshLogs.bind(this), 500, options);
+        const options = {leading: true, trailing: true, maxWait: 1000};
+        this.debouncedRefreshLogs = _.debounce(this.refreshLogs.bind(this), 1000, options);
     }
 
     componentDidMount() {
@@ -66,7 +66,7 @@ export default class Logs extends Base {
     }
 
     refreshLogs(logs) {
-        const items = logs.slice(-2000);
+        const items = logs.slice(-1000);
         this.setState({items});
     }
 

@@ -2,7 +2,8 @@ import log from '../utils/log';
 
 const {host, href, hash, search} = window.location;
 const nonHashedUrl = href.replace(hash, '').replace(search, '');
-const BASE_HTTP_URL = host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
+const isDev = process.env.NODE_ENV !== 'production';
+const BASE_HTTP_URL = isDev && host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 
 export function getToken() {
@@ -47,7 +48,15 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
             logout();
         }
 
-        const error = new Error(`Api request error: ${statusText}`);
+        let message = `Api request error: ${statusText}`;
+        try {
+            const json = await response.json();
+            message += ` - ${json.message}`;
+        } catch (err) {
+            log.error('Unable to parse error json', {err});
+        }
+
+        const error = new Error(message);
         error.status = status;
         throw error;
     }

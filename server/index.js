@@ -7,15 +7,14 @@ const proxy = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
 
+const NODE_ENV = process.env.NODE_ENV;
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 console.log('OIDC_URL: ', OIDC_URL || 'None');
 
-process.on('uncaughtException', err => {
-    console.error('Uncaught exception', err);
-});
+process.on('uncaughtException', err => console.error('Uncaught exception', err));
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -25,27 +24,31 @@ kc.applyToRequest(opts);
 
 const target = kc.getCurrentCluster().server;
 const agent = new https.Agent({ca: opts.ca});
-const proxySettings = {target, agent, secure: false, ws: true, onError};
-
-logClusterInfo();
+const proxySettings = {
+    target,
+    agent,
+    ws: true,
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug',
+    onError,
+};
 
 const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
-app.use(cors()); // TODO: remove in production builds
-
 app.use(logging);
+if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
 app.use('/*', proxy(proxySettings));
 app.use(handleErrors);
 
-const server = http.createServer(app);
-server.listen(4654);
+http.createServer(app).listen(4654);
 console.log('Server started');
 
 function logging(req, res, next) {
-    console.log(req.method, req.url);
+    res.once('finish', () => console.log(req.method, req.url, res.statusCode));
     next();
 }
 
@@ -99,6 +102,7 @@ async function getOidcProvider() {
     return new issuer.Client({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET});
 }
 
+logClusterInfo();
 async function logClusterInfo() {
     try {
         const versionClient = kc.makeApiClient(k8s.VersionApi);
@@ -110,7 +114,13 @@ async function logClusterInfo() {
         const apisResponse = await apisClient.getAPIVersions();
         const apis = apisResponse.body.groups.map(x => x.preferredVersion.groupVersion).sort();
         const apisJson = JSON.stringify(apis, null, 4);
-        console.log('Available APIs:', apisJson);
+        console.log('Available APIs: ', apisJson);
+
+        const authClient = kc.makeApiClient(k8s.Authorization_v1Api);
+        const spec = {resourceAttributes: {}};
+        const authResponse = await authClient.createSelfSubjectAccessReview({spec});
+        const authJson = JSON.stringify(authResponse.body, null, 4);
+        console.log('Auth Response: ', authJson);
     } catch (err) {
         console.error('Error getting cluster info', err);
     }
