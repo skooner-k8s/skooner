@@ -6,3 +6,5 @@ description: A Helm chart for Kubernetes K8Dash
 maintainers:
   - name: Ivan Kirianov
     email: kiryanov.i@gmail.com
+  - name: Eric Herbrandson
+    email: eric@herbrandson.com
