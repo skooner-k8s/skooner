@@ -7,7 +7,7 @@ import DeleteSvg from '../art/deleteSvg';
 export default class DeleteButton extends Base {
     render() {
         return (
-            <Button title='Delete' className='button button_clear' onClick={() => this.startDelete()}>
+            <Button title='Delete' className='button_headerAction' onClick={() => this.startDelete()}>
                 <DeleteSvg />
                 <span className='button_label'>Delete</span>
             </Button>

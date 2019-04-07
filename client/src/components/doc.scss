@@ -8,6 +8,7 @@ ul.doc_group {
 .doc_item {
     margin: 5px;
     list-style-type: none;
+    cursor: pointer;
 }
 
 .doc_itemType {
@@ -19,6 +20,7 @@ ul.doc_group {
     margin-left: 10px;
     color: $color-dark;
     font-size: 8pt;
+    cursor: default;
 }
 
 svg.doc_arrow {

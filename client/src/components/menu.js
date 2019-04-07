@@ -52,7 +52,7 @@ export default class Menu extends Base {
 
                 <Group>
                     <div className='menu_itemApply'>
-                        <button className='menu_item button button_clear' onClick={() => this.setState({showAdd: true})}>
+                        <button className='menu_item button_clear' onClick={() => this.setState({showAdd: true})}>
                             <AddSvg className='menu_icon' />
                             <div className='menu_title'>Apply</div>
                         </button>

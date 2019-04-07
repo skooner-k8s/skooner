@@ -33,7 +33,7 @@ export default class RoleBinding extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Role Binding', namespace, name]} item={item}>
+                <ItemHeader title={['Role Binding', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

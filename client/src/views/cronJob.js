@@ -45,7 +45,7 @@ export default class CronJob extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Cron Job', namespace, name]} item={item}>
+                <ItemHeader title={['Cron Job', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

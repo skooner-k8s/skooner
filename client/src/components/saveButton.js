@@ -11,7 +11,7 @@ export default class DeleteButton extends Base {
 
         return (
             <>
-                <Button title='Edit' className='button button_clear' onClick={() => this.setState({showEditor: true})}>
+                <Button title='Edit' className='button_headerAction' onClick={() => this.setState({showEditor: true})}>
                     <EditSvg />
                     <span className='button_label'>Edit</span>
                 </Button>

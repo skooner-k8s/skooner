@@ -25,7 +25,7 @@ export default class ConfigMap extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Config Map', namespace, name]} item={item}>
+                <ItemHeader title={['Config Map', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

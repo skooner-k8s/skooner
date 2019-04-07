@@ -44,14 +44,14 @@ export default class Pod extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Pod', namespace, name]} item={item}>
+                <ItemHeader title={['Pod', namespace, name]} ready={!!item}>
                     <>
-                        <Button title='Logs' className='button button_clear' onClick={() => goTo(`pod/${namespace}/${name}/logs`)}>
+                        <Button title='Logs' className='button_headerAction' onClick={() => goTo(`pod/${namespace}/${name}/logs`)}>
                             <LogsSvg />
                             <span className='button_label'>Logs</span>
                         </Button>
 
-                        <Button title='Exec' className='button button_clear' onClick={() => goTo(`pod/${namespace}/${name}/exec`)}>
+                        <Button title='Exec' className='button_headerAction' onClick={() => goTo(`pod/${namespace}/${name}/exec`)}>
                             <ExecSvg />
                             <span className='button_label'>Exec</span>
                         </Button>

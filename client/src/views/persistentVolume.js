@@ -25,7 +25,7 @@ export default class PersistentVolume extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Persistent Volume', name]} item={item}>
+                <ItemHeader title={['Persistent Volume', name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

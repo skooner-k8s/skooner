@@ -46,7 +46,7 @@ export default class StatefulSet extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Stateful Set', namespace, name]} item={item}>
+                <ItemHeader title={['Stateful Set', namespace, name]} ready={!!item}>
                     <>
                         <ScaleButton
                             namespace={namespace}

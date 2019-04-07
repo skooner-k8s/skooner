@@ -33,7 +33,7 @@ export default class ClusterRoleBinding extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Cluster Role Binding', name]} item={item}>
+                <ItemHeader title={['Cluster Role Binding', name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

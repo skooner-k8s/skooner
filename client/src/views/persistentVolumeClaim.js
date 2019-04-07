@@ -25,7 +25,7 @@ export default class PersistentVolumeClaim extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Volume Claim', namespace, name]} item={item}>
+                <ItemHeader title={['Volume Claim', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

@@ -26,7 +26,7 @@ export default class Secret extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Secret', namespace, name]} item={item}>
+                <ItemHeader title={['Secret', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

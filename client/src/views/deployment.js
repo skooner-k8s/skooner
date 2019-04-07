@@ -59,7 +59,7 @@ export default class Deployment extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Deployment', namespace, name]} item={item}>
+                <ItemHeader title={['Deployment', namespace, name]} ready={!!item}>
                     <>
                         <ScaleButton
                             namespace={namespace}

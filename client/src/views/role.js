@@ -27,7 +27,7 @@ export default class Role extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Role', namespace, name]} item={item}>
+                <ItemHeader title={['Role', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

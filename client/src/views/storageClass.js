@@ -25,7 +25,7 @@ export default class StorageClass extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Storage Class', name]} item={item}>
+                <ItemHeader title={['Storage Class', name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
