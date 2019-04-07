@@ -51,8 +51,8 @@ export default class RoleBindings extends Base {
                                     item={x}
                                     includeNamespace={true}
                                     href={x.kind === 'ClusterRoleBinding'
-                                        ? `#/clusterrolebinding/${x.metadata.name}`
-                                        : `#/rolebinding/${x.metadata.namespace}/${x.metadata.name}`}
+                                        ? `#!clusterrolebinding/${x.metadata.name}`
+                                        : `#!rolebinding/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                             </tr>
                         )} />

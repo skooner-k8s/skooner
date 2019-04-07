@@ -46,7 +46,7 @@ export default class ServiceAccounts extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/serviceaccount/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!serviceaccount/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                             </tr>
                         )} />

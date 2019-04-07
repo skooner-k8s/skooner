@@ -46,7 +46,7 @@ export default class ConfigMaps extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/configmap/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!configmap/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                             </tr>
                         )} />

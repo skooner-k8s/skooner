@@ -78,7 +78,7 @@ function MenuItem(item) {
     const {path, title, resource} = item;
 
     return (
-        <a href={`#/${path}`} title={title} className={className}>
+        <a href={`#!${path}`} title={title} className={className}>
             <ResourceSvg className='menu_icon' resource={resource} />
             <span className='menu_title'>{title}</span>
         </a>

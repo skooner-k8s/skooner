@@ -47,7 +47,7 @@ export default class Secrets extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/secret/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!secret/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>{x.type}</td>
                             </tr>

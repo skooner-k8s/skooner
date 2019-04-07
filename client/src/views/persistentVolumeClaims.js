@@ -62,7 +62,7 @@ export default class PersistentVolumeClaims extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/persistentvolumeclaim/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!persistentvolumeclaim/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>{x.status.phase}</td>
                                 <td>{x.spec.storageClassName}</td>

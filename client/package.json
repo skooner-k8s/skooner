@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "chartist": "^0.10.1",
-    "director": "^1.2.8",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
+    "page": "^1.11.4",
     "react": "^16.8.2",
     "react-chartist": "^0.13.3",
     "react-dom": "^16.8.2",

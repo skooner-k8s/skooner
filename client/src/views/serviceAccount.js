@@ -46,7 +46,7 @@ export default class ServiceAccount extends Base {
                             <Field name='Secrets'>
                                 {_.map(item.secrets, x => (
                                     <div key={x.name}>
-                                        <a href={`#/secret/${namespace}/${x.name}`}>{x.name}</a>
+                                        <a href={`#!secret/${namespace}/${x.name}`}>{x.name}</a>
                                     </div>
                                 ))}
                             </Field>

@@ -81,7 +81,7 @@ export default class ReplicaSet extends Base {
                             <Field name='Owned By'>
                                 {_.map(item.metadata.ownerReferences, x => (
                                     <div key={x.uid}>
-                                        <a href={`#/${x.kind !== 'ReplicaSet' ? 'workload/' : ''}${x.kind.toLowerCase()}/${namespace}/${x.name}`}>
+                                        <a href={`#!${x.kind !== 'ReplicaSet' ? 'workload/' : ''}${x.kind.toLowerCase()}/${namespace}/${x.name}`}>
                                             {`${x.kind.toLowerCase()}/${namespace}/${x.name}`}
                                         </a>
                                     </div>

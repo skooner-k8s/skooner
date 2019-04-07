@@ -66,7 +66,7 @@ export default class PodsPanel extends Base {
                                 item={x}
                                 isError={x.status.phase !== 'Running'}
                                 includeNamespace={!skipNamespace}
-                                href={`#/pod/${x.metadata.namespace}/${x.metadata.name}`}
+                                href={`#!pod/${x.metadata.namespace}/${x.metadata.name}`}
                             />
                             {!skipNodeName && <td>{x.spec.nodeName}</td>}
                             <td>{x.status.phase}</td>

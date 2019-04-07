@@ -49,7 +49,7 @@ export default class PersistentVolumes extends Base {
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
-                                    href={`#/persistentvolume/${x.metadata.name}`}
+                                    href={`#!persistentvolume/${x.metadata.name}`}
                                 />
                                 <td>{x.status.phase}</td>
                                 <td>{x.spec.capacity && x.spec.capacity.storage}</td>
