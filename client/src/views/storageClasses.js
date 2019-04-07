@@ -44,7 +44,7 @@ export default class StorageClasses extends Base {
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
-                                    href={`#/storageclass/${x.metadata.name}`}
+                                    href={`#!storageclass/${x.metadata.name}`}
                                 />
                                 <td>{x.reclaimPolicy}</td>
                                 <td>{x.volumeBindingMode}</td>

@@ -92,9 +92,9 @@ export default class RoleBinding extends Base {
 
 function getRoleHref(namespace, item) {
     const {name, kind} = item.roleRef;
-    return kind === 'ClusterRole' ? `#/role/${name}` : `#/role/${namespace}/${name}`;
+    return kind === 'ClusterRole' ? `#!role/${name}` : `#!role/${namespace}/${name}`;
 }
 
 function getSubjectHref({name, namespace}) {
-    return namespace ? `#/serviceaccount/${namespace}/${name}` : `#/serviceaccount/${name}`;
+    return namespace ? `#!serviceaccount/${namespace}/${name}` : `#!serviceaccount/${name}`;
 }

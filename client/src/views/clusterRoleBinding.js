@@ -101,9 +101,9 @@ export default class ClusterRoleBinding extends Base {
 }
 
 function getRoleHref({name, kind, namespace}) {
-    return kind === 'ClusterRole' ? `#/clusterrole/${name}` : `#/role/${namespace}/${name}`;
+    return kind === 'ClusterRole' ? `#!clusterrole/${name}` : `#!role/${namespace}/${name}`;
 }
 
 function getSubjectHref({name, namespace}) {
-    return namespace ? `#/serviceaccount/${namespace}/${name}` : `#/serviceaccount/${name}`;
+    return namespace ? `#!serviceaccount/${namespace}/${name}` : `#!serviceaccount/${name}`;
 }

@@ -71,7 +71,7 @@ export default class Workloads extends Base {
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
-                                    href={`#/workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>
                                     <Status item={x} />

@@ -4,7 +4,7 @@ import LogoSvg from '../art/logoSvg';
 
 const TitleBar = () => (
     <div id='titleBar'>
-        <a href='#/'>
+        <a href='#!'>
             <LogoSvg className='titleBar_logo' />
         </a>
 

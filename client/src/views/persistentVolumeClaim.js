@@ -44,12 +44,12 @@ export default class PersistentVolumeClaim extends Base {
                             <MetadataFields item={item} />
                             <Field name='Status' value={item.status.phase} />
                             <Field name='Class'>
-                                <a href={`#/storageclass/${item.spec.storageClassName}`}>
+                                <a href={`#!storageclass/${item.spec.storageClassName}`}>
                                     {item.spec.storageClassName}
                                 </a>
                             </Field>
                             <Field name='Volume'>
-                                <a href={`#/persistentvolume/${item.spec.volumeName}`}>
+                                <a href={`#!persistentvolume/${item.spec.volumeName}`}>
                                     {item.spec.volumeName}
                                 </a>
                             </Field>

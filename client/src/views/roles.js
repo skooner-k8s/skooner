@@ -51,8 +51,8 @@ export default class Roles extends Base {
                                     item={x}
                                     includeNamespace={true}
                                     href={x.kind === 'ClusterRole'
-                                        ? `#/clusterrole/${x.metadata.name}`
-                                        : `#/role/${x.metadata.namespace}/${x.metadata.name}`}
+                                        ? `#!clusterrole/${x.metadata.name}`
+                                        : `#!role/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                             </tr>
                         )} />

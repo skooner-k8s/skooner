@@ -49,7 +49,7 @@ export default class Ingresses extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/ingress/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!ingress/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>{getHosts(x, ' • ')}</td>
                                 <td>{getPaths(x, ' • ')}</td>

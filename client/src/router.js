@@ -1,5 +1,5 @@
 import React from 'react';
-import {Router} from 'director/build/director';
+import page from 'page';
 import {hasToken} from './services/apiProxy';
 import Account from './views/account';
 import Auth from './views/auth';
@@ -45,51 +45,52 @@ import StorageClasses from './views/storageClasses';
 import Workloads from './views/workloads';
 
 const handlers = [];
-const router = Router().configure({notfound: onNotFound});
+let path = '';
 
 registerRoute('/', () => <Dashboard />);
 registerRoute('/account', () => <Account />);
-registerRoute('/clusterrole/:name', name => <ClusterRole name={name} />);
-registerRoute('/clusterrolebinding/:name', name => <ClusterRoleBinding name={name} />);
+registerRoute('/clusterrole/:name', params => <ClusterRole {...params} />);
+registerRoute('/clusterrolebinding/:name', params => <ClusterRoleBinding {...params} />);
 registerRoute('/configmap', () => <ConfigMaps />);
-registerRoute('/configmap/:namespace/:name', (namespace, name) => <ConfigMap namespace={namespace} name={name} />);
+registerRoute('/configmap/:namespace/:name', params => <ConfigMap {...params} />);
 registerRoute('/ingress', () => <Ingresses />);
-registerRoute('/ingress/:namespace/:name', (namespace, name) => <Ingress namespace={namespace} name={name} />);
+registerRoute('/ingress/:namespace/:name', params => <Ingress {...params} />);
 registerRoute('/namespace', () => <Namespaces />);
 registerRoute('/namespace/:namespace', namespace => <Namespace namespace={namespace} />);
 registerRoute('/node', () => <Nodes />);
-registerRoute('/node/:name', name => <Node name={name} />);
+registerRoute('/node/:name', params => <Node {...params} />);
 registerRoute('/persistentvolume', () => <PersistentVolumes />);
-registerRoute('/persistentvolume/:name', name => <PersistentVolume name={name} />);
+registerRoute('/persistentvolume/:name', params => <PersistentVolume {...params} />);
 registerRoute('/persistentvolumeclaim', () => <PersistentVolumeClaims />);
-registerRoute('/persistentvolumeclaim/:namespace/:name', (namespace, name) => <PersistentVolumeClaim namespace={namespace} name={name} />);
+registerRoute('/persistentvolumeclaim/:namespace/:name', params => <PersistentVolumeClaim {...params} />);
 registerRoute('/pod', () => <Pods />);
-registerRoute('/pod/:namespace/:name', (namespace, name) => <Pod namespace={namespace} name={name} />);
-registerRoute('/pod/:namespace/:name/exec', (namespace, name) => <Exec namespace={namespace} name={name} />);
-registerRoute('/pod/:namespace/:name/logs', (namespace, name) => <Logs namespace={namespace} name={name} />);
+registerRoute('/pod/:namespace/:name', params => <Pod {...params} />);
+registerRoute('/pod/:namespace/:name/exec', params => <Exec {...params} />);
+registerRoute('/pod/:namespace/:name/logs', params => <Logs {...params} />);
 registerRoute('/replicaset', () => <ReplicaSets />);
-registerRoute('/replicaset/:namespace/:name', (namespace, name) => <ReplicaSet namespace={namespace} name={name} />);
+registerRoute('/replicaset/:namespace/:name', params => <ReplicaSet {...params} />);
 registerRoute('/role', () => <Roles />);
-registerRoute('/role/:namespace/:name', (namespace, name) => <Role namespace={namespace} name={name} />);
+registerRoute('/role/:namespace/:name', params => <Role {...params} />);
 registerRoute('/rolebinding', () => <RoleBindings />);
-registerRoute('/rolebinding/:namespace/:name', (namespace, name) => <RoleBinding namespace={namespace} name={name} />);
+registerRoute('/rolebinding/:namespace/:name', params => <RoleBinding {...params} />);
 registerRoute('/secret', () => <Secrets />);
-registerRoute('/secret/:namespace/:name', (namespace, name) => <Secret namespace={namespace} name={name} />);
+registerRoute('/secret/:namespace/:name', params => <Secret {...params} />);
 registerRoute('/service', () => <Services />);
-registerRoute('/service/:namespace/:name', (namespace, name) => <Service namespace={namespace} name={name} />);
+registerRoute('/service/:namespace/:name', params => <Service {...params} />);
 registerRoute('/serviceaccount', () => <ServiceAccounts />);
-registerRoute('/serviceaccount/:namespace/:name', (namespace, name) => <ServiceAccount namespace={namespace} name={name} />);
+registerRoute('/serviceaccount/:namespace/:name', params => <ServiceAccount {...params} />);
 registerRoute('/storageclass', () => <StorageClasses />);
-registerRoute('/storageclass/:name', name => <StorageClass name={name} />);
+registerRoute('/storageclass/:name', params => <StorageClass {...params} />);
 registerRoute('/workload', () => <Workloads />);
-registerRoute('/workload/cronjob/:namespace/:name', (namespace, name) => <CronJob namespace={namespace} name={name} />);
-registerRoute('/workload/daemonset/:namespace/:name', (namespace, name) => <DaemonSet namespace={namespace} name={name} />);
-registerRoute('/workload/deployment/:namespace/:name', (namespace, name) => <Deployment namespace={namespace} name={name} />);
-registerRoute('/workload/job/:namespace/:name', (namespace, name) => <Job namespace={namespace} name={name} />);
-registerRoute('/workload/statefulset/:namespace/:name', (namespace, name) => <StatefulSet namespace={namespace} name={name} />);
+registerRoute('/workload/cronjob/:namespace/:name', params => <CronJob {...params} />);
+registerRoute('/workload/daemonset/:namespace/:name', params => <DaemonSet {...params} />);
+registerRoute('/workload/deployment/:namespace/:name', params => <Deployment {...params} />);
+registerRoute('/workload/job/:namespace/:name', params => <Job {...params} />);
+registerRoute('/workload/statefulset/:namespace/:name', params => <StatefulSet {...params} />);
+registerRoute('*', () => <NotFound />);
 
 export function initRouter() {
-    router.init(['/']);
+    page({hashbang: true});
 }
 
 export function registerHandler(handler) {
@@ -97,19 +98,22 @@ export function registerHandler(handler) {
 }
 
 export function getRootPath() {
-    return router.getRoute()[0];
+    return path;
 }
 
 export function goTo(name) {
-    window.location = `#/${name}`;
+    window.location = `#!${name}`;
 }
 
 function registerRoute(route, factory) {
-    router.on(route, (...args) => {
+    page(route, (context) => {
+        const [current] = context.path.split('/').filter(x => !!x);
+        path = current || '';
+
         if (!hasToken()) {
             onRoute(<Auth />);
         } else {
-            const result = factory(...args);
+            const result = factory(context.params);
             onRoute(result);
         }
     });
@@ -117,8 +121,4 @@ function registerRoute(route, factory) {
 
 function onRoute(value) {
     handlers.forEach(x => x(value));
-}
-
-function onNotFound() {
-    onRoute(<NotFound />);
 }

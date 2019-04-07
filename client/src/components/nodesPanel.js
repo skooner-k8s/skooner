@@ -46,7 +46,7 @@ export default class NodesPanel extends Base {
 
                     <TableBody items={items} filter={filter} sort={sort} colSpan='8' row={x => (
                         <tr key={x.metadata.uid}>
-                            <MetadataColumns item={x} href={`#/node/${x.metadata.name}`} />
+                            <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
                             <td>{objectMap(x.metadata.labels)}</td>
                             <td>{getReadyStatus(x)}</td>
                             <td><CpuPercent item={x} metrics={metrics} /></td>

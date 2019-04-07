@@ -45,7 +45,7 @@ export default class Namespaces extends Base {
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
-                                    href={`#/namespace/${x.metadata.name}`}
+                                    href={`#!namespace/${x.metadata.name}`}
                                 />
                                 <td>{x.status.phase}</td>
                             </tr>

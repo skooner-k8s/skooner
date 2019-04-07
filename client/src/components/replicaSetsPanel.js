@@ -49,7 +49,7 @@ export default class ReplicaSetsPanel extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={includeNamespace}
-                                    href={`#/replicaset/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!replicaset/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>{x.status.observedGeneration}</td>
                                 <td>{x.spec.replicas} / {x.status.replicas}</td>

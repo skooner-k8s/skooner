@@ -46,7 +46,7 @@ export default class Services extends Base {
                                 <MetadataColumns
                                     item={x}
                                     includeNamespace={true}
-                                    href={`#/service/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!service/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                             </tr>
                         )} />
