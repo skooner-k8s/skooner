@@ -26,7 +26,7 @@ export default class Ingress extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Ingress', namespace, name]} item={item}>
+                <ItemHeader title={['Ingress', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

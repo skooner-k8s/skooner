@@ -26,7 +26,7 @@ export default class Namespace extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Namespace', namespace]} item={item}>
+                <ItemHeader title={['Namespace', namespace]} ready={!!item}>
                     <>
                         <DeleteButton
                             onDelete={() => service.delete(namespace)}

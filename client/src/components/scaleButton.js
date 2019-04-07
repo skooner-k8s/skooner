@@ -11,7 +11,7 @@ export default class ScaleButton extends Base {
 
         return (
             <>
-                <Button title='Scale' className='button button_clear' onClick={() => this.openModal()}>
+                <Button title='Scale' className='button_headerAction' onClick={() => this.openModal()}>
                     <ScaleSvg />
                     <span className='button_label'>Scale</span>
                 </Button>
@@ -30,7 +30,7 @@ export default class ScaleButton extends Base {
 
                             <div className='modal_actions'>
                                 <Button className='button' onClick={() => this.scale()}>Scale</Button>
-                                <Button className='button button_negative' onClick={() => this.close()}>Cancel</Button>
+                                <Button className='button_negative' onClick={() => this.close()}>Cancel</Button>
                             </div>
                         </div>
                     </Modal>

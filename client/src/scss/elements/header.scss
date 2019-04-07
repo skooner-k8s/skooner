@@ -3,7 +3,28 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 15px;
+	padding-top: 15px;
+
+}
+
+#header > .button_headerAction {
+	transform: translateY(-50px);
+	transition-duration: $animation-length;
+	transition-property: transform;
+}
+
+#header > .button_headerAction > svg {
+	transform: rotate(180deg);
+	transition-duration: $animation-length;
+	transition-property: transform;
+}
+
+#header.header_ready > .button_headerAction {
+	transform: translateY(0);
+}
+
+#header > .button_headerAction > svg {
+	transform: rotate(0);
 }
 
 .header_label {
@@ -31,4 +52,40 @@ input[type="text"].header_filter {
 		padding: .25rem;
 		border-color: $color-light;
 	}
+}
+
+#header .button_headerAction:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+#header .button_headerAction:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+#header .button_headerAction:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+#header .button_headerAction:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+#header .button_headerAction:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+#header .button_headerAction:nth-child(6) {
+    transition-delay: 0.6s;
+}
+
+#header .button_headerAction:nth-child(7) {
+    transition-delay: 0.7s;
+}
+
+#header .button_headerAction:nth-child(8) {
+    transition-delay: 0.8s;
+}
+
+#header .button_headerAction:nth-child(9) {
+    transition-delay: 0.9s;
 }

@@ -45,7 +45,7 @@ export default class Job extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Job', namespace, name]} item={item}>
+                <ItemHeader title={['Job', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

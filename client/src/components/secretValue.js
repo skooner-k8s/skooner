@@ -17,13 +17,11 @@ export default class SecretValue extends Base {
 
         return (
             <div className='secretValue'>
-                <Button className='button button_clear' onClick={() => this.toggle()}>
+                <Button className='button_clear' onClick={() => this.toggle()}>
                     {show ? <UnlockSvg /> : <LockSvg />}
                 </Button>
 
-                {show && (
-                    <span className='secretValue_text'>{text}</span>
-                )}
+                <span className={show ? 'secretValue_text' : 'secretValue_textHidden'}>{text}</span>
             </div>
         );
     }

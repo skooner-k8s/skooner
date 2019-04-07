@@ -48,7 +48,7 @@ export default class ReplicaSet extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Replica Set', namespace, name]} item={item}>
+                <ItemHeader title={['Replica Set', namespace, name]} ready={!!item}>
                     <>
                         <ScaleButton
                             namespace={namespace}

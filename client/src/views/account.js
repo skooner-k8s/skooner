@@ -6,8 +6,8 @@ import LogoutSvg from '../art/logoutSvg';
 
 const Account = () => (
     <div id='content'>
-        <ItemHeader title={['Account', 'Token']} item={{}}>
-            <Button title='Logout' className='button button_clear' onClick={logout}>
+        <ItemHeader title={['Account', 'Token']} ready={true}>
+            <Button title='Logout' className='button_headerAction' onClick={logout}>
                 <LogoutSvg />
                 <span className='button_label'>Logout</span>
             </Button>

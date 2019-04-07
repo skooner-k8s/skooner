@@ -89,7 +89,7 @@ export default class EditorModal extends Base {
                         </div>
 
                         <div className='modal_actions'>
-                            <Button className='button button_clear' onClick={() => this.setState(x => ({showDocs: !x.showDocs}))}>
+                            <Button className='button_clear' onClick={() => this.setState(x => ({showDocs: !x.showDocs}))}>
                                 {showDocs ? <EditSvg /> : <LightBulbSvg />}
                                 <span className='button_label'>
                                     {showDocs ? 'Edit' : 'View Docs'}
@@ -97,7 +97,7 @@ export default class EditorModal extends Base {
                             </Button>
                             <div className='editorModal_spacer'></div>
                             <Button className='button' onClick={() => this.add()}>Save</Button>
-                            <Button className='button button_negative' onClick={() => this.close()}>Cancel</Button>
+                            <Button className='button_negative' onClick={() => this.close()}>Cancel</Button>
                         </div>
                     </div>
                 </div>

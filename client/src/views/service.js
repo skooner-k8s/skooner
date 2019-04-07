@@ -32,7 +32,7 @@ export default class Service extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Service', namespace, name]} item={item}>
+                <ItemHeader title={['Service', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

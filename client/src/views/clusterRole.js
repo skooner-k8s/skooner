@@ -27,7 +27,7 @@ export default class ClusterRole extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Cluster Role', name]} item={item}>
+                <ItemHeader title={['Cluster Role', name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

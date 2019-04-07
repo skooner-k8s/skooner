@@ -46,7 +46,7 @@ export default class DaemonSet extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Daemon Set', namespace, name]} item={item}>
+                <ItemHeader title={['Daemon Set', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
