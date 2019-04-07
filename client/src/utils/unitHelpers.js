@@ -1,37 +1,45 @@
 import _ from 'lodash';
 
 const RAM_TYPES = ['Bi', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei'];
+const UNITS = ['B', 'K', 'M', 'G', 'T', 'P', 'E'];
 
 export const TO_GB = 1024 * 1024 * 1024;
 export const TO_ONE_M_CPU = 1000000;
 export const TO_ONE_CPU = 1000000000;
 
 export function parseDiskSpace(value) {
-    if (!value) return 0;
-
-    const number = parseInt(value, 10);
-    if (value.endsWith('Ki')) return number * 1024;
-    if (value.endsWith('Mi')) return number * 1024 * 1024;
-    if (value.endsWith('Gi')) return number * 1024 * 1024 * 1024;
-    if (value.endsWith('Ti')) return number * 1024 * 1024 * 1024 * 1024;
-    if (value.endsWith('Pi')) return number * 1024 * 1024 * 1024 * 1024 * 1024;
-    if (value.endsWith('Ei')) return number * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
-
-    return number;
+    return parseUnitsOfBytes(value);
 }
 
 export function parseRam(value) {
+    return parseUnitsOfBytes(value);
+} 
+    
+function parseUnitsOfBytes(value) {
     if (!value) return 0;
 
-    const number = parseInt(value, 10);
-    if (value.endsWith('Ki')) return number * 1024;
-    if (value.endsWith('Mi')) return number * 1024 * 1024;
-    if (value.endsWith('Gi')) return number * 1024 * 1024 * 1024;
-    if (value.endsWith('Ti')) return number * 1024 * 1024 * 1024 * 1024;
-    if (value.endsWith('Pi')) return number * 1024 * 1024 * 1024 * 1024 * 1024;
-    if (value.endsWith('Ei')) return number * 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
+    const groups = value.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/);
+    const number = parseInt(groups[1], 10);
 
-    return number;
+    // number ex. 1000
+    if (groups[2] === undefined) {
+        return number;
+    }
+
+    // number with exponent ex. 1e3
+    if (groups[4] !== undefined) {
+        return number * (10 ** parseInt(groups[4], 10));
+    }
+
+    const unitIndex = _.indexOf(UNITS, groups[2]);
+
+    // Unit + i ex. 1Ki
+    if (groups[3] !== undefined) {
+        return number * (1024 ** unitIndex);
+    }
+
+    // Unit ex. 1K
+    return number * (1000 ** unitIndex);
 }
 
 export function unparseRam(value) {
