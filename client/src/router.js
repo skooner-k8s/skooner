@@ -91,6 +91,11 @@ registerRoute('*', () => <NotFound />);
 
 export function initRouter() {
     page({hashbang: true});
+    const {hash} = window.location;
+    if (hash && hash.startsWith('#!') && !hash.startsWith('#!/')) {
+        const fixedHash = hash.replace('#!', '/');
+        page(fixedHash);
+    }
 }
 
 export function registerHandler(handler) {
@@ -99,10 +104,6 @@ export function registerHandler(handler) {
 
 export function getRootPath() {
     return path;
-}
-
-export function goTo(name) {
-    window.location = `#!${name}`;
 }
 
 function registerRoute(route, factory) {
