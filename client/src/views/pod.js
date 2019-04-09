@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
-import Button from '../components/button';
 import Error from '../components/error';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
@@ -10,7 +9,6 @@ import Field from '../components/field';
 import api from '../services/api';
 import LogsSvg from '../art/logsSvg';
 import ExecSvg from '../art/execSvg';
-import {goTo} from '../router';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
@@ -46,15 +44,15 @@ export default class Pod extends Base {
             <div id='content'>
                 <ItemHeader title={['Pod', namespace, name]} ready={!!item}>
                     <>
-                        <Button title='Logs' className='button_headerAction' onClick={() => goTo(`pod/${namespace}/${name}/logs`)}>
+                        <a title='Logs' className='button_headerAction' href={`pod/${namespace}/${name}/logs`}>
                             <LogsSvg />
                             <span className='button_label'>Logs</span>
-                        </Button>
+                        </a>
 
-                        <Button title='Exec' className='button_headerAction' onClick={() => goTo(`pod/${namespace}/${name}/exec`)}>
+                        <a title='Exec' className='button_headerAction' href={`pod/${namespace}/${name}/exec`}>
                             <ExecSvg />
                             <span className='button_label'>Exec</span>
-                        </Button>
+                        </a>
 
                         <SaveButton
                             item={item}
