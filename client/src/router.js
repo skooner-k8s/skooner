@@ -56,7 +56,7 @@ registerRoute('/configmap/:namespace/:name', params => <ConfigMap {...params} />
 registerRoute('/ingress', () => <Ingresses />);
 registerRoute('/ingress/:namespace/:name', params => <Ingress {...params} />);
 registerRoute('/namespace', () => <Namespaces />);
-registerRoute('/namespace/:namespace', namespace => <Namespace namespace={namespace} />);
+registerRoute('/namespace/:namespace', params => <Namespace {...params} />);
 registerRoute('/node', () => <Nodes />);
 registerRoute('/node/:name', params => <Node {...params} />);
 registerRoute('/persistentvolume', () => <PersistentVolumes />);
