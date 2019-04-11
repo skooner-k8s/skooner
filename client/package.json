@@ -21,7 +21,7 @@
     "yamljs": "^0.3.0"
   },
   "scripts": {
-    "start": "PORT=4653 react-scripts start",
+    "start": "cross-env PORT=4653 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -40,6 +40,7 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4"
+    "eslint-plugin-react": "^7.12.4",
+    "cross-env": "^5.2.0"
   }
 }
