@@ -18,12 +18,12 @@ export default class ScaleButton extends Base {
 
                 {scaleInfo && (
                     <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>
-                        <div>
-                            <div className='scaleButton_label'>Desired count</div>
+                        <div className='scaleButton'>
+                            <div className='scaleButton_label'>Desired Count</div>
                             <input
                                 type='number'
                                 className='scaleButton_input'
-                                min="0"
+                                min='0'
                                 defaultValue={scaleInfo.spec.replicas || 0}
                                 onChange={x => this.setState({value: parseInt(x.target.value, 10)})}
                             />
@@ -57,8 +57,8 @@ export default class ScaleButton extends Base {
     }
 
     close() {
-    // Use setTimeout to prevent the following React warning:
-    // "Warning: Can't perform a React state update on an unmounted component."
+        // Use setTimeout to prevent the following React warning:
+        // "Warning: Can't perform a React state update on an unmounted component."
         setTimeout(() => this.setState({scaleInfo: null}), 0);
     }
 }

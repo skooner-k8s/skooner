@@ -48,6 +48,7 @@ export default class Role extends Base {
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Rules</div>
                 <div className='contentPanel'>
                     <table>
                         <thead>

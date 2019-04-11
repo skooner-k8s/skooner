@@ -1,5 +1,10 @@
 @import '../scss/settings.scss';
 
+.scaleButton {
+    display: flex;
+    flex-direction: column;
+}
+
 .scaleButton_label {
     color: $color-light;
 }

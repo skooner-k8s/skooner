@@ -32,3 +32,12 @@
 .editorModal_spacer {
     flex: 1;
 }
+
+@media only screen and (max-width: $media-xsmall) {
+    .editorModal {
+        width: initial;
+        max-width: initial;
+        max-height: initial;
+        height: calc(100vh - 40px);
+    }
+}

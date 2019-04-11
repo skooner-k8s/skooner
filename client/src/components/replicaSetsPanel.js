@@ -19,12 +19,12 @@ export default class ReplicaSetsPanel extends Base {
                     <thead>
                         <tr>
                             <MetadataHeaders sort={sort} includeNamespace={includeNamespace} />
-                            <th>
+                            <th className='optional_small'>
                                 <Sorter field='status.observedGeneration' sort={sort}>Generations</Sorter>
                             </th>
                             <th className='replicaSetsPanel_replicas'>
                                 <Sorter field='spec.replicas' sort={sort}>Replicas</Sorter>
-                                <label className='replicaSetsPanel_switch'>
+                                <label className='replicaSetsPanel_switch optional_xsmall'>
                                     <Switch
                                         checked={activeOnly}
                                         onChange={x => this.setState({activeOnly: x})}
@@ -51,7 +51,7 @@ export default class ReplicaSetsPanel extends Base {
                                     includeNamespace={includeNamespace}
                                     href={`#!replicaset/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
-                                <td>{x.status.observedGeneration}</td>
+                                <td className='optional_small'>{x.status.observedGeneration}</td>
                                 <td>{x.spec.replicas} / {x.status.replicas}</td>
                             </tr>
                         )}

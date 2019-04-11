@@ -8,7 +8,7 @@
 }
 
 #header > .button_headerAction {
-	transform: translateY(-50px);
+	transform: translateY(-80px);
 	transition-duration: $animation-length;
 	transition-property: transform;
 }
@@ -88,4 +88,11 @@ input[type="text"].header_filter {
 
 #header .button_headerAction:nth-child(9) {
     transition-delay: 0.9s;
+}
+
+
+@media only screen and (max-width: $media-xsmall) {
+	.header_label {
+		font-size: $font-size-medium;
+	}
 }

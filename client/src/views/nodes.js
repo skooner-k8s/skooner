@@ -68,7 +68,7 @@ function CpuTotalsChart({items, metrics}) {
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Cpu Cores Used</div>
+            <div className='charts_itemLabel'>Cores</div>
         </div>
     );
 }
@@ -78,11 +78,11 @@ function RamTotalsChart({items, metrics}) {
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart used={totals.used} available={totals.available} />
+                <Chart used={totals.used} usedSuffix='Gb' available={totals.available} availableSuffix='Gb' />
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>GB Ram Used</div>
+            <div className='charts_itemLabel'>Ram</div>
         </div>
     );
 }

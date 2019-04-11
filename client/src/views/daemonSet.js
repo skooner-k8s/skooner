@@ -85,7 +85,11 @@ export default class DaemonSet extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
+
+                <div className='contentPanel_header'>Pods</div>
                 <PodsPanel items={filteredPods} sort={podsSort} metrics={filteredMetrics} skipNamespace={true} />
+
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel sort={eventsSort} shortList={true} items={filteredEvents} />
             </div>
         );

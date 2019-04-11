@@ -36,7 +36,7 @@ export default class StorageClasses extends Base {
                             <tr>
                                 <MetadataHeaders sort={sort} />
                                 <th><Sorter field='reclaimPolicy' sort={sort}>Reclaim Policy</Sorter></th>
-                                <th><Sorter field='volumeBindingMode' sort={sort}>Mode</Sorter></th>
+                                <th className='optional_small'><Sorter field='volumeBindingMode' sort={sort}>Mode</Sorter></th>
                             </tr>
                         </thead>
 
@@ -47,7 +47,7 @@ export default class StorageClasses extends Base {
                                     href={`#!storageclass/${x.metadata.name}`}
                                 />
                                 <td>{x.reclaimPolicy}</td>
-                                <td>{x.volumeBindingMode}</td>
+                                <td className='optional_small'>{x.volumeBindingMode}</td>
                             </tr>
                         )} />
                     </table>

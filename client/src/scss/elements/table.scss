@@ -9,7 +9,7 @@ thead > tr > th {
 	font-weight: normal;
 	text-transform: uppercase;
 	text-align: left;
-	padding: 1rem;
+	padding: 0.75rem;
 	border-bottom: 1px solid $color-light;
 }
 
@@ -29,4 +29,24 @@ td {
     font-size: $font-size-small;
     margin-top: -2px;
     text-transform: uppercase;
+}
+
+@media only screen and (max-width: $media-xsmall) {
+	thead > tr > th {
+		padding: 0.75rem 0.25rem;
+	}
+
+	td {
+		padding: 0.75rem 0.25rem;
+	}
+
+	.wrapped > thead {
+		display: none;
+	}
+
+	.wrapped > tbody > tr {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 35px;
+	}
 }

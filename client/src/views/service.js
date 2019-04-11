@@ -1,7 +1,7 @@
+import _ from 'lodash';
 import React from 'react';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
-import {TableBody} from '../components/listViewHelpers';
 import Base from '../components/base';
 import DeleteButton from '../components/deleteButton';
 import Field from '../components/field';
@@ -26,7 +26,6 @@ export default class Service extends Base {
     render() {
         const {namespace, name} = this.props;
         const {item, events} = this.state || {};
-        const ports = item && item.spec.ports;
 
         const filteredEvents = filterByOwner(events, item);
 
@@ -54,30 +53,17 @@ export default class Service extends Base {
                             <Field name='Affinity' value={item.spec.sessionAffinity} />
                             <Field name='Selector' value={item.spec.selector && item.spec.selector.app} />
                             <Field name='Ports'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Port</th>
-                                            <th>Protocol</th>
-                                            <th>Target</th>
-                                        </tr>
-                                    </thead>
-
-                                    <TableBody items={ports} colSpan='4' row={x => (
-                                        <tr key={x.port}>
-                                            <td>{x.name}</td>
-                                            <td>{x.port}</td>
-                                            <td>{x.protocol}</td>
-                                            <td>{x.targetPort}</td>
-                                        </tr>
-                                    )} />
-                                </table>
+                                {_.map(item.spec.ports, x => (
+                                    <div key={x.port}>
+                                        {[x.name, x.port, x.targetPort, x.protocol].filter(y => !!y).join(' • ')}
+                                    </div>
+                                ))}
                             </Field>
                         </div>
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel shortList={true} items={filteredEvents} />
             </div>
         );

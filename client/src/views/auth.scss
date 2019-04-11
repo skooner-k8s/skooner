@@ -14,7 +14,7 @@
 }
 
 .auth_input {
-    font-size: $font-size-medium;
+    font-size: $font-size-large;
     padding: 0.5rem;
     width: 400px;
     margin: 0 5px;
@@ -22,5 +22,15 @@
 
 .auth_button {
     border: solid 1px $color-accent;
-    font-size: $font-size-medium;
+    font-size: $font-size-large;
+}
+
+@media only screen and (max-width: $media-small) {
+    .auth {
+        flex-direction: column;
+    }
+
+    .auth_input {
+        width: 300px;
+    }
 }

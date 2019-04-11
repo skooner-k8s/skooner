@@ -1,3 +1,4 @@
+@import '../scss/settings.scss';
 
 .field_set {
     margin: 20px 0;
@@ -14,4 +15,21 @@
 .field_value {
     margin-left: 20px;
     word-break: break-all;
+}
+
+
+@media only screen and (max-width: $media-small) {
+    .field_set {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .field_name {
+        text-align: left;
+        flex: 0;
+    }
+
+    .field_value {
+        margin-left: 0;
+    }
 }

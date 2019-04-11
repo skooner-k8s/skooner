@@ -39,17 +39,17 @@ export default class PersistentVolumeClaims extends Base {
                         <thead>
                             <tr>
                                 <MetadataHeaders includeNamespace={true} sort={sort} />
-                                <th>
+                                <th className='optional_small'>
                                     <Sorter field='status.phase' sort={sort}>Status</Sorter>
                                 </th>
-                                <th>
+                                <th className='optional_medium'>
                                     <Sorter field='spec.storageClassName' sort={sort}>Class Name</Sorter>
                                 </th>
-                                <th>
-                                    <Sorter field={getAccessModes} sort={sort}>Access Modes</Sorter>
-                                </th>
-                                <th>
+                                <th className='optional_medium'>
                                     <Sorter field='spec.volumeName' sort={sort}>Volume</Sorter>
+                                </th>
+                                <th className='optional_medium'>
+                                    <Sorter field={getAccessModes} sort={sort}>Access Modes</Sorter>
                                 </th>
                                 <th>
                                     <Sorter field={getDiskSpace} sort={sort}>Capacity</Sorter>
@@ -64,10 +64,10 @@ export default class PersistentVolumeClaims extends Base {
                                     includeNamespace={true}
                                     href={`#!persistentvolumeclaim/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
-                                <td>{x.status.phase}</td>
-                                <td>{x.spec.storageClassName}</td>
-                                <td>{getAccessModes(x, ' • ')}</td>
-                                <td>{x.spec.volumeName}</td>
+                                <td className='optional_small'>{x.status.phase}</td>
+                                <td className='optional_medium'>{x.spec.storageClassName}</td>
+                                <td className='optional_medium'>{x.spec.volumeName}</td>
+                                <td className='optional_medium'>{getAccessModes(x, ' • ')}</td>
                                 <td>{x.status.capacity && x.status.capacity.storage}</td>
                             </tr>
                         )} />

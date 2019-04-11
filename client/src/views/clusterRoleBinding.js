@@ -61,20 +61,21 @@ export default class ClusterRoleBinding extends Base {
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Subjects</div>
                 <div className='contentPanel'>
                     <table>
                         <thead>
                             <tr>
-                                <th className='th_icon'>
+                                <th className='th_icon optional_small'>
                                     <Sorter sort={sort} field='kind'>Type</Sorter>
                                 </th>
                                 <th>
                                     <Sorter sort={sort} field='name'>Name</Sorter>
                                 </th>
-                                <th>
+                                <th className='optional_small'>
                                     <Sorter sort={sort} field='namespace'>Namespace</Sorter>
                                 </th>
-                                <th>
+                                <th className='optional_small'>
                                     <Sorter sort={sort} field='apiGroup'>Api Group</Sorter>
                                 </th>
                             </tr>
@@ -82,15 +83,15 @@ export default class ClusterRoleBinding extends Base {
 
                         <TableBody items={subjects} colSpan='4' sort={sort} row={x => (
                             <tr key={x.name}>
-                                <td>
+                                <td className='td_icon optional_small'>
                                     <ResourceSvg resource={x.kind} />
                                     <div className='td_iconLabel'>{x.kind}</div>
                                 </td>
                                 <td>
                                     {x.kind === 'ServiceAccount' ? (<a href={getSubjectHref(x)}>{x.name}</a>) : x.name}
                                 </td>
-                                <td>{x.namespace}</td>
-                                <td>{x.apiGroup}</td>
+                                <td className='optional_small'>{x.namespace}</td>
+                                <td className='optional_small'>{x.apiGroup}</td>
                             </tr>
                         )} />
                     </table>

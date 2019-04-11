@@ -52,7 +52,15 @@ $ct-series-colors: (
 .chart_donutLabel {
     grid-column: 1;
     grid-row: 1;
+    font-size: $font-size-large;
+}
+
+.charts_itemLabel {
     font-size: $font-size-medium;
+    color: $color-light;
+    margin-top: 8px;
+    text-align: right;
+    text-transform: uppercase;
 }
 
 .chart_innerLabel {
@@ -63,4 +71,14 @@ $ct-series-colors: (
 .ct-chart {
     grid-column: 1;
     grid-row: 1;
+}
+
+@media only screen and (max-width: $media-small) {
+	.chart_donutLabel {
+		font-size: $font-size;
+	}
+
+    .charts_itemLabel {
+        font-size: $font-size;
+    }
 }

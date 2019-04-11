@@ -37,8 +37,8 @@ export default class NodesPanel extends Base {
                     <thead>
                         <tr>
                             <MetadataHeaders sort={sort} />
-                            <th>Labels</th>
-                            <th><Sorter field={getReadyStatus} sort={sort}>Ready</Sorter></th>
+                            <th className='optional_medium'>Labels</th>
+                            <th className='optional_small'><Sorter field={getReadyStatus} sort={sort}>Ready</Sorter></th>
                             <th><Sorter field={this.sortByCpu} sort={sort}>Cpu</Sorter></th>
                             <th><Sorter field={this.sortByRam} sort={sort}>Ram</Sorter></th>
                         </tr>
@@ -47,8 +47,8 @@ export default class NodesPanel extends Base {
                     <TableBody items={items} filter={filter} sort={sort} colSpan='8' row={x => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
-                            <td>{objectMap(x.metadata.labels)}</td>
-                            <td>{getReadyStatus(x)}</td>
+                            <td className='optional_medium'>{objectMap(x.metadata.labels)}</td>
+                            <td className='optional_small'>{getReadyStatus(x)}</td>
                             <td><CpuPercent item={x} metrics={metrics} /></td>
                             <td><RamPercent item={x} metrics={metrics} /></td>
                         </tr>

@@ -1,10 +1,12 @@
 import React, {Component, Fragment} from 'react';
-import TitleBar from './components/titleBar';
 import Menu from './components/menu';
 import {Notifier} from './components/notifier';
 import Error from './components/error';
 import {registerHandler, initRouter} from './router';
 import log from './utils/log';
+import Button from './components/button';
+import LogoSvg from './art/logoSvg';
+import HamburgerSvg from './art/hamburgerSvg';
 
 const genericError = (
     <div id='content'>
@@ -24,19 +26,28 @@ class App extends Component {
     }
 
     render() {
-        const {content, hasError} = this.state || {};
+        const {content, hasError, menuToggled} = this.state || {};
 
         return (
         <>
-            <TitleBar />
+            <div id='titleBar'>
+                <Button className='button_clear titleBar_hamburger' onClick={() => this.setState({menuToggled: !menuToggled})}>
+                    <HamburgerSvg className='svg_button' />
+                </Button>
+
+                <a href='#!'>
+                    <LogoSvg className='titleBar_logo' />
+                </a>
+            </div>
+
             <div id='shell'>
-                <Menu />
+                <Menu toggled={menuToggled} onClick={() => this.setState({menuToggled: false})} />
                 <Fragment key={Date.now()}>
                     {hasError ? genericError : content}
                 </Fragment>
-                <Notifier />
             </div>
 
+            <Notifier />
         </>
         );
     }
