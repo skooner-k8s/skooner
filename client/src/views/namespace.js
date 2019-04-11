@@ -43,6 +43,7 @@ export default class Namespace extends Base {
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel items={events} />
             </div>
         );

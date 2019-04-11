@@ -19,26 +19,6 @@
     transition: transform 0.33s;
 }
 
-.menu_subMenu a:nth-child(1) {
-    transition-delay: 0.1s;
-}
-
-.menu_subMenu a:nth-child(2) {
-    transition-delay: 0.2s;
-}
-
-.menu_subMenu a:nth-child(3) {
-    transition-delay: 0.3s;
-}
-
-.menu_subMenu a:nth-child(4) {
-    transition-delay: 0.4s;
-}
-
-.menu_subMenu a:nth-child(5) {
-    transition-delay: 0.5s;
-}
-
 .menu_subMenuSelected {
     max-height: 1000px;
 }
@@ -77,4 +57,47 @@ a.menu_itemSelected, a.menu_itemSelected:visited {
 .menu_itemApply {
     display: flex;
     justify-content: center;
+}
+
+.menu_subMenu a:nth-child(1) {
+    transition-delay: 0.1s;
+}
+
+.menu_subMenu a:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.menu_subMenu a:nth-child(3) {
+    transition-delay: 0.3s;
+}
+
+.menu_subMenu a:nth-child(4) {
+    transition-delay: 0.4s;
+}
+
+.menu_subMenu a:nth-child(5) {
+    transition-delay: 0.5s;
+}
+
+@media only screen and (max-width: $media-small) and (min-width: $media-xsmall) {
+    button.menu_item, a.menu_item, a.menu_item:visited {
+        svg {
+            width: 25px;
+            height: 25px;
+        }
+    }
+
+    .menu_title {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: $media-xsmall) {
+    .menu_subMenu {
+        max-height: initial;
+    }
+
+    .menu_subMenu a {
+        transform: initial;
+    }
 }

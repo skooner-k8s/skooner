@@ -71,9 +71,9 @@ export default class Node extends Base {
                                 <tr>
                                     <th>Condition</th>
                                     <th>Status</th>
-                                    <th>Transition</th>
-                                    <th>Reason</th>
-                                    <th>Message</th>
+                                    <th className='optional_medium'>Transition</th>
+                                    <th className='optional_small'>Reason</th>
+                                    <th className='optional_small'>Message</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,9 +81,9 @@ export default class Node extends Base {
                                     <tr key={x.type}>
                                         <td>{x.type}</td>
                                         <td>{x.status}</td>
-                                        <td>{moment(x.lastTransitionTime).fromNow()}</td>
-                                        <td>{x.reason}</td>
-                                        <td>{x.message}</td>
+                                        <td className='optional_medium'>{moment(x.lastTransitionTime).fromNow()}</td>
+                                        <td className='optional_small'>{x.reason}</td>
+                                        <td className='optional_small'>{x.message}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -91,7 +91,7 @@ export default class Node extends Base {
                     )}
                 </div>
 
-
+                <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
                     items={filteredPods}
                     sort={podsSort}

@@ -36,7 +36,7 @@ export default class PersistentVolumes extends Base {
                         <thead>
                             <tr>
                                 <MetadataHeaders sort={sort} />
-                                <th>
+                                <th className='optional_small'>
                                     <Sorter field='status.phase' sort={sort}>Status</Sorter>
                                 </th>
                                 <th>
@@ -51,7 +51,7 @@ export default class PersistentVolumes extends Base {
                                     item={x}
                                     href={`#!persistentvolume/${x.metadata.name}`}
                                 />
-                                <td>{x.status.phase}</td>
+                                <td className='optional_small'>{x.status.phase}</td>
                                 <td>{x.spec.capacity && x.spec.capacity.storage}</td>
                             </tr>
                         )} />

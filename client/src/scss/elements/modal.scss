@@ -1,4 +1,13 @@
 
+.modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.33);
+}
+
 .modal_modal {
     position: absolute;
     top: 50%;
@@ -12,17 +21,24 @@
     transform: translate(-50%, -50%);
 }
 
-.modal_overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.33);
-}
-
 .modal_actions {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+}
+
+@media only screen and (max-width: $media-xsmall) {
+    .modal_overlay {
+        z-index: 300;
+    }
+
+    .modal_modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        transform: initial;
+    }
 }

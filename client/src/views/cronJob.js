@@ -82,6 +82,7 @@ export default class CronJob extends Base {
 
                 {/* TODO: this actually need to be a list of jobs */}
 
+                <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
                     items={filteredPods}
                     sort={podsSort}
@@ -89,6 +90,7 @@ export default class CronJob extends Base {
                     skipNamespace={true}
                 />
 
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel
                     sort={eventsSort}
                     shortList={true}

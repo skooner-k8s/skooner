@@ -8,10 +8,10 @@ import Sorter, {sortByDate} from './sorter';
 export default function EventsPanel({items, filter, shortList, sort}) {
     return (
         <div className='contentPanel'>
-            <table>
+            <table className='wrapped'>
                 <thead>
                     <tr>
-                        <th className='th_icon'>
+                        <th className='th_icon optional_medium'>
                             <Sorter field='involvedObject.kind' sort={sort}>Type</Sorter>
                         </th>
                         <th>
@@ -22,7 +22,7 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                                 <Sorter field={sortByName} sort={sort}>Name</Sorter>
                             </th>
                         )}
-                        <th>
+                        <th className='optional_small'>
                             <Sorter field='reason' sort={sort}>Reason</Sorter>
                         </th>
                         <th>
@@ -38,7 +38,7 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                     sort={sort}
                     row={x => (
                         <tr key={x.metadata.name}>
-                            <td className='td_icon'>
+                            <td className='td_icon optional_medium'>
                                 <ResourceSvg
                                     resource={x.involvedObject.kind}
                                     className={getTypeClass(x.type)}
@@ -49,7 +49,7 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                             {!shortList && (
                                 <td>{x.involvedObject.namespace}:{x.involvedObject.name}</td>
                             )}
-                            <td>{x.reason}</td>
+                            <td className='optional_small'>{x.reason}</td>
                             <td>{x.message}</td>
                         </tr>
                     )}

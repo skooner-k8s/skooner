@@ -44,7 +44,7 @@ export default class Auth extends Base {
             <div className='auth'>
                 {!useTokenLogin ? <Loading /> : (
                     <>
-                        <LogoSvg />
+                        <LogoSvg className='optional_small' />
                         <input
                             type='password'
                             className='auth_input'

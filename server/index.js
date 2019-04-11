@@ -115,12 +115,6 @@ async function logClusterInfo() {
         const apis = apisResponse.body.groups.map(x => x.preferredVersion.groupVersion).sort();
         const apisJson = JSON.stringify(apis, null, 4);
         console.log('Available APIs: ', apisJson);
-
-        const authClient = kc.makeApiClient(k8s.Authorization_v1Api);
-        const spec = {resourceAttributes: {}};
-        const authResponse = await authClient.createSelfSubjectAccessReview({spec});
-        const authJson = JSON.stringify(authResponse.body, null, 4);
-        console.log('Auth Response: ', authJson);
     } catch (err) {
         console.error('Error getting cluster info', err);
     }

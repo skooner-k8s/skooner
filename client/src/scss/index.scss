@@ -27,16 +27,12 @@ html {
 	font-size: $font-size;
 	font-weight: 300;
 	color: $color-font;
+	min-width: 320px;
 }
 
 #root {
 	display: flex;
 	flex-direction: column;
-}
-
-.titleBar_logo {
-	width: 80px;
-	height: 80px;
 }
 
 #shell {
@@ -54,4 +50,82 @@ html {
 	padding: 0 45px;
 	flex: 1;
 	width: calc(100vw - 72px);
+}
+
+#titleBar {
+	height: 55px;
+	background-color: $color-accent;
+	color: $color-white;
+	display: flex;
+	align-items: center;
+	padding: 0 8px;
+	font-size: $font-size-large;
+    justify-content: space-between;
+    z-index: 1;
+}
+
+.titleBar_logo {
+	width: 80px;
+	height: 80px;
+}
+
+button.titleBar_hamburger {
+	display: none;
+}
+
+.titleBar_hamburger > svg {
+	fill: $color-white;
+}
+
+@media only screen and (max-width: $media-medium) {
+	.optional_medium {
+		display: none;
+	}
+}
+
+@media only screen and (max-width: $media-small) {
+	.optional_small {
+		display: none;
+	}
+
+	#menu {
+		width: 44px
+	}
+
+	#content {
+		width: calc(100vw - 44px);
+	}
+}
+
+@media only screen and (max-width: $media-xsmall) {
+	#content {
+		padding: 0 15px;
+		width: 100vw;
+	}
+
+	.optional_xsmall {
+		display: none;
+	}
+
+	#menu {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 200;
+		width: 72px;
+		overflow-y: scroll;
+		box-shadow: 0 0 5px 0 $color-light;
+
+		transform: translateX(-80px);
+    	transition: transform 0.33s;
+	}
+
+    #menu.menu_toggled {
+		transform: translateX(0);
+    }
+
+	button.titleBar_hamburger {
+		display: initial;
+	}
 }

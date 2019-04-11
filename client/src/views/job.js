@@ -85,6 +85,7 @@ export default class Job extends Base {
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
 
+                <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
                     items={filteredPods}
                     sort={podsSort}
@@ -92,6 +93,7 @@ export default class Job extends Base {
                     skipNamespace={true}
                 />
 
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel
                     shortList={true}
                     sort={eventsSort}

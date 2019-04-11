@@ -47,6 +47,7 @@ export default class Ingress extends Base {
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Rules</div>
                 <div className='contentPanel'>
                     <table>
                         <thead>

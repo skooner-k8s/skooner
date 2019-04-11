@@ -36,11 +36,9 @@ export default class PodsPanel extends Base {
                         <tr>
                             <MetadataHeaders sort={sort} includeNamespace={!skipNamespace} />
                             {!skipNodeName && (
-                                <th><Sorter field='spec.nodeName' sort={sort}>Node</Sorter></th>
+                                <th className='optional_small'><Sorter field='spec.nodeName' sort={sort}>Node</Sorter></th>
                             )}
-                            <th><Sorter field='status.phase' sort={sort}>Status</Sorter></th>
-                            <th><Sorter field={getContainerCount} sort={sort}>Containers</Sorter></th>
-                            <th><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
+                            <th className='optional_medium'><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
                             <th>
                                 <Sorter field={this.sortByCpu} sort={sort}>
                                     Cpu
@@ -68,10 +66,8 @@ export default class PodsPanel extends Base {
                                 includeNamespace={!skipNamespace}
                                 href={`#!pod/${x.metadata.namespace}/${x.metadata.name}`}
                             />
-                            {!skipNodeName && <td>{x.spec.nodeName}</td>}
-                            <td>{x.status.phase}</td>
-                            <td>{getContainerCount(x)}</td>
-                            <td>{getRestartCount(x)}</td>
+                            {!skipNodeName && <td className='optional_small'>{x.spec.nodeName}</td>}
+                            <td className='optional_medium'>{getRestartCount(x)}</td>
                             <td><Cpu item={x} metrics={metrics} /></td>
                             <td><Ram item={x} metrics={metrics} /></td>
                         </tr>
@@ -80,10 +76,6 @@ export default class PodsPanel extends Base {
             </div>
         );
     }
-}
-
-function getContainerCount({spec}) {
-    return spec.containers ? spec.containers.length : 0;
 }
 
 function getRestartCount({status}) {

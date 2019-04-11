@@ -117,6 +117,8 @@ export default class Pod extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec} />
+
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel items={filteredEvents} />
             </div>
         );

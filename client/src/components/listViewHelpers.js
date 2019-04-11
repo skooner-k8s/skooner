@@ -31,18 +31,18 @@ export function TableBody({items, filter, colSpan, sort, row}) {
 export function MetadataHeaders({includeNamespace, sort}) {
     return (
         <>
-            <th className='th_icon'>
+            <th className='th_icon optional_small'>
                 <Sorter field='kind' sort={sort}>Type</Sorter>
             </th>
             <th>
                 <Sorter field='metadata.name' sort={sort}>Name</Sorter>
             </th>
             {includeNamespace && (
-                <th>
+                <th className='optional_medium'>
                     <Sorter field='metadata.namespace' sort={sort}>Namespace</Sorter>
                 </th>
             )}
-            <th>
+            <th className='optional_medium'>
                 <Sorter field={sortByDate} sort={sort}>Age</Sorter>
             </th>
         </>
@@ -52,7 +52,7 @@ export function MetadataHeaders({includeNamespace, sort}) {
 export function MetadataColumns({item, href, includeNamespace, isError}) {
     return (
         <>
-            <td className='td_icon'>
+            <td className='td_icon optional_small'>
                 <ResourceSvg
                     resource={item.kind}
                     className={isError ? 'svg_error' : undefined}
@@ -64,12 +64,12 @@ export function MetadataColumns({item, href, includeNamespace, isError}) {
             </td>
 
             {includeNamespace && (
-                <td>
+                <td className='optional_medium'>
                     {item.metadata.namespace || 'All Namespaces'}
                 </td>
             )}
 
-            <td>
+            <td className='optional_medium'>
                 {moment(item.metadata.creationTimestamp).fromNow(true)}
             </td>
         </>

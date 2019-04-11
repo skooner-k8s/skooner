@@ -5,7 +5,7 @@ import Cancel from '../art/cancelSvg';
 const InputFilter = ({filter, onChange}) => (
     <>
         <input
-            className='header_filter header_fill'
+            className='header_filter header_fill optional_xsmall'
             type='text'
             placeholder='type to filter'
             value={filter}
@@ -17,9 +17,9 @@ const InputFilter = ({filter, onChange}) => (
         />
 
         {filter.length === 0 ? (
-            <Search />
+            <Search className='optional_xsmall' />
         ) : (
-            <Cancel className='svg_button svg_error' onClick={() => onChange('')} />
+            <Cancel className='svg_button svg_error optional_xsmall' onClick={() => onChange('')} />
         )}
     </>
 );
