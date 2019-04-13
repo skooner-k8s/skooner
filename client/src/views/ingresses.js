@@ -40,7 +40,7 @@ export default class Ingresses extends Base {
                             <tr>
                                 <MetadataHeaders includeNamespace={true} sort={sort} />
                                 <th>Hosts</th>
-                                <th>Paths</th>
+                                <th className='optional_xsmall'>Paths</th>
                             </tr>
                         </thead>
 
@@ -52,7 +52,7 @@ export default class Ingresses extends Base {
                                     href={`#!ingress/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>{getHosts(x, ' • ')}</td>
-                                <td>{getPaths(x, ' • ')}</td>
+                                <td className='optional_xsmall'>{getPaths(x, ' • ')}</td>
                             </tr>
                         )} />
                     </table>

@@ -7,7 +7,10 @@ export default class ItemHeader extends Base {
 
         return (
             <div id='header' className={ready ? 'header_ready' : undefined}>
-                <span className='header_label'>{title.join(' • ')}</span>
+                <span className='header_label optional_xsmall'>
+                    {title.join(' • ')}
+                </span>
+
                 <div className='header_fill'></div>
 
                 {children}

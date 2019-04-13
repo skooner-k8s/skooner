@@ -14,6 +14,7 @@ export default function NodeStatusChart({items}) {
                 <LoadingChart />
             )}
             <div className='charts_itemLabel'>Nodes</div>
+            <div className='charts_itemSubLabel'>Ready vs All</div>
         </div>
     );
 }

@@ -6,6 +6,7 @@ import {objectMap} from './listViewHelpers';
 const MetadataFields = ({item}) => (
     <>
         <Field name='Name' value={item.metadata.name} />
+        <Field name='Kind' value={item.kind} />
 
         {item.metadata.namespace && (
             <Field name='Namespace' value={item.metadata.namespace} />

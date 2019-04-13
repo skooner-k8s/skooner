@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
+import ChartsContainer from '../components/chartsContainer';
 import Filter from '../components/filter';
 import {defaultSortInfo} from '../components/sorter';
 import NodeStatusChart from '../components/nodeStatusChart';
@@ -43,11 +44,11 @@ export default class Nodes extends Base {
                     onChange={x => this.setState({filter: x})}
                 />
 
-                <div className='charts'>
+                <ChartsContainer>
                     <NodeStatusChart items={filtered} />
                     <CpuTotalsChart items={filtered} metrics={filteredMetrics} />
                     <RamTotalsChart items={filtered} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <NodesPanel
                     sort={sort}
@@ -69,6 +70,7 @@ function CpuTotalsChart({items, metrics}) {
                 <LoadingChart />
             )}
             <div className='charts_itemLabel'>Cores</div>
+            <div className='charts_itemSubLabel'>Used vs Available</div>
         </div>
     );
 }
@@ -83,6 +85,7 @@ function RamTotalsChart({items, metrics}) {
                 <LoadingChart />
             )}
             <div className='charts_itemLabel'>Ram</div>
+            <div className='charts_itemSubLabel'>Used vs Available</div>
         </div>
     );
 }

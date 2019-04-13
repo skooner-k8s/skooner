@@ -16,7 +16,11 @@ const genericError = (
 
 class App extends Component {
     componentDidMount() {
-        registerHandler(content => this.setState({content, hasError: false}));
+        registerHandler((content) => {
+            this.setState({content, contentDate: Date.now(), hasError: false});
+            window.scrollTo(0, 0);
+        });
+
         initRouter();
     }
 
@@ -26,29 +30,33 @@ class App extends Component {
     }
 
     render() {
-        const {content, hasError, menuToggled} = this.state || {};
+        const {content, contentDate, hasError, menuToggled} = this.state || {};
 
         return (
-        <>
-            <div id='titleBar'>
-                <Button className='button_clear titleBar_hamburger' onClick={() => this.setState({menuToggled: !menuToggled})}>
-                    <HamburgerSvg className='svg_button' />
-                </Button>
+            <>
+                <div id='titleBar'>
+                    <Button className='button_clear titleBar_hamburger' onClick={() => this.setState({menuToggled: !menuToggled})}>
+                        <HamburgerSvg className='svg_button' />
+                    </Button>
 
-                <a href='#!'>
-                    <LogoSvg className='titleBar_logo' />
-                </a>
-            </div>
+                    <a href='#!'>
+                        <LogoSvg className='titleBar_logo' />
+                    </a>
+                </div>
 
-            <div id='shell'>
-                <Menu toggled={menuToggled} onClick={() => this.setState({menuToggled: false})} />
-                <Fragment key={Date.now()}>
-                    {hasError ? genericError : content}
-                </Fragment>
-            </div>
+                <div id='shell'>
+                    <Menu
+                        toggled={menuToggled}
+                        onClick={() => this.setState({menuToggled: false})}
+                    />
 
-            <Notifier />
-        </>
+                    <Fragment key={contentDate}>
+                        {hasError ? genericError : content}
+                    </Fragment>
+                </div>
+
+                <Notifier />
+            </>
         );
     }
 }

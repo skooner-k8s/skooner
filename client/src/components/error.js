@@ -1,4 +1,4 @@
-import './error.scss'
+import './error.scss';
 import React from 'react';
 
 const Error = ({messages}) => (

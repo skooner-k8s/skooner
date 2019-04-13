@@ -1,5 +1,6 @@
 import React from 'react';
 import Base from '../components/base';
+import ChartsContainer from '../components/chartsContainer';
 import Filter from '../components/filter';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
@@ -39,13 +40,14 @@ export default class Dashboard extends Base {
                     onChange={x => this.setState({filter: x})}
                 />
 
-                <div className='charts'>
+                <ChartsContainer>
                     <NodeStatusChart items={nodes} />
                     <PodStatusChart items={pods} />
                     <CpuChart items={pods} metrics={filteredPodMetrics} />
                     <RamChart items={pods} metrics={filteredPodMetrics} />
-                </div>
+                </ChartsContainer>
 
+                <div className='contentPanel_header'>Events</div>
                 <EventsPanel items={filteredEvents} filter={filter} sort={sort} />
             </div>
         );

@@ -18,6 +18,7 @@ import ScaleButton from '../components/scaleButton';
 import {defaultSortInfo} from '../components/sorter';
 import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.replicaSet;
 
@@ -67,11 +68,11 @@ export default class ReplicaSet extends Base {
                     </>
                 </ItemHeader>
 
-                <div className='charts'>
+                <ChartsContainer>
                     <ReplicasChart item={item} />
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (

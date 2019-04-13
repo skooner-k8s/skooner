@@ -13,6 +13,7 @@ import {defaultSortInfo} from '../components/sorter';
 import {parseCpu, parseRam, TO_GB, TO_ONE_M_CPU} from '../utils/unitHelpers';
 import PodStatusChart from '../components/podStatusChart';
 import Field from '../components/field';
+import ChartsContainer from '../components/chartsContainer';
 
 export default class Node extends Base {
     state = {
@@ -43,11 +44,11 @@ export default class Node extends Base {
             <div id='content'>
                 <ItemHeader title={['Node', name]} />
 
-                <div className='charts'>
+                <ChartsContainer>
                     <PodStatusChart items={filteredPods} />
                     <CpuChart item={item} metrics={metrics} />
                     <RamChart item={item} metrics={metrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (
@@ -64,6 +65,7 @@ export default class Node extends Base {
                     )}
                 </div>
 
+                <div className='contentPanel_header'>Conditions</div>
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (
                         <table>
@@ -142,5 +144,5 @@ function RamChart({item, metrics}) {
             )}
             <div className='charts_itemLabel'>Ram Used</div>
         </div>
-    )
+    );
 }

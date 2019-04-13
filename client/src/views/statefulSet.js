@@ -16,6 +16,7 @@ import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo} from '../components/sorter';
 import ReplicasChart from '../components/replicasChart';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.statefulSet;
 
@@ -65,11 +66,11 @@ export default class StatefulSet extends Base {
                     </>
                 </ItemHeader>
 
-                <div className='charts'>
+                <ChartsContainer>
                     <ReplicasChart item={item} />
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (

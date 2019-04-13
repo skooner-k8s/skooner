@@ -13,8 +13,8 @@ export function parseDiskSpace(value) {
 
 export function parseRam(value) {
     return parseUnitsOfBytes(value);
-} 
-    
+}
+
 function parseUnitsOfBytes(value) {
     if (!value) return 0;
 

@@ -16,6 +16,7 @@ import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo} from '../components/sorter';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.daemonSet;
 
@@ -59,7 +60,7 @@ export default class DaemonSet extends Base {
                     </>
                 </ItemHeader>
 
-                <div className='charts'>
+                <ChartsContainer>
                     <div className='charts_item'>
                         {item ? (
                             <Chart
@@ -71,10 +72,11 @@ export default class DaemonSet extends Base {
                             <LoadingChart />
                         )}
                         <div className='charts_itemLabel'>Replicas</div>
+                        <div className='charts_itemSubLabel'>Ready vs Requested</div>
                     </div>
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (
@@ -87,10 +89,19 @@ export default class DaemonSet extends Base {
                 <ContainersPanel spec={item && item.spec.template.spec} />
 
                 <div className='contentPanel_header'>Pods</div>
-                <PodsPanel items={filteredPods} sort={podsSort} metrics={filteredMetrics} skipNamespace={true} />
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={filteredMetrics}
+                    skipNamespace={true}
+                />
 
                 <div className='contentPanel_header'>Events</div>
-                <EventsPanel sort={eventsSort} shortList={true} items={filteredEvents} />
+                <EventsPanel
+                    sort={eventsSort}
+                    shortList={true}
+                    items={filteredEvents}
+                />
             </div>
         );
     }

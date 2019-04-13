@@ -15,6 +15,7 @@ import api from '../services/api';
 import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo} from '../components/sorter';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.job;
 
@@ -59,7 +60,7 @@ export default class Job extends Base {
                 </ItemHeader>
 
 
-                <div className='charts'>
+                <ChartsContainer>
                     <div className='charts_item'>
                         {/* TODO: put a chart here */}
                         <div className='charts_number'>
@@ -71,7 +72,7 @@ export default class Job extends Base {
                     </div>
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (

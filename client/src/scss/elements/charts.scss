@@ -7,12 +7,15 @@ $ct-series-colors: (
     $color-light,
 );
 
+.charts_container {
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
 .charts {
     display: flex;
     justify-content: space-between;
-    margin: 35px 0;
     text-align: center;
-    height: 200px
 }
 
 .charts_item {
@@ -24,7 +27,8 @@ $ct-series-colors: (
     align-items: center;
     flex-direction: column;
     flex: 1;
-    margin: 0 15px;
+    margin: 15px;
+    padding: 10px;
 }
 
 .charts_item:first-child {
@@ -63,14 +67,29 @@ $ct-series-colors: (
     text-transform: uppercase;
 }
 
+.charts_itemSubLabel {
+    color: $color-light;
+    font-size: $font-size-small;
+    text-transform: uppercase;
+}
+
 .chart_innerLabel {
     color: $color-light;
     font-size: $font-size-small;
 }
 
+.chart_dots {
+    display: none;
+}
+
+.chart_dotSelected {
+    color: $color-light;
+}
+
 .ct-chart {
     grid-column: 1;
     grid-row: 1;
+    pointer-events: none;
 }
 
 @media only screen and (max-width: $media-small) {
@@ -80,5 +99,45 @@ $ct-series-colors: (
 
     .charts_itemLabel {
         font-size: $font-size;
+    }
+}
+
+@media only screen and (max-width: $media-xsmall) {
+    .charts {
+        flex-wrap: nowrap;
+        overflow-x: hidden;
+    }
+
+    .chart_1 > .charts_item {
+        transform: translateX(calc(-1 * (100vw - 16px)));
+    }
+
+    .chart_2 > .charts_item {
+        transform: translateX(calc(-2 * (100vw - 16px)));
+    }
+
+    .chart_3 > .charts_item {
+        transform: translateX(calc(-3 * (100vw - 16px)));
+    }
+
+    .charts_item {
+        margin: 10px;
+        flex: 0 0 calc(100vw - 36px);
+
+        transition-duration: $animation-length;
+        transition-property: transform;
+    }
+
+    .charts_item:first-child {
+        margin-left: 3px;
+    }
+
+    .charts_item:last-child {
+        margin-right: 3px;
+    }
+
+    .chart_dots {
+        display: block;
+        text-align: center;
     }
 }

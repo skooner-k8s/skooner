@@ -81,7 +81,10 @@ export default class EditorModal extends Base {
                             ) : (
                                 <div className='editorModal_noDocs'>
                                     <h3>No Docs Found</h3>
-                                    <div>Please enter yaml that includes an `api version` and `kind` to display help. For example</div>
+                                    <div>
+                                        Please enter yaml that includes an &quot;api version&quot;
+                                        and &quot;kind&quot; to display help. For example
+                                    </div>
                                     <pre>kind: ConfigMap</pre>
                                     <pre>apiVersion: v1</pre>
                                 </div>
