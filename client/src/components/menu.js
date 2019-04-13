@@ -13,61 +13,65 @@ export default class Menu extends Base {
         const {showAdd} = this.state || {};
 
         return (
-            <div id='menu' className={toggled ? 'menu_toggled' : undefined}>
+            <>
+                <div className={toggled ? 'menu_background menu_backgroundToggled' : 'menu_background'} onClick={onClick}></div>
 
-                {/* Cluster */}
-                <Group>
-                    <MenuItem title='Cluster' path='' resource='Logo' onClick={onClick} />
-                    <MenuItem title='Nodes' path='node' resource='Node' onClick={onClick} />
-                    <MenuItem title='Namespaces' path='namespace' resource='Namespace' onClick={onClick} />
-                </Group>
+                <div id='menu' className={toggled ? 'menu_toggled' : undefined}>
 
-                {/* Workloads */}
-                <Group>
-                    <MenuItem title='Workloads' path='workload' resource='Deployment' onClick={onClick} />
-                    <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
-                    <MenuItem title='Replicas' path='replicaset' resource='ReplicaSet' onClick={onClick} />
-                    <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
-                    <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
-                    <MenuItem title='Config' path='configmap' resource='ConfigMap' onClick={onClick} />
-                </Group>
+                    {/* Cluster */}
+                    <Group>
+                        <MenuItem title='Cluster' path='' resource='Logo' onClick={onClick} />
+                        <MenuItem title='Nodes' path='node' resource='Node' onClick={onClick} />
+                        <MenuItem title='Namespaces' path='namespace' resource='Namespace' onClick={onClick} />
+                    </Group>
 
-                {/* Storage */}
-                <Group>
-                    <MenuItem title='Storage' path='storageclass' resource='StorageClass' onClick={onClick} />
-                    <MenuItem title='Volumes' path='persistentvolume' resource='PersistentVolume' onClick={onClick} />
-                    <MenuItem title='Claims' path='persistentvolumeclaim' resource='PersistentVolumeClaim' onClick={onClick} />
-                </Group>
+                    {/* Workloads */}
+                    <Group>
+                        <MenuItem title='Workloads' path='workload' resource='Deployment' onClick={onClick} />
+                        <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
+                        <MenuItem title='Replicas' path='replicaset' resource='ReplicaSet' onClick={onClick} />
+                        <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
+                        <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
+                        <MenuItem title='Config' path='configmap' resource='ConfigMap' onClick={onClick} />
+                    </Group>
 
-                {/* Security */}
-                <Group>
-                    <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' onClick={onClick} />
-                    <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} onClick={onClick} />
-                    <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} onClick={onClick} />
-                    <MenuItem title='Secrets' path='secret' resource='Secret' onClick={onClick} />
-                </Group>
+                    {/* Storage */}
+                    <Group>
+                        <MenuItem title='Storage' path='storageclass' resource='StorageClass' onClick={onClick} />
+                        <MenuItem title='Volumes' path='persistentvolume' resource='PersistentVolume' onClick={onClick} />
+                        <MenuItem title='Claims' path='persistentvolumeclaim' resource='PersistentVolumeClaim' onClick={onClick} />
+                    </Group>
 
-                <Group>
-                    <MenuItem title='Profile' path='account' resource='User' onClick={onClick} />
-                </Group>
+                    {/* Security */}
+                    <Group>
+                        <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' onClick={onClick} />
+                        <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} onClick={onClick} />
+                        <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} onClick={onClick} />
+                        <MenuItem title='Secrets' path='secret' resource='Secret' onClick={onClick} />
+                    </Group>
 
-                <Group>
-                    <div className='menu_itemApply'>
-                        <button className='menu_item button_clear' onClick={() => { this.setState({showAdd: true}); onClick(); }}>
-                            <AddSvg className='menu_icon' />
-                            <div className='menu_title'>Apply</div>
-                        </button>
-                    </div>
-                </Group>
+                    <Group>
+                        <MenuItem title='Profile' path='account' resource='User' onClick={onClick} />
+                    </Group>
 
-                {showAdd && (
-                    <EditorModal
-                        onSave={x => api.apply(x)}
-                        onRequestClose={() => this.setState({showAdd: false})}
-                    />
-                )}
+                    <Group>
+                        <div className='menu_itemApply'>
+                            <button className='menu_item button_clear' onClick={() => { this.setState({showAdd: true}); onClick(); }}>
+                                <AddSvg className='menu_icon' />
+                                <div className='menu_title'>Apply</div>
+                            </button>
+                        </div>
+                    </Group>
 
-            </div>
+                    {showAdd && (
+                        <EditorModal
+                            onSave={x => api.apply(x)}
+                            onRequestClose={() => this.setState({showAdd: false})}
+                        />
+                    )}
+
+                </div>
+            </>
         );
     }
 }

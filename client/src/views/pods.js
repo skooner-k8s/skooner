@@ -9,6 +9,7 @@ import PodsPanel from '../components/podsPanel';
 import PodStatusChart from '../components/podStatusChart';
 import {defaultSortInfo} from '../components/sorter';
 import getPodMetrics from '../utils/metricsHelpers';
+import ChartsContainer from '../components/chartsContainer';
 
 export default class Pods extends Base {
     state = {
@@ -41,11 +42,11 @@ export default class Pods extends Base {
                     onNamespaceChange={x => this.setNamespace(x)}
                 />
 
-                <div className='charts'>
+                <ChartsContainer>
                     <PodStatusChart items={filtered} />
                     <CpuChart items={filtered} metrics={filteredMetrics} />
                     <RamChart items={filtered} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <PodsPanel
                     items={filtered}

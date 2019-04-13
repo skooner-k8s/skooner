@@ -9,6 +9,7 @@ import api from '../services/api';
 import test from '../utils/filterHelper';
 import Working from '../components/working';
 import LoadingChart from '../components/loadingChart';
+import ChartsContainer from '../components/chartsContainer';
 
 export default class Workloads extends Base {
     state = {
@@ -53,16 +54,16 @@ export default class Workloads extends Base {
                     onNamespaceChange={x => this.setNamespace(x)}
                 />
 
-                <div className='charts'>
+                <ChartsContainer>
                     <ControllerStatusChart items={filtered} />
                     <PodStatusChart items={filtered} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders sort={sort}/>
+                                <MetadataHeaders includeNamespace={true} sort={sort}/>
                                 <th><Sorter field={getExpectedCount} sort={sort}>Pods</Sorter></th>
                             </tr>
                         </thead>
@@ -71,6 +72,7 @@ export default class Workloads extends Base {
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
+                                    includeNamespace={true}
                                     href={`#!workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
                                 <td>
@@ -102,7 +104,8 @@ function ControllerStatusChart({items}) {
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Controllers</div>
+            <div className='charts_itemLabel'>Workloads</div>
+            <div className='charts_itemSubLabel'>Ready vs Requested</div>
         </div>
     );
 }
@@ -119,6 +122,7 @@ function PodStatusChart({items}) {
                 <LoadingChart />
             )}
             <div className='charts_itemLabel'>Pods</div>
+            <div className='charts_itemSubLabel'>Ready vs Requested</div>
         </div>
     );
 }

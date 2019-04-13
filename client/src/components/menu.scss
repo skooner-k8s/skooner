@@ -1,5 +1,11 @@
 @import '../scss/settings.scss';
 
+.menu_background {
+    z-index: 200;
+    position: initial;
+    display: none;
+}
+
 .menu_group {
     border-bottom: 1px solid $color-light;
 }
@@ -99,5 +105,14 @@ a.menu_itemSelected, a.menu_itemSelected:visited {
 
     .menu_subMenu a {
         transform: initial;
+    }
+
+    .menu_backgroundToggled {
+        display: initial;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 }

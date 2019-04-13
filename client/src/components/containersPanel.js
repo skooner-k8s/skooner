@@ -1,11 +1,11 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {Fragment} from 'react';
 import Field from './field';
 
 const ContainersPanel = ({spec}) => (
     <>
         {spec && _.map(spec.containers, item => (
-            <>
+            <Fragment key={item.name}>
                 <div className='contentPanel_header'>Container</div>
                 <div key={item.name} className='contentPanel'>
 
@@ -50,7 +50,7 @@ const ContainersPanel = ({spec}) => (
                         </Field>
                     )}
                 </div>
-            </>
+            </Fragment>
         ))}
     </>
 );

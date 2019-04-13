@@ -18,6 +18,7 @@ import {filterByOwner} from '../utils/filterHelper';
 import getPodMetrics from '../utils/metricsHelpers';
 import CpuChart from '../components/cpuChart';
 import RamChart from '../components/ramChart';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.pod;
 
@@ -67,14 +68,14 @@ export default class Pod extends Base {
 
                 {errors && !!errors.length && <Error messages={errors} />}
 
-                <div className='charts'>
+                <ChartsContainer>
                     <div className='charts_item'>
                         <div className='charts_number'>{item && item.spec.containers.length}</div>
                         <div className='charts_itemLabel'>Containers</div>
                     </div>
                     <CpuChart items={item && [item]} metrics={filteredMetrics} />
                     <RamChart items={item && [item]} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (

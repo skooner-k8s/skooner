@@ -48,9 +48,6 @@ export default class PersistentVolumeClaims extends Base {
                                 <th className='optional_medium'>
                                     <Sorter field='spec.volumeName' sort={sort}>Volume</Sorter>
                                 </th>
-                                <th className='optional_medium'>
-                                    <Sorter field={getAccessModes} sort={sort}>Access Modes</Sorter>
-                                </th>
                                 <th>
                                     <Sorter field={getDiskSpace} sort={sort}>Capacity</Sorter>
                                 </th>
@@ -67,7 +64,6 @@ export default class PersistentVolumeClaims extends Base {
                                 <td className='optional_small'>{x.status.phase}</td>
                                 <td className='optional_medium'>{x.spec.storageClassName}</td>
                                 <td className='optional_medium'>{x.spec.volumeName}</td>
-                                <td className='optional_medium'>{getAccessModes(x, ' • ')}</td>
                                 <td>{x.status.capacity && x.status.capacity.storage}</td>
                             </tr>
                         )} />
@@ -76,10 +72,6 @@ export default class PersistentVolumeClaims extends Base {
             </div>
         );
     }
-}
-
-function getAccessModes({spec}, join = ' ') {
-    return spec.accessModes.join(join);
 }
 
 function getDiskSpace({status}) {

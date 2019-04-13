@@ -14,19 +14,19 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                         <th className='th_icon optional_medium'>
                             <Sorter field='involvedObject.kind' sort={sort}>Type</Sorter>
                         </th>
-                        <th>
-                            <Sorter field={sortByDate} sort={sort}>Time</Sorter>
-                        </th>
                         {!shortList && (
                             <th>
                                 <Sorter field={sortByName} sort={sort}>Name</Sorter>
                             </th>
                         )}
+                        <th>
+                            <Sorter field={sortByDate} sort={sort}>Time</Sorter>
+                        </th>
                         <th className='optional_small'>
                             <Sorter field='reason' sort={sort}>Reason</Sorter>
                         </th>
                         <th>
-                            <Sorter field='message' sort={sort}>Message</Sorter>
+                            <Sorter field='message' sort={sort}>Event</Sorter>
                         </th>
                     </tr>
                 </thead>
@@ -45,10 +45,10 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                                 />
                                 <div className='td_iconLabel'>{x.involvedObject.kind}</div>
                             </td>
-                            <td>{moment(x.metadata.creationTimestamp).fromNow(true)}</td>
                             {!shortList && (
                                 <td>{x.involvedObject.namespace}:{x.involvedObject.name}</td>
                             )}
+                            <td>{moment(x.metadata.creationTimestamp).fromNow(true)}</td>
                             <td className='optional_small'>{x.reason}</td>
                             <td>{x.message}</td>
                         </tr>

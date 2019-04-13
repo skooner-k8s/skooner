@@ -15,6 +15,7 @@ import api from '../services/api';
 import getPodMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo} from '../components/sorter';
+import ChartsContainer from '../components/chartsContainer';
 
 const service = api.cronJob;
 
@@ -58,14 +59,14 @@ export default class CronJob extends Base {
                     </>
                 </ItemHeader>
 
-                <div className='charts'>
+                <ChartsContainer>
                     <div className='charts_item'>
                         <div className='charts_number'>{(item && item.status.active) ? item.status.active.length : 0}</div>
                         <div className='charts_itemLabel'>Active</div>
                     </div>
                     <CpuChart items={filteredPods} metrics={filteredMetrics} />
                     <RamChart items={filteredPods} metrics={filteredMetrics} />
-                </div>
+                </ChartsContainer>
 
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (

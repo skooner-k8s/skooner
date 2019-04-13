@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
 	padding-top: 15px;
-
+	margin-bottom: 25px;
 }
 
 #header > .button_headerAction {
@@ -94,5 +94,9 @@ input[type="text"].header_filter {
 @media only screen and (max-width: $media-xsmall) {
 	.header_label {
 		font-size: $font-size-medium;
+	}
+
+	#header {
+		margin-bottom: 5px;
 	}
 }

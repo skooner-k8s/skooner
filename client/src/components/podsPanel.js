@@ -2,8 +2,8 @@ import './podsPanel.scss';
 import React from 'react';
 import _ from 'lodash';
 import Base from './base';
-import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import Sorter from './sorter';
+import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
 
 export default class PodsPanel extends Base {
@@ -43,7 +43,7 @@ export default class PodsPanel extends Base {
                                 <Sorter field={this.sortByCpu} sort={sort}>
                                     Cpu
                                     <div className='podsPanel_label'>
-                                        actual vs. request
+                                        actual vs. reserved
                                     </div>
                                 </Sorter>
                             </th>
@@ -51,7 +51,7 @@ export default class PodsPanel extends Base {
                                 <Sorter field={this.sortByRam} sort={sort}>
                                     Ram
                                     <div className='podsPanel_label'>
-                                        actual vs. request
+                                        actual vs. reserved
                                     </div>
                                 </Sorter>
                             </th>
