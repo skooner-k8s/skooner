@@ -15,13 +15,13 @@ export default class PodsPanel extends Base {
 
     sortByCpu(item) {
         const actual = getCpuUsage(item, this.props.metrics);
-        const requested = getCpuRequest(item);
+        const requested = getCpuRequest(item, this.props.metrics);
         return actual / requested;
     }
 
     sortByRam(item) {
-        const actual = getRamUsage(item, this.props.metrics);
-        const requested = getRamRequest(item);
+        const actual = getRamUsage(item, this.props.metrics, null);
+        const requested = getRamRequest(item, this.props.metrics);
         return actual / requested;
     }
 
@@ -95,30 +95,43 @@ function Cpu({item, metrics}) {
     if (!containers) return null;
 
     const actual = getCpuUsage(item, metrics);
-    const requested = getCpuRequest(item);
-    return <Chart actual={actual} requested={requested} unparser={unparseCpu} />;
+    const requested = getCpuRequest(item, metrics);
+    const defined = getCpuRequestFlag(item);
+    return <Chart actual={actual} requested={requested} unparser={unparseCpu} defined={defined} />;
 }
 
-function getCpuUsage(item, metrics) {
+function getCpuUsage(item, metrics, name) {
     const containers = getContainerMetrics(item, metrics);
-    return _.sumBy(containers, x => parseCpu(x.usage.cpu));
+    return _.sumBy(containers, (x) => {
+        if (name && x.name !== name) {
+            return 0;
+        }
+        return parseCpu(x.usage.cpu);
+    });
 }
 
-function getCpuRequest(item) {
-    const podContainers = _.filter(item.spec.containers, x => x.resources && x.resources.requests);
-    return _.sumBy(podContainers, x => parseCpu(x.resources.requests.cpu));
+function getCpuRequest(item, metrics) {
+    return _.sumBy(item.spec.containers, (x) => {
+        if (!x.resources.requests || !x.resources.requests.cpu) return getCpuUsage(item, metrics, x.name);
+        return parseCpu(x.resources.requests.cpu);
+    });
+}
+
+function getCpuRequestFlag(item) {
+    return !_.some(item.spec.containers, x => !x.resources.requests || !x.resources.requests.cpu);
 }
 
 function Ram({item, metrics}) {
     const containers = getContainerMetrics(item, metrics);
     if (!containers) return null;
 
-    const actual = getRamUsage(item, metrics);
-    const requested = getRamRequest(item);
-    return <Chart actual={actual} requested={requested} unparser={unparseRam} />;
+    const actual = getRamUsage(item, metrics, null);
+    const requested = getRamRequest(item, metrics);
+    const defined = getRamRequestFlag(item);
+    return <Chart actual={actual} requested={requested} unparser={unparseRam} defined={defined} />;
 }
 
-function Chart({actual, requested, unparser}) {
+function Chart({actual, requested, unparser, defined}) {
     const isWarning = requested && (actual > requested);
     const actualRam = unparser(actual);
     const requestedRam = unparser(requested);
@@ -129,23 +142,32 @@ function Chart({actual, requested, unparser}) {
             <div>{requested ? `${percent}%` : 'N/A'}</div>
             <div className='podsPanel_label'>
                 <span>{actualRam.value}{actualRam.unit}</span>
-                <span> of </span>
-                <span>{requestedRam.value}{requestedRam.unit}</span>
+                {defined && <span> of </span>}
+                {defined && <span>{requestedRam.value}{requestedRam.unit}</span>}
             </div>
         </div>
     );
 }
 
-function getRamUsage(item, metrics) {
+function getRamUsage(item, metrics, name) {
     const containers = getContainerMetrics(item, metrics);
-    return _.sumBy(containers, x => parseRam(x.usage.memory));
+    return _.sumBy(containers, (x) => {
+        if (name && x.name !== name) {
+            return 0;
+        }
+        return parseRam(x.usage.memory);
+    });
 }
 
-function getRamRequest(item) {
+function getRamRequest(item, metrics) {
     return _.sumBy(item.spec.containers, (x) => {
-        if (!x.resources.requests) return 0;
+        if (!x.resources.requests || !x.resources.requests.memory) return getRamUsage(item, metrics, x.name);
         return parseRam(x.resources.requests.memory);
     });
+}
+
+function getRamRequestFlag(item) {
+    return !_.some(item.spec.containers, x => !x.resources.requests || !x.resources.requests.memory);
 }
 
 function getContainerMetrics(item, metrics) {

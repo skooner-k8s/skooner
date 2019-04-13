@@ -9,7 +9,8 @@
     "parserOptions": {
         "jsx": true
     },
-    "rules": {
+    "rules": {        
+        "max-len": ["error", 150],
         "indent": [
             "error",
             4,
