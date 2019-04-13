@@ -29,13 +29,23 @@ export default function RamChart({items, metrics}) {
 export function getPodRamTotals(items, metrics) {
     if (!items || !metrics) return null;
 
-    const metricsContainers = Object.values(metrics).flatMap(x => x.containers);
+    const metricsContainers = Object.values(metrics)
+        .flatMap(x => x.containers);
+
+    const metricsContainersWithoutRequests = Object.values(metrics)
+        .flatMap(x => x.containers)
+        .filter(x => !x.resources || !x.resources.requests || !x.resource.requests.memory);
+
     const podContainers = items
         .flatMap(x => x.spec.containers)
-        .filter(x => x.resources && x.resources.requests);
+        .filter(x => x.resources && x.resources.requests && x.resources.requests.memory);
 
     const used = _.sumBy(metricsContainers, x => parseRam(x.usage.memory)) / TO_GB;
-    const available = _.sumBy(podContainers, x => parseRam(x.resources.requests.memory)) / TO_GB;
+
+    let available = _.sumBy(metricsContainersWithoutRequests, x => parseRam(x.usage.memory));
+
+    available += _.sumBy(podContainers, x => parseRam(x.resources.requests.memory));
+    available /= TO_GB;
 
     return {used, available};
 }
