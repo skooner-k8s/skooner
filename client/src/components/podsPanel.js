@@ -5,6 +5,7 @@ import Base from './base';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import Sorter from './sorter';
 import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
+import {getCpuRequestFlag, getRamRequestFlag} from '../utils/itemHelpers';
 
 export default class PodsPanel extends Base {
     constructor(props) {
@@ -117,10 +118,6 @@ function getCpuRequest(item, metrics) {
     });
 }
 
-function getCpuRequestFlag(item) {
-    return !_.some(item.spec.containers, x => !x.resources.requests || !x.resources.requests.cpu);
-}
-
 function Ram({item, metrics}) {
     const containers = getContainerMetrics(item, metrics);
     if (!containers) return null;
@@ -164,10 +161,6 @@ function getRamRequest(item, metrics) {
         if (!x.resources.requests || !x.resources.requests.memory) return getRamUsage(item, metrics, x.name);
         return parseRam(x.resources.requests.memory);
     });
-}
-
-function getRamRequestFlag(item) {
-    return !_.some(item.spec.containers, x => !x.resources.requests || !x.resources.requests.memory);
 }
 
 function getContainerMetrics(item, metrics) {
