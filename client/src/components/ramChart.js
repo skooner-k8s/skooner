@@ -29,23 +29,27 @@ export default function RamChart({items, metrics}) {
 export function getPodRamTotals(items, metrics) {
     if (!items || !metrics) return null;
 
-    const metricsContainers = Object.values(metrics)
-        .flatMap(x => x.containers);
-
-    const metricsContainersWithoutRequests = Object.values(metrics)
+    const used = _(metrics)
         .flatMap(x => x.containers)
-        .filter(x => !x.resources || !x.resources.requests || !x.resource.requests.memory);
+        .sumBy(x => parseRam(x.usage.memory));
 
-    const podContainers = items
+    const available = _(items)
         .flatMap(x => x.spec.containers)
-        .filter(x => x.resources && x.resources.requests && x.resources.requests.memory);
+        .filter(x => x.resources && x.resources.requests && x.resources.requests.memory)
+        .sumBy(x => parseRam(x.resources.requests.memory));
 
-    const used = _.sumBy(metricsContainers, x => parseRam(x.usage.memory)) / TO_GB;
+    const namesWithoutResources = _(items)
+        .flatMap(x => x.spec.containers)
+        .filter(x => !x.resources || !x.resources.requests || !x.resources.requests.memory)
+        .map(x => x.name);
 
-    let available = _.sumBy(metricsContainersWithoutRequests, x => parseRam(x.usage.memory));
+    const availablePlus = _(metrics)
+        .flatMap(x => x.containers)
+        .filter(x => namesWithoutResources.includes(x.name))
+        .sumBy(x => parseRam(x.usage.memory));
 
-    available += _.sumBy(podContainers, x => parseRam(x.resources.requests.memory));
-    available /= TO_GB;
-
-    return {used, available};
+    return {
+        used: used / TO_GB,
+        available: (available + availablePlus) / TO_GB,
+    };
 }

@@ -33,11 +33,21 @@ function getPodCpuTotals(items, metrics) {
 
     const available = _(items)
         .flatMap(x => x.spec.containers)
-        .filter(x => x.resources && x.resources.requests)
+        .filter(x => x.resources && x.resources.requests && x.resources.requests.cpu)
         .sumBy(x => parseCpu(x.resources.requests.cpu));
 
+    const namesWithoutResources = _(items)
+        .flatMap(x => x.spec.containers)
+        .filter(x => !x.resources || !x.resources.requests || !x.resources.requests.cpu)        
+        .map(x => x.name);
+        
+    const availablePlus = _(metrics)
+        .flatMap(x => x.containers)
+        .filter(x => namesWithoutResources.includes(x.name))
+        .sumBy(x => parseCpu(x.usage.cpu));
+    
     return {
         used: used / TO_ONE_CPU,
-        available: available / TO_ONE_CPU,
+        available: (available + availablePlus) / TO_ONE_CPU,
     };
 }
