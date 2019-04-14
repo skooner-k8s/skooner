@@ -11,7 +11,7 @@ const options = {
 };
 
 export default function Chart(props) {
-    const {used = 0, usedSuffix, available = 0, availableSuffix, pending = 0, decimals = 1} = props;
+    const {used = 0, usedSuffix, available = 0, availableSuffix, pending = 0, decimals = 1, defined = true} = props;
 
     const fixedUsed = _.round(used, decimals);
     const fixedPending = _.round(pending, decimals);
@@ -31,15 +31,15 @@ export default function Chart(props) {
                         </>
                     )}
                 </div>
-                <div className='chart_innerLabel'>of</div>
-                <div>
+                {defined && <div className='chart_innerLabel'>of</div>}
+                {defined && <div>
                     {Number.isFinite(fixedAvailable) && (
                         <>
                             <span>{fixedAvailable}</span>
                             {availableSuffix && (<span className='chart_innerLabel'>{availableSuffix}</span>)}
                         </>
                     )}
-                </div>
+                </div>}
             </span>
         </div>
     );

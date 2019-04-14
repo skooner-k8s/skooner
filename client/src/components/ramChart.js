@@ -3,10 +3,12 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
+import {getRamRequestFlag} from '../utils/itemHelpers';
 
 export default function RamChart({items, metrics}) {
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
+    const defined = items ? !_(items).every(x => !getRamRequestFlag(x)) : true;
 
     return (
         <div className='charts_item'>
@@ -17,6 +19,7 @@ export default function RamChart({items, metrics}) {
                     usedSuffix='Gb'
                     available={totals && totals.available}
                     availableSuffix='Gb'
+                    defined={defined}
                 />
             ) : (
                 <LoadingChart />

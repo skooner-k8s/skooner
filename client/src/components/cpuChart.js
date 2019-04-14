@@ -3,10 +3,12 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
+import {getCpuRequestFlag} from '../utils/itemHelpers';
 
 export default function CpuChart({items, metrics}) {
     const totals = getPodCpuTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
+    const defined = items ? !_(items).every(x => !getCpuRequestFlag(x)) : true;
 
     return (
         <div className='charts_item'>
@@ -15,6 +17,7 @@ export default function CpuChart({items, metrics}) {
                     decimals={decimals}
                     used={totals.used}
                     available={totals.available}
+                    defined={defined}
                 />
             ) : (
                 <LoadingChart />
@@ -38,14 +41,14 @@ function getPodCpuTotals(items, metrics) {
 
     const namesWithoutResources = _(items)
         .flatMap(x => x.spec.containers)
-        .filter(x => !x.resources || !x.resources.requests || !x.resources.requests.cpu)        
+        .filter(x => !x.resources || !x.resources.requests || !x.resources.requests.cpu)
         .map(x => x.name);
-        
+
     const availablePlus = _(metrics)
         .flatMap(x => x.containers)
         .filter(x => namesWithoutResources.includes(x.name))
         .sumBy(x => parseCpu(x.usage.cpu));
-    
+
     return {
         used: used / TO_ONE_CPU,
         available: (available + availablePlus) / TO_ONE_CPU,
