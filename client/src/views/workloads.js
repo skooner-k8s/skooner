@@ -68,7 +68,7 @@ export default class Workloads extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='5' row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
