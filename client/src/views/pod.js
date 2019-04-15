@@ -69,10 +69,6 @@ export default class Pod extends Base {
                 {errors && !!errors.length && <Error messages={errors} />}
 
                 <ChartsContainer>
-                    <div className='charts_item'>
-                        <div className='charts_number'>{item && item.spec.containers.length}</div>
-                        <div className='charts_itemLabel'>Containers</div>
-                    </div>
                     <CpuChart items={item && [item]} metrics={filteredMetrics} />
                     <RamChart items={item && [item]} metrics={filteredMetrics} />
                 </ChartsContainer>

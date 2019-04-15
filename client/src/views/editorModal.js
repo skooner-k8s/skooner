@@ -29,7 +29,7 @@ export default class EditorModal extends Base {
         }
     }
 
-    async add() {
+    async save() {
         const {onSave} = this.props;
         const {yaml = ''} = this.state;
 
@@ -57,10 +57,10 @@ export default class EditorModal extends Base {
     }
 
     render() {
-        const {properties, showDocs} = this.state || {};
+        const {yaml, properties, showDocs} = this.state || {};
         const {body} = this.props;
 
-        const yaml = body && yamljs.stringify(body, 10, 2);
+        const defaultYaml = body && yamljs.stringify(body, 10, 2);
 
         return (
             <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>
@@ -69,7 +69,7 @@ export default class EditorModal extends Base {
                         <textarea
                             hidden={showDocs}
                             className='editorModal_input'
-                            defaultValue={yaml}
+                            defaultValue={defaultYaml}
                             placeholder="Enter some yaml here, y'all..."
                             onChange={x => this.onEdit(x.target.value)}
                             spellCheck='false'
@@ -99,7 +99,7 @@ export default class EditorModal extends Base {
                                 </span>
                             </Button>
                             <div className='editorModal_spacer'></div>
-                            <Button className='button' onClick={() => this.add()}>Save</Button>
+                            <Button disabled={!yaml} className='button' onClick={() => this.save()}>Save</Button>
                             <Button className='button_negative' onClick={() => this.close()}>Cancel</Button>
                         </div>
                     </div>
