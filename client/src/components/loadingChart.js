@@ -1,3 +1,4 @@
+import './loadingChart.scss';
 import React from 'react';
 import ChartistGraph from 'react-chartist';
 
@@ -13,8 +14,10 @@ export default function Chart() {
     return (
         <div className='charts_donut'>
             <ChartistGraph data={{series: [0, 0, 1]}} options={options} type='Pie' />
-            <span className='chart_donutLabel'>
-                ...
+            <span className='chart_donutLabel loadingChart'>
+                <span>.</span>
+                <span>.</span>
+                <span>.</span>
             </span>
         </div>
     );

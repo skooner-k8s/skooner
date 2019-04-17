@@ -15,9 +15,9 @@ import EventsPanel from '../components/eventsPanel';
 import ContainersPanel from '../components/containersPanel';
 import {objectMap} from '../components/listViewHelpers';
 import {filterByOwner} from '../utils/filterHelper';
-import getPodMetrics from '../utils/metricsHelpers';
-import CpuChart from '../components/cpuChart';
-import RamChart from '../components/ramChart';
+import getMetrics from '../utils/metricsHelpers';
+import PodCpuChart from '../components/podCpuChart';
+import PodRamChart from '../components/podRamChart';
 import ChartsContainer from '../components/chartsContainer';
 
 const service = api.pod;
@@ -39,7 +39,7 @@ export default class Pod extends Base {
 
         const errors = getErrors(item);
         const filteredEvents = filterByOwner(events, item);
-        const filteredMetrics = getPodMetrics(item && [item], metrics && [metrics]);
+        const filteredMetrics = getMetrics(item && [item], metrics && [metrics]);
 
         return (
             <div id='content'>
@@ -69,8 +69,8 @@ export default class Pod extends Base {
                 {errors && !!errors.length && <Error messages={errors} />}
 
                 <ChartsContainer>
-                    <CpuChart items={item && [item]} metrics={filteredMetrics} />
-                    <RamChart items={item && [item]} metrics={filteredMetrics} />
+                    <PodCpuChart items={item && [item]} metrics={filteredMetrics} />
+                    <PodRamChart items={item && [item]} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <div className='contentPanel'>

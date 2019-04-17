@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import ChartsContainer from '../components/chartsContainer';
@@ -8,9 +7,9 @@ import NodeStatusChart from '../components/nodeStatusChart';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import NodesPanel from '../components/nodesPanel';
-import Chart from '../components/chart';
-import LoadingChart from '../components/loadingChart';
-import {parseCpu, parseRam, TO_GB, TO_ONE_CPU} from '../utils/unitHelpers';
+import NodeCpuChart from '../components/nodeCpuChart';
+import NodeRamChart from '../components/nodeRamChart';
+import getMetrics from '../utils/metricsHelpers';
 
 export default class Nodes extends Base {
     state = {
@@ -34,7 +33,7 @@ export default class Nodes extends Base {
             return test(filter, x.metadata.name, ...searchableLabels);
         });
 
-        const filteredMetrics = getNodeMetrics(filtered, metrics);
+        const filteredMetrics = getMetrics(filtered, metrics);
 
         return (
             <div id='content'>
@@ -46,8 +45,8 @@ export default class Nodes extends Base {
 
                 <ChartsContainer>
                     <NodeStatusChart items={filtered} />
-                    <CpuTotalsChart items={filtered} metrics={filteredMetrics} />
-                    <RamTotalsChart items={filtered} metrics={filteredMetrics} />
+                    <NodeCpuChart items={filtered} metrics={filteredMetrics} />
+                    <NodeRamChart items={filtered} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <NodesPanel
@@ -58,63 +57,4 @@ export default class Nodes extends Base {
             </div>
         );
     }
-}
-
-function CpuTotalsChart({items, metrics}) {
-    const totals = getNodeCpuTotals(items, metrics);
-    return (
-        <div className='charts_item'>
-            {totals ? (
-                <Chart used={totals.used} available={totals.available} />
-            ) : (
-                <LoadingChart />
-            )}
-            <div className='charts_itemLabel'>Cores</div>
-            <div className='charts_itemSubLabel'>Used vs Available</div>
-        </div>
-    );
-}
-
-function RamTotalsChart({items, metrics}) {
-    const totals = getNodeRamTotals(items, metrics);
-    return (
-        <div className='charts_item'>
-            {totals ? (
-                <Chart used={totals.used} usedSuffix='Gb' available={totals.available} availableSuffix='Gb' />
-            ) : (
-                <LoadingChart />
-            )}
-            <div className='charts_itemLabel'>Ram</div>
-            <div className='charts_itemSubLabel'>Used vs Available</div>
-        </div>
-    );
-}
-
-function getNodeMetrics(nodes, metrics) {
-    if (!nodes || !metrics) return null;
-
-    const names = _.map(nodes, x => x.metadata.name);
-    const filteredMetrics = metrics.filter(x => names.includes(x.metadata.name));
-
-    return _.keyBy(filteredMetrics, 'metadata.name');
-}
-
-function getNodeCpuTotals(items, metrics) {
-    if (!items || !metrics) return null;
-
-    const metricValues = Object.values(metrics);
-    const used = _.sumBy(metricValues, x => parseCpu(x.usage.cpu)) / TO_ONE_CPU;
-    const available = _.sumBy(items, x => parseCpu(x.status.capacity.cpu)) / TO_ONE_CPU;
-
-    return {used, available};
-}
-
-function getNodeRamTotals(items, metrics) {
-    if (!items || !metrics) return null;
-
-    const metricValues = Object.values(metrics);
-    const used = _.sumBy(metricValues, x => parseRam(x.usage.memory)) / TO_GB;
-    const available = _.sumBy(items, x => parseRam(x.status.capacity.memory)) / TO_GB;
-
-    return {used, available};
 }
