@@ -53,4 +53,8 @@ td {
 	.wrapped > tbody > tr > td {
 		padding: 0.25rem;
 	}
+
+	.wrapped .wrapped_name {
+		font-weight: bold;
+	}
 }

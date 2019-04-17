@@ -3,9 +3,9 @@ import React from 'react';
 import api from '../services/api';
 import Base from '../components/base';
 import ContainersPanel from '../components/containersPanel';
-import CpuChart from '../components/cpuChart';
+import PodCpuChart from '../components/podCpuChart';
 import ReplicasChart from '../components/replicasChart';
-import RamChart from '../components/ramChart';
+import PodRamChart from '../components/podRamChart';
 import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import ItemHeader from '../components/itemHeader';
@@ -16,7 +16,7 @@ import PodsPanel from '../components/podsPanel';
 import SaveButton from '../components/saveButton';
 import ScaleButton from '../components/scaleButton';
 import {defaultSortInfo} from '../components/sorter';
-import getPodMetrics from '../utils/metricsHelpers';
+import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ChartsContainer from '../components/chartsContainer';
 
@@ -45,7 +45,7 @@ export default class ReplicaSet extends Base {
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
-        const filteredMetrics = getPodMetrics(filteredPods, metrics);
+        const filteredMetrics = getMetrics(filteredPods, metrics);
 
         return (
             <div id='content'>
@@ -70,8 +70,8 @@ export default class ReplicaSet extends Base {
 
                 <ChartsContainer>
                     <ReplicasChart item={item} />
-                    <CpuChart items={filteredPods} metrics={filteredMetrics} />
-                    <RamChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodRamChart items={filteredPods} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <div className='contentPanel'>

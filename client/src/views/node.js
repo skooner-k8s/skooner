@@ -3,17 +3,20 @@ import React from 'react';
 import moment from 'moment';
 import api from '../services/api';
 import Base from '../components/base';
-import Chart from '../components/chart';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import LoadingChart from '../components/loadingChart';
 import MetadataFields from '../components/metadataFields';
 import PodsPanel from '../components/podsPanel';
 import {defaultSortInfo} from '../components/sorter';
-import {parseCpu, parseRam, TO_GB, TO_ONE_M_CPU} from '../utils/unitHelpers';
-import PodStatusChart from '../components/podStatusChart';
 import Field from '../components/field';
 import ChartsContainer from '../components/chartsContainer';
+import NodeCpuChart from '../components/nodeCpuChart';
+import NodeRamChart from '../components/nodeRamChart';
+import PodStatusChart from '../components/podStatusChart';
+import PodCpuChart from '../components/podCpuChart';
+import PodRamChart from '../components/podRamChart';
+import getMetrics from '../utils/metricsHelpers';
 
 export default class Node extends Base {
     state = {
@@ -25,12 +28,9 @@ export default class Node extends Base {
 
         this.registerApi({
             item: api.node.get(name, item => this.setState({item})),
-            pods: api.pod.list(null, pods => this.setState({pods})),
             metrics: api.metrics.node(name, metrics => this.setState({metrics})),
-            podMetrics: api.metrics.pods(null, (x) => {
-                const podMetrics = _.keyBy(x, 'metadata.name');
-                this.setState({podMetrics});
-            }),
+            pods: api.pod.list(null, pods => this.setState({pods})),
+            podMetrics: api.metrics.pods(null, podMetrics => this.setState({podMetrics})),
         });
     }
 
@@ -39,15 +39,29 @@ export default class Node extends Base {
         const {item, pods, metrics, podMetrics, podsSort} = this.state;
 
         const filteredPods = pods && pods.filter(x => x.spec.nodeName === name);
+        const filteredPodMetrics = getMetrics(filteredPods, podMetrics);
 
         return (
             <div id='content'>
                 <ItemHeader title={['Node', name]} />
 
                 <ChartsContainer>
+                    <div className='charts_item'>
+                        {item ? (
+                            <span className='charts_number'>{getUpTime(item)}</span>
+                        ) : (
+                            <LoadingChart />
+                        )}
+                        <div className='charts_itemLabel'>Days Up</div>
+                    </div>
+                    <NodeCpuChart items={item && [item]} metrics={metrics && [metrics]} />
+                    <NodeRamChart items={item && [item]} metrics={metrics && [metrics]} />
+                </ChartsContainer>
+
+                <ChartsContainer>
                     <PodStatusChart items={filteredPods} />
-                    <CpuChart item={item} metrics={metrics} />
-                    <RamChart item={item} metrics={metrics} />
+                    <PodCpuChart items={filteredPods} metrics={filteredPodMetrics} />
+                    <PodRamChart items={filteredPods} metrics={filteredPodMetrics} />
                 </ChartsContainer>
 
                 <div className='contentPanel'>
@@ -97,7 +111,7 @@ export default class Node extends Base {
                 <PodsPanel
                     items={filteredPods}
                     sort={podsSort}
-                    metrics={podMetrics}
+                    metrics={filteredPodMetrics}
                     skipNodeName={true}
                 />
             </div>
@@ -105,44 +119,12 @@ export default class Node extends Base {
     }
 }
 
-function CpuChart({item, metrics}) {
-    const usedCpu = metrics && parseCpu(metrics.usage.cpu) / TO_ONE_M_CPU;
-    const availableCpu = item && parseCpu(item.status.capacity.cpu) / TO_ONE_M_CPU;
+function getUpTime({status}) {
+    const ready = status.conditions.find(y => y.type === 'Ready');
+    if (!ready) return 'N/A';
 
-    return (
-        <div className='charts_item'>
-            {item && metrics ? (
-                <Chart
-                    used={usedCpu}
-                    usedSuffix='m'
-                    available={availableCpu}
-                    availableSuffix='m'
-                />
-            ) : (
-                <LoadingChart />
-            )}
-            <div className='charts_itemLabel'>Cpu Used</div>
-        </div>
-    );
-}
-
-function RamChart({item, metrics}) {
-    const usedRam = metrics && parseRam(metrics.usage.memory) / TO_GB;
-    const availableRam = item && parseRam(item.status.capacity.memory) / TO_GB;
-
-    return (
-        <div className='charts_item'>
-            {item && metrics ? (
-                <Chart
-                    used={usedRam}
-                    usedSuffix='Gi'
-                    available={availableRam}
-                    availableSuffix='Gi'
-                />
-            ) : (
-                <LoadingChart />
-            )}
-            <div className='charts_itemLabel'>Ram Used</div>
-        </div>
-    );
+    const last = moment(ready.lastTransitionTime);
+    const diff = moment().diff(last);
+    const hours = moment.duration(diff).asDays();
+    return _.round(hours);
 }
