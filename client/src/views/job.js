@@ -1,7 +1,7 @@
 import React from 'react';
 import Base from '../components/base';
 import ContainersPanel from '../components/containersPanel';
-import CpuChart from '../components/cpuChart';
+import PodCpuChart from '../components/podCpuChart';
 import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import Field from '../components/field';
@@ -9,10 +9,10 @@ import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import PodsPanel from '../components/podsPanel';
-import RamChart from '../components/ramChart';
+import PodRamChart from '../components/podRamChart';
 import SaveButton from '../components/saveButton';
 import api from '../services/api';
-import getPodMetrics from '../utils/metricsHelpers';
+import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
@@ -42,7 +42,7 @@ export default class Job extends Base {
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
-        const filteredMetrics = getPodMetrics(filteredPods, metrics);
+        const filteredMetrics = getMetrics(filteredPods, metrics);
 
         return (
             <div id='content'>
@@ -70,8 +70,8 @@ export default class Job extends Base {
                         </div>
                         <div className='charts_itemLabel'>Active / Succeeded</div>
                     </div>
-                    <CpuChart items={filteredPods} metrics={filteredMetrics} />
-                    <RamChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodRamChart items={filteredPods} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <div className='contentPanel'>

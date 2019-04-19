@@ -10,9 +10,9 @@ import EventsPanel from '../components/eventsPanel';
 import PodsPanel from '../components/podsPanel';
 import Chart from '../components/chart';
 import LoadingChart from '../components/loadingChart';
-import RamChart from '../components/ramChart';
-import CpuChart from '../components/cpuChart';
-import getPodMetrics from '../utils/metricsHelpers';
+import PodRamChart from '../components/podRamChart';
+import PodCpuChart from '../components/podCpuChart';
+import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo} from '../components/sorter';
@@ -43,7 +43,7 @@ export default class DaemonSet extends Base {
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
-        const filteredMetrics = getPodMetrics(filteredPods, metrics);
+        const filteredMetrics = getMetrics(filteredPods, metrics);
 
         return (
             <div id='content'>
@@ -74,8 +74,8 @@ export default class DaemonSet extends Base {
                         <div className='charts_itemLabel'>Replicas</div>
                         <div className='charts_itemSubLabel'>Ready vs Requested</div>
                     </div>
-                    <CpuChart items={filteredPods} metrics={filteredMetrics} />
-                    <RamChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodRamChart items={filteredPods} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <div className='contentPanel'>
