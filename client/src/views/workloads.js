@@ -145,9 +145,13 @@ function getExpectedCount({spec, status}) {
 }
 
 function filterControllers(filter, items) {
-    const results = items.flat();
+    const results = items
+        .flat()
+        .filter(x => !!x);
 
-    if (results.length && items.some(x => !x)) return null;
+    // If there are no results yet but some of the workload types are still
+    // loading, return "null" so we display the "loading" control
+    if (!results.length && items.some(x => !x)) return null;
 
     return _(results)
         .flatten()

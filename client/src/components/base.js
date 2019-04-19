@@ -16,7 +16,8 @@ export default class Base extends Component {
     }
 
     async clearDisposers() {
-        for (const name of Object.keys(this.apis || {})) {
+        const keys = Object.keys(this.apis || {});
+        for (const name of keys) {
             this.clearDisposer(name);
         }
     }

@@ -46,7 +46,7 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                                 <div className='td_iconLabel'>{x.involvedObject.kind}</div>
                             </td>
                             {!shortList && (
-                                <td>{x.involvedObject.namespace}:{x.involvedObject.name}</td>
+                                <td className='wrapped_name'>{x.involvedObject.namespace}:{x.involvedObject.name}</td>
                             )}
                             <td>{moment(x.metadata.creationTimestamp).fromNow(true)}</td>
                             <td className='optional_small'>{x.reason}</td>

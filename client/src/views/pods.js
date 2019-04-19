@@ -3,12 +3,12 @@ import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import CpuChart from '../components/cpuChart';
-import RamChart from '../components/ramChart';
+import PodCpuChart from '../components/podCpuChart';
+import PodRamChart from '../components/podRamChart';
 import PodsPanel from '../components/podsPanel';
 import PodStatusChart from '../components/podStatusChart';
 import {defaultSortInfo} from '../components/sorter';
-import getPodMetrics from '../utils/metricsHelpers';
+import getMetrics from '../utils/metricsHelpers';
 import ChartsContainer from '../components/chartsContainer';
 
 export default class Pods extends Base {
@@ -31,7 +31,7 @@ export default class Pods extends Base {
     render() {
         const {items, metrics, namespace, sort, filter} = this.state;
         const filtered = items && items.filter(x => test(filter, x.metadata.name));
-        const filteredMetrics = getPodMetrics(filtered, metrics);
+        const filteredMetrics = getMetrics(filtered, metrics);
 
         return (
             <div id='content'>
@@ -44,8 +44,8 @@ export default class Pods extends Base {
 
                 <ChartsContainer>
                     <PodStatusChart items={filtered} />
-                    <CpuChart items={filtered} metrics={filteredMetrics} />
-                    <RamChart items={filtered} metrics={filteredMetrics} />
+                    <PodCpuChart items={filtered} metrics={filteredMetrics} />
+                    <PodRamChart items={filtered} metrics={filteredMetrics} />
                 </ChartsContainer>
 
                 <PodsPanel
