@@ -1,33 +1,29 @@
 import './podsPanel.scss';
-import React from 'react';
 import _ from 'lodash';
+import React from 'react';
 import Base from './base';
 import Sorter from './sorter';
+import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
-import {parseRam, unparseRam, parseCpu, unparseCpu} from '../utils/unitHelpers';
+import {unparseRam, unparseCpu} from '../utils/unitHelpers';
+import {getPodResourcePercent, getPodUsage, getPodResourceValue} from '../utils/metricsHelpers';
 
 export default class PodsPanel extends Base {
     constructor(props) {
         super(props);
-        this.sortByCpu = this.sortByCpu.bind(this);
-        this.sortByRam = this.sortByRam.bind(this);
-    }
 
-    sortByCpu(item) {
-        const actual = getCpuUsage(item, this.props.metrics);
-        const requested = getCpuRequest(item);
-        return actual / requested;
-    }
+        this.sortByCpuUsage = x => getPodUsage(x, this.props.metrics, 'cpu');
+        this.sortByCpuRequest = x => getPodResourcePercent(x, this.props.metrics, 'cpu', 'requests');
+        this.sortByCpuLimit = x => getPodResourcePercent(x, this.props.metrics, 'cpu', 'limits');
 
-    sortByRam(item) {
-        const actual = getRamUsage(item, this.props.metrics);
-        const requested = getRamRequest(item);
-        return actual / requested;
+        this.sortByRamUsage = x => getPodUsage(x, this.props.metrics, 'memory');
+        this.sortByRamRequest = x => getPodResourcePercent(x, this.props.metrics, 'memory', 'requests');
+        this.sortByRamLimit = x => getPodResourcePercent(x, this.props.metrics, 'memory', 'limits');
     }
 
     render() {
         const {items, metrics, sort, filter, skipNamespace, skipNodeName} = this.props;
-        const col = 8 + !skipNamespace + !skipNodeName;
+        const col = 8 + !skipNamespace + !skipNodeName; // TODO: fix me
 
         return (
             <div className='contentPanel'>
@@ -35,25 +31,30 @@ export default class PodsPanel extends Base {
                     <thead>
                         <tr>
                             <MetadataHeaders sort={sort} includeNamespace={!skipNamespace} />
+                            {/*
+                            TODO: remove this (and all callers too)
                             {!skipNodeName && (
                                 <th className='optional_small'><Sorter field='spec.nodeName' sort={sort}>Node</Sorter></th>
                             )}
+                            */}
                             <th className='optional_medium'><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
                             <th>
-                                <Sorter field={this.sortByCpu} sort={sort}>
-                                    Cpu
-                                    <div className='podsPanel_label'>
-                                        actual vs. reserved
-                                    </div>
-                                </Sorter>
+                                <Sorter field={this.sortByCpuUsage} sort={sort}>Cpu</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByCpuRequest} sort={sort}>Request</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByCpuLimit} sort={sort}>Limit</Sorter>
                             </th>
                             <th>
-                                <Sorter field={this.sortByRam} sort={sort}>
-                                    Ram
-                                    <div className='podsPanel_label'>
-                                        actual vs. reserved
-                                    </div>
-                                </Sorter>
+                                <Sorter field={this.sortByRamUsage} sort={sort}>Ram</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByRamRequest} sort={sort}>Request</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByRamLimit} sort={sort}>Limit</Sorter>
                             </th>
                         </tr>
                     </thead>
@@ -66,10 +67,10 @@ export default class PodsPanel extends Base {
                                 includeNamespace={!skipNamespace}
                                 href={`#!pod/${x.metadata.namespace}/${x.metadata.name}`}
                             />
-                            {!skipNodeName && <td className='optional_small'>{x.spec.nodeName}</td>}
+                            {/* {!skipNodeName && <td className='optional_small'>{x.spec.nodeName}</td>} */}
                             <td className='optional_medium'>{getRestartCount(x)}</td>
-                            <td><Cpu item={x} metrics={metrics} /></td>
-                            <td><Ram item={x} metrics={metrics} /></td>
+                            {getChart(x, metrics, 'cpu')}
+                            {getChart(x, metrics, 'memory')}
                         </tr>
                     )} />
                 </table>
@@ -82,66 +83,47 @@ function getRestartCount({status}) {
     return _.sumBy(status.containerStatuses, 'restartCount');
 }
 
-function Cpu({item, metrics}) {
-    const containers = getContainerMetrics(item, metrics);
-    if (!containers) return null;
-
-    const actual = getCpuUsage(item, metrics);
-    const requested = getCpuRequest(item);
-    return <Chart actual={actual} requested={requested} unparser={unparseCpu} />;
-}
-
-function getCpuUsage(item, metrics) {
-    const containers = getContainerMetrics(item, metrics);
-    return _.sumBy(containers, x => parseCpu(x.usage.cpu));
-}
-
-function getCpuRequest(item) {
-    const podContainers = _.filter(item.spec.containers, x => x.resources && x.resources.requests);
-    return _.sumBy(podContainers, x => parseCpu(x.resources.requests.cpu));
-}
-
-function Ram({item, metrics}) {
-    const containers = getContainerMetrics(item, metrics);
-    if (!containers) return null;
-
-    const actual = getRamUsage(item, metrics);
-    const requested = getRamRequest(item);
-    return <Chart actual={actual} requested={requested} unparser={unparseRam} />;
-}
-
-function Chart({actual, requested, unparser}) {
-    const isWarning = requested && (actual > requested);
-    const actualRam = unparser(actual);
-    const requestedRam = unparser(requested);
-    const percent = requested ? _.round(actual / requested * 100, 1) : 100;
+function getChart(item, metrics, resource) {
+    const actual = getPodUsage(item, metrics, resource);
 
     return (
-        <div className={isWarning ? 'contentPanel_warn' : undefined}>
-            <div>{requested ? `${percent}%` : 'N/A'}</div>
-            <div className='podsPanel_label'>
-                <span>{actualRam.value}{actualRam.unit}</span>
-                <span> of </span>
-                <span>{requestedRam.value}{requestedRam.unit}</span>
-            </div>
-        </div>
+        <>
+            {getRawDisplay(item, metrics, actual, resource)}
+            {getPercentDisplay(item, metrics, actual, resource, 'requests')}
+            {getPercentDisplay(item, metrics, actual, resource, 'limits')}
+        </>
     );
 }
 
-function getRamUsage(item, metrics) {
-    const containers = getContainerMetrics(item, metrics);
-    return _.sumBy(containers, x => parseRam(x.usage.memory));
+function getRawDisplay(item, metrics, actual, resource) {
+    if (!item || !metrics) return <td><LoadingEllipsis /></td>;
+
+    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const actualResult = unparser(actual);
+
+    return (
+        <td>
+            {actualResult.value}
+            <span className='podsPanel_label'>{actualResult.unit}</span>
+        </td>
+    );
 }
 
-function getRamRequest(item) {
-    return _.sumBy(item.spec.containers, (x) => {
-        if (!x.resources.requests) return 0;
-        return parseRam(x.resources.requests.memory);
-    });
-}
+function getPercentDisplay(item, metrics, actual, resource, type) {
+    if (!item || !metrics) return <td><LoadingEllipsis /></td>;
 
-function getContainerMetrics(item, metrics) {
-    if (!item || !metrics) return null;
-    const metric = metrics[item.metadata.name] || {};
-    return metric.containers;
+    const request = getPodResourceValue(item, resource, type);
+    if (!request) return <td className='podsPanel_label'>-</td>;
+
+    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const result = unparser(request);
+    const percent = request ? _.round(actual / request * 100, 1) : 0;
+    const className = percent > 85 ? 'optional_xsmall contentPanel_warn' : 'optional_xsmall';
+
+    return (
+        <td className={className}>
+            {percent}<span className='podsPanel_label'>%</span>
+            <div className='podsPanel_label'>{result.value}{result.unit}</div>
+        </td>
+    );
 }
