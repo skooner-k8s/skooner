@@ -21,18 +21,14 @@ export default class Nodes extends Base {
         this.registerApi({
             items: api.node.list(items => this.setState({items})),
             metrics: api.metrics.nodes(metrics => this.setState({metrics})),
+            pods: api.pod.list(null, pods => this.setState({pods})),
         });
     }
 
     render() {
-        const {items, metrics, sort, filter} = this.state;
+        const {items, metrics, pods, sort, filter} = this.state;
 
-        const filtered = items && items.filter((x) => {
-            const labels = x.metadata.labels || {};
-            const searchableLabels = Object.entries(labels).flat();
-            return test(filter, x.metadata.name, ...searchableLabels);
-        });
-
+        const filtered = filterNodes(items, filter);
         const filteredMetrics = getMetrics(filtered, metrics);
 
         return (
@@ -53,8 +49,19 @@ export default class Nodes extends Base {
                     sort={sort}
                     items={filtered}
                     metrics={filteredMetrics}
+                    pods={pods}
                 />
             </div>
         );
     }
+}
+
+function filterNodes(items, filter) {
+    if (!items) return null;
+
+    return items.filter((x) => {
+        const labels = x.metadata.labels || {};
+        const searchableLabels = Object.entries(labels).flat();
+        return test(filter, x.metadata.name, ...searchableLabels);
+    });
 }
