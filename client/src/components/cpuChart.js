@@ -22,7 +22,8 @@ export default function CpuChart({items, metrics}) {
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Cores Used</div>
+            <div className='charts_itemLabel'>Pod Cpu Use</div>
+            <div className='charts_itemSubLabel'>Actual vs Reserved</div>
         </div>
     );
 }

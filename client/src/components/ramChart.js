@@ -24,7 +24,8 @@ export default function RamChart({items, metrics}) {
             ) : (
                 <LoadingChart />
             )}
-            <div className='charts_itemLabel'>Ram Used</div>
+            <div className='charts_itemLabel'>Pod Ram Use</div>
+            <div className='charts_itemSubLabel'>Actual vs Reserved</div>
         </div>
     );
 }
