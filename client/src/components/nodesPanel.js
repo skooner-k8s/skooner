@@ -47,7 +47,7 @@ export default class NodesPanel extends Base {
                     <TableBody items={items} filter={filter} sort={sort} colSpan='8' row={x => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
-                            <td className='optional_medium'>{objectMap(x.metadata.labels)}</td>
+                            <td className='podsPanel_label optional_medium'>{objectMap(x.metadata.labels)}</td>
                             <td className='optional_small'>{getReadyStatus(x)}</td>
                             <td><CpuPercent item={x} metrics={metrics} /></td>
                             <td><RamPercent item={x} metrics={metrics} /></td>
