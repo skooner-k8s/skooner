@@ -1,6 +1,6 @@
-import './loadingChart.scss';
 import React from 'react';
 import ChartistGraph from 'react-chartist';
+import LoadingEllipsis from './loadingEllipsis';
 
 const options = {
     donut: true,
@@ -14,11 +14,7 @@ export default function Chart() {
     return (
         <div className='charts_donut'>
             <ChartistGraph data={{series: [0, 0, 1]}} options={options} type='Pie' />
-            <span className='chart_donutLabel loadingChart'>
-                <span>.</span>
-                <span>.</span>
-                <span>.</span>
-            </span>
+            <LoadingEllipsis />
         </div>
     );
 }
