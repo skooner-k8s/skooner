@@ -34,22 +34,40 @@ export default class NodesPanel extends Base {
                                 <Sorter field={getReadyStatus} sort={sort}>Ready</Sorter>
                             </th>
                             <th>
-                                <Sorter field={this.sortByCpuUsage} sort={sort}>Cpu</Sorter>
+                                <Sorter field={this.sortByCpuUsage} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Actual</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByCpuRequest} sort={sort}>Requests</Sorter>
+                                <Sorter field={this.sortByCpuRequest} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Requests</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByCpuLimit} sort={sort}>Limits</Sorter>
+                                <Sorter field={this.sortByCpuLimit} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Limits</div>
+                                </Sorter>
                             </th>
                             <th>
-                                <Sorter field={this.sortByRamUsage} sort={sort}>Ram</Sorter>
+                                <Sorter field={this.sortByRamUsage} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Actual</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByRamRequest} sort={sort}>Requests</Sorter>
+                                <Sorter field={this.sortByRamRequest} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Requests</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByRamLimit} sort={sort}>Limits</Sorter>
+                                <Sorter field={this.sortByRamLimit} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Limits</div>
+                                </Sorter>
                             </th>
                         </tr>
                     </thead>
@@ -57,7 +75,7 @@ export default class NodesPanel extends Base {
                     <TableBody items={items} filter={filter} sort={sort} colSpan='11' row={x => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
-                            <td className='podsPanel_label optional_medium'>{objectMap(x.metadata.labels)}</td>
+                            <td className='smallText optional_medium'>{objectMap(x.metadata.labels)}</td>
                             <td className='optional_small'>{getReadyStatus(x)}</td>
                             <td>{getPercentDisplay(x, metrics, 'cpu')}</td>
                             <td className='optional_xsmall'>{getResourcePercentDisplay(x, pods, 'cpu', 'requests')}</td>
@@ -92,7 +110,7 @@ function getResourcePercentDisplay(node, pods, resource, type) {
 
 function percent(node, used, resource) {
     if (used == null) return <LoadingEllipsis />;
-    if (!used) return <span className='podsPanel_label'>-</span>;
+    if (!used) return <span className='smallText'>-</span>;
 
     const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
     const result = unparser(used);
@@ -103,8 +121,8 @@ function percent(node, used, resource) {
 
     return (
         <div className={className}>
-            {displayPercent}<span className='podsPanel_label'>%</span>
-            <div className='podsPanel_label'>{result.value}{result.unit}</div>
+            {displayPercent}<span className='smallText'>%</span>
+            <div className='smallText'>{result.value}{result.unit}</div>
         </div>
     );
 }

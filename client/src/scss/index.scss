@@ -75,6 +75,11 @@ button.titleBar_hamburger {
 	fill: $color-white;
 }
 
+.smallText {
+    color: $color-light;
+    font-size: $font-size-small;
+}
+
 @media only screen and (max-width: $media-medium) {
 	.optional_medium {
 		display: none;

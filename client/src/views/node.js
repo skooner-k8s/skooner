@@ -112,7 +112,6 @@ export default class Node extends Base {
                     items={filteredPods}
                     sort={podsSort}
                     metrics={filteredPodMetrics}
-                    skipNodeName={true}
                 />
             </div>
         );
