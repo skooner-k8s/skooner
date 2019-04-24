@@ -1,35 +1,27 @@
 import _ from 'lodash';
 import React from 'react';
 import Base from './base';
-import {MetadataHeaders, MetadataColumns, TableBody, objectMap} from './listViewHelpers';
 import Sorter from './sorter';
-import {parseCpu, parseRam} from '../utils/unitHelpers';
+import LoadingEllipsis from './loadingEllipsis';
+import {MetadataHeaders, MetadataColumns, TableBody, objectMap} from './listViewHelpers';
+import {unparseCpu, unparseRam} from '../utils/unitHelpers';
+import {getNodeResourceValue, getNodeResourcePercent, getNodeUsagePercent, getNodeUsage, getNodeResourcesAvailable} from '../utils/metricsHelpers';
 
 export default class NodesPanel extends Base {
     constructor(props) {
         super(props);
-        this.sortByCpu = this.sortByCpu.bind(this);
-        this.sortByRam = this.sortByRam.bind(this);
-    }
 
-    sortByCpu(item) {
-        const used = getCpuUsed(item, this.props.metrics);
-        if (used == null) return null;
+        this.sortByCpuUsage = x => getNodeUsagePercent(x, this.props.metrics, 'cpu');
+        this.sortByCpuRequest = x => getNodeResourcePercent(x, this.props.pods, 'cpu', 'requests');
+        this.sortByCpuLimit = x => getNodeResourcePercent(x, this.props.pods, 'cpu', 'limits');
 
-        const available = getCpuAvailable(item);
-        return used / available;
-    }
-
-    sortByRam(item) {
-        const used = getRamUsed(item, this.props.metrics);
-        if (used == null) return null;
-
-        const available = getRamAvailable(item);
-        return used / available;
+        this.sortByRamUsage = x => getNodeUsagePercent(x, this.props.metrics, 'memory');
+        this.sortByRamRequest = x => getNodeResourcePercent(x, this.props.pods, 'memory', 'requests');
+        this.sortByRamLimit = x => getNodeResourcePercent(x, this.props.pods, 'memory', 'limits');
     }
 
     render() {
-        const {items, metrics, sort, filter} = this.props;
+        const {items, metrics, pods, sort, filter} = this.props;
 
         return (
             <div className='contentPanel'>
@@ -38,19 +30,41 @@ export default class NodesPanel extends Base {
                         <tr>
                             <MetadataHeaders sort={sort} />
                             <th className='optional_medium'>Labels</th>
-                            <th className='optional_small'><Sorter field={getReadyStatus} sort={sort}>Ready</Sorter></th>
-                            <th><Sorter field={this.sortByCpu} sort={sort}>Cpu</Sorter></th>
-                            <th><Sorter field={this.sortByRam} sort={sort}>Ram</Sorter></th>
+                            <th className='optional_small'>
+                                <Sorter field={getReadyStatus} sort={sort}>Ready</Sorter>
+                            </th>
+                            <th>
+                                <Sorter field={this.sortByCpuUsage} sort={sort}>Cpu</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByCpuRequest} sort={sort}>Requests</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByCpuLimit} sort={sort}>Limits</Sorter>
+                            </th>
+                            <th>
+                                <Sorter field={this.sortByRamUsage} sort={sort}>Ram</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByRamRequest} sort={sort}>Requests</Sorter>
+                            </th>
+                            <th className='optional_xsmall'>
+                                <Sorter field={this.sortByRamLimit} sort={sort}>Limits</Sorter>
+                            </th>
                         </tr>
                     </thead>
 
-                    <TableBody items={items} filter={filter} sort={sort} colSpan='8' row={x => (
+                    <TableBody items={items} filter={filter} sort={sort} colSpan='11' row={x => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
                             <td className='podsPanel_label optional_medium'>{objectMap(x.metadata.labels)}</td>
                             <td className='optional_small'>{getReadyStatus(x)}</td>
-                            <td><CpuPercent item={x} metrics={metrics} /></td>
-                            <td><RamPercent item={x} metrics={metrics} /></td>
+                            <td>{getPercentDisplay(x, metrics, 'cpu')}</td>
+                            <td className='optional_xsmall'>{getResourcePercentDisplay(x, pods, 'cpu', 'requests')}</td>
+                            <td className='optional_xsmall'>{getResourcePercentDisplay(x, pods, 'cpu', 'limits')}</td>
+                            <td>{getPercentDisplay(x, metrics, 'memory')}</td>
+                            <td className='optional_xsmall'>{getResourcePercentDisplay(x, pods, 'memory', 'requests')}</td>
+                            <td className='optional_xsmall'>{getResourcePercentDisplay(x, pods, 'memory', 'limits')}</td>
                         </tr>
                     )} />
                 </table>
@@ -66,52 +80,31 @@ function getReadyStatus({status}) {
     return ready && ready.status;
 }
 
-function CpuPercent({item, metrics}) {
-    const used = getCpuUsed(item, metrics);
-    if (used == null) return null;
-
-    const available = getCpuAvailable(item);
-    return <Percent used={used} available={available} />;
+function getPercentDisplay(node, metrics, resource) {
+    const used = getNodeUsage(node, metrics, resource);
+    return percent(node, used, resource);
 }
 
-function getCpuUsed(item, metrics) {
-    const usage = getUsage(item, metrics);
-    if (!usage) return null;
-
-    return parseCpu(usage.cpu) / 1000000;
+function getResourcePercentDisplay(node, pods, resource, type) {
+    const used = getNodeResourceValue(node, pods, resource, type);
+    return percent(node, used, resource);
 }
 
-function getCpuAvailable(item) {
-    return parseCpu(item.status.capacity.cpu) / 1000000;
-}
+function percent(node, used, resource) {
+    if (used == null) return <LoadingEllipsis />;
+    if (!used) return <span className='podsPanel_label'>-</span>;
 
-function RamPercent({item, metrics}) {
-    const used = getRamUsed(item, metrics);
-    if (used == null) return null;
+    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const result = unparser(used);
 
-    const available = getRamAvailable(item);
-    return <Percent used={used} available={available} />;
-}
+    const available = getNodeResourcesAvailable(node, resource);
+    const displayPercent = _.round(used / available * 100, 1);
+    const className = displayPercent >= 85 ? 'contentPanel_warn' : undefined;
 
-function getRamUsed(item, metrics) {
-    const usage = getUsage(item, metrics);
-    if (!usage) return null;
-
-    return parseRam(usage.memory);
-}
-
-function getRamAvailable(item) {
-    return parseRam(item.status.capacity.memory);
-}
-
-function Percent({used, available}) {
-    const percent = _.round(used / available * 100, 1);
-    const className = percent >= 85 ? 'contentPanel_warn' : undefined;
-    return (<span className={className}>{`${percent}%`}</span>);
-}
-
-function getUsage(item, metrics) {
-    if (!item || !metrics) return null;
-    const result = metrics[item.metadata.name] || {};
-    return result && result.usage;
+    return (
+        <div className={className}>
+            {displayPercent}<span className='podsPanel_label'>%</span>
+            <div className='podsPanel_label'>{result.value}{result.unit}</div>
+        </div>
+    );
 }
