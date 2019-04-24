@@ -86,12 +86,6 @@ $ct-series-colors: (
     color: $color-light;
 }
 
-.ct-chart {
-    grid-column: 1;
-    grid-row: 1;
-    pointer-events: none;
-}
-
 @media only screen and (max-width: $media-small) {
 	.chart_donutLabel {
 		font-size: $font-size;
@@ -140,4 +134,35 @@ $ct-series-colors: (
         display: block;
         text-align: center;
     }
+}
+
+
+
+
+.donut {
+    width: 150px;
+    height: 150px;
+    grid-column: 1;
+    grid-row: 1;
+    pointer-events: none;
+}
+
+.donut_layer {
+    fill: transparent;
+    stroke-width: 6;
+}
+
+.donut_background {
+    @extend .donut_layer;
+    stroke: $color-light;
+}
+
+.donut_layer1 {
+    @extend .donut_layer;
+    stroke: $color-accent;
+}
+
+.donut_layer2 {
+    @extend .donut_layer;
+    stroke: $color-error;
 }

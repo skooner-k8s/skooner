@@ -1,14 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import ChartistGraph from 'react-chartist';
-
-const options = {
-    donut: true,
-    donutWidth: 23,
-    donutSolid: true,
-    startAngle: 0,
-    showLabel: false,
-};
+import Donut from './donut';
 
 export default function Chart(props) {
     const {used = 0, usedSuffix, available = 0, availableSuffix, pending = 0, decimals = 1} = props;
@@ -16,12 +8,11 @@ export default function Chart(props) {
     const fixedUsed = _.round(used, decimals);
     const fixedPending = _.round(pending, decimals);
     const fixedAvailable = _.round(available, decimals);
-    const fixedRemaining = fixedAvailable - fixedUsed - fixedPending;
-    const data = getData(fixedUsed, fixedPending, fixedRemaining);
+    const {percent, percent2} = getData(fixedUsed, fixedPending, fixedAvailable);
 
     return (
         <div className='charts_donut'>
-            <ChartistGraph data={{series: data}} options={options} type='Pie' />
+            <Donut percent={percent} percent2={percent2} />
             <span className='chart_donutLabel'>
                 <div>
                     {Number.isFinite(fixedUsed) && (
@@ -45,12 +36,16 @@ export default function Chart(props) {
     );
 }
 
-function getData(used, pending, remaining) {
+function getData(used, pending, available) {
     // If there's a negative amount remaining, show an all red chart
-    if (remaining < 0) return [0, 1, 0];
+    const remaining = available - used - pending;
+    if (remaining < 0) return {percent: 0, percent2: 1};
 
     // If there's no data, show an all grey chart
-    if (!used && !pending && !remaining) return [0, 0, 1];
+    if (!available) return {percent: 0, percent2: 0};
 
-    return [used, pending, remaining];
+    const percent = used / available;
+    const percent2 = pending / available;
+
+    return {percent, percent2};
 }

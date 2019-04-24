@@ -8,6 +8,7 @@ const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
 
 const NODE_ENV = process.env.NODE_ENV;
+const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
@@ -33,6 +34,10 @@ const proxySettings = {
     logLevel: 'debug',
     onError,
 };
+
+if (DEBUG_VERBOSE) {
+    proxySettings.onProxyRes = onProxyRes;
+}
 
 const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
@@ -74,6 +79,11 @@ async function postOidc(req, res, next) {
 
 function onError(err, req, res) {
     console.log('Error in proxied request', err, req.method, req.url);
+}
+
+function onProxyRes(proxyRes, req, res) {
+    console.log('VERBOSE REQUEST', req.method, req.protocol, req.hostname, req.url, req.headers);
+    console.log('VERBOSE RESPONSE', proxyRes.statusCode, proxyRes.headers);
 }
 
 function handleErrors(err, req, res, next) {
