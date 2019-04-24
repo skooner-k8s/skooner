@@ -33,19 +33,14 @@ export function getNodeUsagePercent(node, metrics, resource) {
 }
 
 export function getNodeResourcesAvailable(node, resource) {
-    if (!node) return null;
-    return resource === 'cpu' ? parseCpu(node.status.capacity.cpu) : parseRam(node.status.capacity.memory);
+    return node ? parse(resource, node.status.capacity) : null;
 }
 
 export function getNodeUsage(node, metrics, resource) {
     if (!node || !metrics) return null;
 
-    const result = metrics[node.metadata.name] || {};
-    if (!result) return null;
-
-    const value = resource === 'cpu' ? result.usage.cpu : result.usage.memory;
-    const parser = resource === 'cpu' ? parseCpu : parseRam;
-    return parser(value);
+    const result = metrics[node.metadata.name];
+    return result ? parse(resource, result.usage) : null;
 }
 
 
@@ -60,14 +55,16 @@ export function getPodUsage(pod, metrics, resource) {
     if (!pod || !metrics) return null;
 
     const metric = metrics[pod.metadata.name] || {};
-    const parser = resource === 'cpu' ? parseCpu : parseRam;
-    return _.sumBy(metric.containers, x => parser(x.usage[resource]));
+    return _.sumBy(metric.containers, x => parse(resource, x.usage));
 }
 
 export function getPodResourceValue(pod, resource, type) {
-    const parser = resource === 'cpu' ? parseCpu : parseRam;
-
     return _(pod.spec.containers)
         .filter(x => x.resources && x.resources[type])
-        .sumBy(x => parser(x.resources[type][resource]));
+        .sumBy(x => parse(resource, x.resources[type]));
+}
+
+function parse(resource, target) {
+    const parser = resource === 'cpu' ? parseCpu : parseRam;
+    return parser(target[resource]);
 }

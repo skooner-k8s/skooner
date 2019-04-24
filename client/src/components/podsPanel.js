@@ -1,4 +1,3 @@
-import './podsPanel.scss';
 import _ from 'lodash';
 import React from 'react';
 import Base from './base';
@@ -13,17 +12,17 @@ export default class PodsPanel extends Base {
         super(props);
 
         this.sortByCpuUsage = x => getPodUsage(x, this.props.metrics, 'cpu');
-        this.sortByCpuRequest = x => getPodResourcePercent(x, this.props.metrics, 'cpu', 'requests');
-        this.sortByCpuLimit = x => getPodResourcePercent(x, this.props.metrics, 'cpu', 'limits');
+        this.sortByCpuRequest = x => sortBy(x, this.props.metrics, 'cpu', 'requests');
+        this.sortByCpuLimit = x => sortBy(x, this.props.metrics, 'cpu', 'limits');
 
         this.sortByRamUsage = x => getPodUsage(x, this.props.metrics, 'memory');
-        this.sortByRamRequest = x => getPodResourcePercent(x, this.props.metrics, 'memory', 'requests');
-        this.sortByRamLimit = x => getPodResourcePercent(x, this.props.metrics, 'memory', 'limits');
+        this.sortByRamRequest = x => sortBy(x, this.props.metrics, 'memory', 'requests');
+        this.sortByRamLimit = x => sortBy(x, this.props.metrics, 'memory', 'limits');
     }
 
     render() {
-        const {items, metrics, sort, filter, skipNamespace, skipNodeName} = this.props;
-        const col = 8 + !skipNamespace + !skipNodeName; // TODO: fix me
+        const {items, metrics, sort, filter, skipNamespace} = this.props;
+        const col = 10 + !skipNamespace;
 
         return (
             <div className='contentPanel'>
@@ -31,30 +30,42 @@ export default class PodsPanel extends Base {
                     <thead>
                         <tr>
                             <MetadataHeaders sort={sort} includeNamespace={!skipNamespace} />
-                            {/*
-                            TODO: remove this (and all callers too)
-                            {!skipNodeName && (
-                                <th className='optional_small'><Sorter field='spec.nodeName' sort={sort}>Node</Sorter></th>
-                            )}
-                            */}
                             <th className='optional_medium'><Sorter field={getRestartCount} sort={sort}>Restarts</Sorter></th>
                             <th>
-                                <Sorter field={this.sortByCpuUsage} sort={sort}>Cpu</Sorter>
+                                <Sorter field={this.sortByCpuUsage} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Actual</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByCpuRequest} sort={sort}>Request</Sorter>
+                                <Sorter field={this.sortByCpuRequest} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Request</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByCpuLimit} sort={sort}>Limit</Sorter>
+                                <Sorter field={this.sortByCpuLimit} sort={sort}>
+                                    Cpu
+                                    <div className='smallText'>Limit</div>
+                                </Sorter>
                             </th>
                             <th>
-                                <Sorter field={this.sortByRamUsage} sort={sort}>Ram</Sorter>
+                                <Sorter field={this.sortByRamUsage} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Actual</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByRamRequest} sort={sort}>Request</Sorter>
+                                <Sorter field={this.sortByRamRequest} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Request</div>
+                                </Sorter>
                             </th>
                             <th className='optional_xsmall'>
-                                <Sorter field={this.sortByRamLimit} sort={sort}>Limit</Sorter>
+                                <Sorter field={this.sortByRamLimit} sort={sort}>
+                                    Ram
+                                    <div className='smallText'>Limit</div>
+                                </Sorter>
                             </th>
                         </tr>
                     </thead>
@@ -67,7 +78,6 @@ export default class PodsPanel extends Base {
                                 includeNamespace={!skipNamespace}
                                 href={`#!pod/${x.metadata.namespace}/${x.metadata.name}`}
                             />
-                            {/* {!skipNodeName && <td className='optional_small'>{x.spec.nodeName}</td>} */}
                             <td className='optional_medium'>{getRestartCount(x)}</td>
                             {getChart(x, metrics, 'cpu')}
                             {getChart(x, metrics, 'memory')}
@@ -77,6 +87,11 @@ export default class PodsPanel extends Base {
             </div>
         );
     }
+}
+
+function sortBy(item, metrics, resource, type) {
+    const result = getPodResourcePercent(item, metrics, resource, type);
+    return Number.isFinite(result) ? result : -1;
 }
 
 function getRestartCount({status}) {
@@ -104,16 +119,16 @@ function getRawDisplay(item, metrics, actual, resource) {
     return (
         <td>
             {actualResult.value}
-            <span className='podsPanel_label'>{actualResult.unit}</span>
+            <span className='smallText'>{actualResult.unit}</span>
         </td>
     );
 }
 
 function getPercentDisplay(item, metrics, actual, resource, type) {
-    if (!item || !metrics) return <td><LoadingEllipsis /></td>;
+    if (!item || !metrics) return <td className='optional_xsmall'><LoadingEllipsis /></td>;
 
     const request = getPodResourceValue(item, resource, type);
-    if (!request) return <td className='podsPanel_label'>-</td>;
+    if (!request) return <td className='smallText optional_xsmall'>-</td>;
 
     const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
     const result = unparser(request);
@@ -122,8 +137,8 @@ function getPercentDisplay(item, metrics, actual, resource, type) {
 
     return (
         <td className={className}>
-            {percent}<span className='podsPanel_label'>%</span>
-            <div className='podsPanel_label'>{result.value}{result.unit}</div>
+            {percent}<span className='smallText'>%</span>
+            <div className='smallText'>{result.value}{result.unit}</div>
         </td>
     );
 }

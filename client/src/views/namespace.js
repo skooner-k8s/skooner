@@ -70,7 +70,6 @@ export default class Namespace extends Base {
                     sort={podsSort}
                     metrics={filteredPodMetrics}
                     skipNamespace={true}
-                    skipNodeName={false}
                 />
 
                 <div className='contentPanel_header'>Events</div>
