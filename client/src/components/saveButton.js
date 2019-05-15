@@ -4,7 +4,7 @@ import Button from './button';
 import EditorModal from '../views/editorModal';
 import EditSvg from '../art/editSvg';
 
-export default class DeleteButton extends Base {
+export default class SaveButton extends Base {
     render() {
         const {onSave, item} = this.props;
         const {showEditor} = this.state || {};

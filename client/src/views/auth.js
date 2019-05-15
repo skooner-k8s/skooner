@@ -99,14 +99,7 @@ async function oidcLogin(code, returnedState) {
 async function login(token) {
     try {
         setToken(token);
-
-        const result = await api.testAuth();
-        log.info('Auth', result);
-
-        if (!result || !result.status || !result.status.allowed) {
-            throw new Error('Invalid login');
-        }
-
+        await api.testAuth();
         window.location.reload();
     } catch (err) {
         log.error('Login Failed', err);

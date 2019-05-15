@@ -41,8 +41,8 @@ const apis = {
 };
 
 async function testAuth() {
-    const spec = {resourceAttributes: {}};
-    return post('apis/authorization.k8s.io/v1/selfsubjectaccessreviews', {spec}, false);
+    const spec = {namespace: 'default'};
+    await post('apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
 }
 
 async function apply(body) {
@@ -107,8 +107,8 @@ function metrics(url, cb) {
 function apiFactory(apiType, kind) {
     const url = `${apiType}/${kind}`;
     return {
-        list: cb => streamResults(url, cb),
-        get: (name, cb) => streamResult(url, name, cb),
+        list: (cb, errCb) => streamResults(url, cb, errCb),
+        get: (name, cb, errCb) => streamResult(url, name, cb, errCb),
         post: body => post(url, body),
         put: body => put(`${url}/${body.metadata.name}`, body),
         delete: name => del(`${url}/${name}`),
@@ -117,8 +117,8 @@ function apiFactory(apiType, kind) {
 
 function apiFactoryWithNamespace(apiType, kind, includeScale) {
     const results = {
-        list: (namespace, cb) => streamResults(url(namespace), cb),
-        get: (namespace, name, cb) => streamResult(url(namespace), name, cb),
+        list: (namespace, cb, errCb) => streamResults(url(namespace), cb, errCb),
+        get: (namespace, name, cb, errCb) => streamResult(url(namespace), name, cb, errCb),
         post: body => post(url(body.metadata.namespace), body),
         put: body => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
         delete: (namespace, name) => del(`${url(namespace)}/${name}`),
