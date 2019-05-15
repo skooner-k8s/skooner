@@ -26,7 +26,7 @@ export default class ServiceAccount extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Volume Claim', namespace, name]} ready={!!item}>
+                <ItemHeader title={['Service Account', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}

@@ -43,7 +43,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
 
     if (!response.ok) {
         const {status, statusText} = response;
-        if (autoLogoutOnAuthError && (status === 401 || status === 403)) {
+        if (autoLogoutOnAuthError && status === 401) {
             log.error('Logging out due to auth error', {status, statusText, path});
             logout();
         }
@@ -64,7 +64,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     return response.json();
 }
 
-export async function streamResult(url, name, cb) {
+export async function streamResult(url, name, cb, errCb) {
     let isCancelled = false;
     let socket;
     run();
@@ -84,6 +84,7 @@ export async function streamResult(url, name, cb) {
             socket = stream(watchUrl, x => cb(x.object));
         } catch (err) {
             log.error('Error in api request', {err, url});
+            if (errCb) errCb(err);
         }
     }
 
@@ -95,7 +96,7 @@ export async function streamResult(url, name, cb) {
     }
 }
 
-export async function streamResults(url, cb) {
+export async function streamResults(url, cb, errCb) {
     const results = {};
     let isCancelled = false;
     let socket;
@@ -114,6 +115,7 @@ export async function streamResults(url, cb) {
             socket = stream(watchUrl, update);
         } catch (err) {
             log.error('Error in api request', {err, url});
+            if (errCb) errCb(err);
         }
     }
 

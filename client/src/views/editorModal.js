@@ -108,3 +108,12 @@ export default class EditorModal extends Base {
         );
     }
 }
+
+// function yaml2js(allowArrays, yaml) {
+//     if (!allowArrays) return yamljs.parse(yaml);
+
+//     return yaml
+//         .split('---')
+//         .filter(Boolean)
+//         .map(yamljs.parse);
+// }

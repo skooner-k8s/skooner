@@ -24,6 +24,7 @@ const opts = {};
 kc.applyToRequest(opts);
 
 const target = kc.getCurrentCluster().server;
+console.log('API URL: ', target);
 const agent = new https.Agent({ca: opts.ca});
 const proxySettings = {
     target,
