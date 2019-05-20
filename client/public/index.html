@@ -2,7 +2,9 @@
 <html lang="en">
   <head>
     <script>
-      document.write(`<base href="${window.location.pathname}">`);
+      let basePath = window.location.pathname;
+      if (!basePath.endsWith('/')) basePath += '/';
+      document.write(`<base href="${basePath}">`);
     </script>
 
     <meta charset="utf-8" />

@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 import Menu from './components/menu';
 import {Notifier} from './components/notifier';
 import Error from './components/error';
-import {registerHandler, initRouter} from './router';
+import {initRouter} from './router';
 import log from './utils/log';
 import Button from './components/button';
 import LogoSvg from './art/logoSvg';
@@ -16,12 +16,10 @@ const genericError = (
 
 class App extends Component {
     componentDidMount() {
-        registerHandler((content) => {
+        initRouter((content) => {
             this.setState({content, contentDate: Date.now(), hasError: false});
             window.scrollTo(0, 0);
         });
-
-        initRouter();
     }
 
     componentDidCatch(err, info) { // eslint-disable-line class-methods-use-this
