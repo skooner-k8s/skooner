@@ -45,12 +45,12 @@ export default class Pod extends Base {
             <div id='content'>
                 <ItemHeader title={['Pod', namespace, name]} ready={!!item}>
                     <>
-                        <a title='Logs' className='button_headerAction' href={`pod/${namespace}/${name}/logs`}>
+                        <a title='Logs' className='button_headerAction' href={`#!pod/${namespace}/${name}/logs`}>
                             <LogsSvg />
                             <span className='button_label'>Logs</span>
                         </a>
 
-                        <a title='Exec' className='button_headerAction' href={`pod/${namespace}/${name}/exec`}>
+                        <a title='Exec' className='button_headerAction' href={`#!pod/${namespace}/${name}/exec`}>
                             <ExecSvg />
                             <span className='button_label'>Exec</span>
                         </a>
