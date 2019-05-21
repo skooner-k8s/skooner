@@ -41,6 +41,8 @@ spec:
             secretKeyRef:
               name: k8dash
               key: secret
+      nodeSelector:
+        'beta.kubernetes.io/os': linux
 
 ---
 kind: Service
