@@ -8,9 +8,16 @@ import ResourceSvg from '../art/resourceSvg';
 import AddSvg from '../art/addSvg';
 
 export default class Menu extends Base {
+    async componentDidMount() {
+        const rules = await api.getRules('default');
+        this.setState({rules});
+
+        console.log(rules);
+    }
+
     render() {
         const {onClick, toggled} = this.props;
-        const {showAdd} = this.state || {};
+        const {showAdd, rules} = this.state || {};
 
         return (
             <>
@@ -76,6 +83,15 @@ export default class Menu extends Base {
     }
 }
 
+function canView(resources, group, resource) {
+    resources.some((x) => {
+        const hasVerb = (x.verbs.includes('list') || x.verbs.includes('*'));
+        const hasGroup = (x.apiGroups.includes(group) || x.apiGroups.includes('*'));
+        const hasResource = (x.resources.includes(resource)) || x.resources.includes('*');
+        return hasVerb && hasGroup && hasResource;
+    });
+}
+
 function MenuItem(item) {
     const currentPath = getRootPath();
     const paths = getPaths(item);
@@ -92,6 +108,7 @@ function MenuItem(item) {
 
 function Group({children = []}) {
     if (!Array.isArray(children)) children = [children]; // eslint-disable-line no-param-reassign
+    if (children.length === 0) return null;
 
     const paths = children.flatMap(x => getPaths(x.props));
 

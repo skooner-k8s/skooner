@@ -7,6 +7,7 @@ const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/j
 const apis = {
     apply,
     testAuth,
+    getRules,
     logs,
     swagger,
     exec,
@@ -42,7 +43,11 @@ const apis = {
 
 async function testAuth() {
     const spec = {namespace: 'default'};
-    await post('apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
+    await post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
+}
+
+function getRules(namespace) {
+    return post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec: {namespace}});
 }
 
 async function apply(body) {

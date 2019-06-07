@@ -11,7 +11,7 @@ spec:
   ports:
   - name: k8dash
     port: 80
-    targetport: 4654
+    targetPort: 4654
   selector:
     app: k8dash
     release: {{ .Release.Name }}
