@@ -22,11 +22,11 @@ spec:
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
-        pullPolicy: IfNotPresent
+        imagePullPolicy: IfNotPresent
         resources:
           requests:
             cpu: "25m"
             memory: "100Mi"
           limits:
             cpu: "100m"
-            memory: "200Mi"   
+            memory: "200Mi"
