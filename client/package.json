@@ -7,16 +7,16 @@
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
     "react-modal": "^3.8.1",
-    "react-scripts": "2.1.5",
-    "react-select": "^2.4.2",
-    "react-swipeable": "^5.1.0",
-    "react-switch": "^4.1.0",
-    "swagger-parser": "^6.0.5",
+    "react-scripts": "3.0.1",
+    "react-select": "^3.0.4",
+    "react-swipeable": "^5.2.3",
+    "react-switch": "^5.0.0",
+    "swagger-parser": "^7.0.0",
     "uuid": "^3.3.2",
-    "xterm": "^3.12.0",
+    "xterm": "^3.14.2",
     "yamljs": "^0.3.0"
   },
   "scripts": {
@@ -35,10 +35,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "eslint": "^5.12.0",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-import": "^2.17.3",
     "eslint-plugin-jsx-a11y": "^6.2.1",
-    "eslint-plugin-react": "^7.12.4"
+    "eslint-plugin-react": "^7.13.0"
   }
 }
