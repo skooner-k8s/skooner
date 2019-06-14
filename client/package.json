@@ -15,7 +15,6 @@
     "react-swipeable": "^5.2.3",
     "react-switch": "^5.0.0",
     "swagger-parser": "^7.0.0",
-    "uuid": "^3.3.2",
     "xterm": "^3.14.2",
     "yamljs": "^0.3.0"
   },
