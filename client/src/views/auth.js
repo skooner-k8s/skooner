@@ -1,6 +1,5 @@
 import './auth.scss';
 import React from 'react';
-import uuidv4 from 'uuid/v4';
 import {addUserNotification} from '../components/notifier';
 import {setToken, deleteToken} from '../services/apiProxy';
 import api from '../services/api';
@@ -64,7 +63,7 @@ export default class Auth extends Base {
 }
 
 async function redirectToOidc(authEndpoint) {
-    const state = uuidv4();
+    const state = window.location.href;
     const redirectUri = window.location.href.replace(window.location.hash, '');
     sessionStorage.oidc = JSON.stringify({state, redirectUri});
 
@@ -88,7 +87,7 @@ async function oidcLogin(code, returnedState) {
 
     try {
         const {token} = await api.oidc.post(code, redirectUri);
-        login(token);
+        login(token, state);
     } catch (err) {
         log.error('OICD login failed', {err});
         addUserNotification('Login failed.', true);
@@ -96,11 +95,16 @@ async function oidcLogin(code, returnedState) {
     }
 }
 
-async function login(token) {
+async function login(token, redirectUri) {
     try {
         setToken(token);
         await api.testAuth();
-        window.location.reload();
+
+        if (redirectUri) {
+            window.location = redirectUri;
+        } else {
+            window.location.reload();
+        }
     } catch (err) {
         log.error('Login Failed', err);
 
