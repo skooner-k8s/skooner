@@ -81,7 +81,7 @@ export async function streamResult(url, name, cb, errCb) {
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
-            socket = stream(watchUrl, x => cb(x.object));
+            socket = stream(watchUrl, x => cb(x.object), {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -112,7 +112,7 @@ export async function streamResults(url, cb, errCb) {
             add(items, kind);
 
             const watchUrl = `${url}?watch=1&resourceVersion=${metadata.resourceVersion}`;
-            socket = stream(watchUrl, update);
+            socket = stream(watchUrl, update, {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -177,9 +177,10 @@ export async function streamResults(url, cb, errCb) {
     }
 }
 
-export function stream(url, cb, isJson = true, additionalProtocols) {
+export function stream(url, cb, args) {
     let connection;
     let isCancelled;
+    const {isJson, additionalProtocols, connectCb} = args;
 
     connect();
 
@@ -195,6 +196,7 @@ export function stream(url, cb, isJson = true, additionalProtocols) {
     }
 
     function connect() {
+        if (connectCb) connectCb();
         connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
     }
 
