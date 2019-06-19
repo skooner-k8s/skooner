@@ -49,6 +49,12 @@ spec:
           servicePort: 80
 ```
 
+# kubectl proxy
+Unfortunately, `kubectl proxy` can not be used to access k8dash. According to the information at [https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961](https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961), it seems that `kubectl proxy` strips the Authorization header when it proxies requests. From that link:
+
+> this is working as expected. "proxying" through the apiserver will not get you standard proxy behavior (preserving Authorization headers end-to-end), because the API is not being used as a standard proxy
+
+
 
 # Logging in
 There are multiple options logging into the dashboard.
