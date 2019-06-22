@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import moment from 'moment';
+import fromNow from '../utils/dates';
 import api from '../services/api';
 import Base from '../components/base';
 import ItemHeader from '../components/itemHeader';
@@ -48,11 +48,11 @@ export default class Node extends Base {
                 <ChartsContainer>
                     <div className='charts_item'>
                         {item ? (
-                            <span className='charts_number'>{getUpTime(item)}</span>
+                            <span className='charts_number'>{getUptime(item)}</span>
                         ) : (
                             <LoadingChart />
                         )}
-                        <div className='charts_itemLabel'>Days Up</div>
+                        <div className='charts_itemLabel'>Uptime</div>
                     </div>
                     <NodeCpuChart items={item && [item]} metrics={metrics && [metrics]} />
                     <NodeRamChart items={item && [item]} metrics={metrics && [metrics]} />
@@ -97,7 +97,7 @@ export default class Node extends Base {
                                     <tr key={x.type}>
                                         <td>{x.type}</td>
                                         <td>{x.status}</td>
-                                        <td className='optional_medium'>{moment(x.lastTransitionTime).fromNow()}</td>
+                                        <td className='optional_medium'>{fromNow(x.lastTransitionTime)}</td>
                                         <td className='optional_small'>{x.reason}</td>
                                         <td className='optional_small'>{x.message}</td>
                                     </tr>
@@ -118,12 +118,9 @@ export default class Node extends Base {
     }
 }
 
-function getUpTime({status}) {
+function getUptime({status}) {
     const ready = status.conditions.find(y => y.type === 'Ready');
     if (!ready) return 'N/A';
 
-    const last = moment(ready.lastTransitionTime);
-    const diff = moment().diff(last);
-    const hours = moment.duration(diff).asDays();
-    return _.round(hours);
+    return fromNow(ready.lastTransitionTime);
 }

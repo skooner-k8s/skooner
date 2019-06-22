@@ -1,6 +1,5 @@
 import React from 'react';
 import Field from './field';
-import formatDate from '../utils/dates';
 import {objectMap} from './listViewHelpers';
 
 const MetadataFields = ({item}) => (
@@ -13,7 +12,7 @@ const MetadataFields = ({item}) => (
         )}
 
         <Field name='Created'>
-            {formatDate(item.metadata.creationTimestamp)}
+            {new Date(item.metadata.creationTimestamp).toLocaleString()}
         </Field>
 
         {item.metadata.labels && (

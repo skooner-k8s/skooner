@@ -74,7 +74,7 @@ export default class PodsPanel extends Base {
                         <tr key={x.metadata.uid}>
                             <MetadataColumns
                                 item={x}
-                                isError={x.status.phase !== 'Running'}
+                                resourceClass={getPhaseStyle(x.status.phase)}
                                 includeNamespace={!skipNamespace}
                                 href={`#!pod/${x.metadata.namespace}/${x.metadata.name}`}
                             />
@@ -86,6 +86,25 @@ export default class PodsPanel extends Base {
                 </table>
             </div>
         );
+    }
+}
+
+function getPhaseStyle(phase) {
+    switch (phase) {
+        case 'Pending':
+            return 'svg_warn';
+
+        case 'Running':
+            return undefined;
+
+        case 'Failed':
+        case 'Unknown':
+            return 'svg_error';
+
+        case 'Succeeded':
+        case 'Completed':
+        default:
+            return 'svg_neutral';
     }
 }
 

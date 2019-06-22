@@ -10,16 +10,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@kubernetes/client-node": "^0.8.1",
+    "@kubernetes/client-node": "^0.8.2",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "http-proxy-middleware": "^0.19.1",
-    "openid-client": "^2.4.5",
+    "openid-client": "^2.5.0",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "stream-to-string": "^1.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.19.1"
   }
 }
