@@ -95,17 +95,14 @@ function sortByName({involvedObject}) {
 
 function getTypeClass(type) {
     switch (type) {
-        case 'Normal':
-            return '';
-
-        case 'Warning':
-        case 'Error':
-            return 'svg_error';
+        case 'Normal': return undefined;
+        case 'Warning': return 'svg_warn';
+        case 'Error': return 'svg_error';
 
         default: {
             const error = new Error('Unexpected event type');
             log.error('Unexpected event type', {error, type});
-            return '';
+            return 'svg_neutral';
         }
     }
 }
