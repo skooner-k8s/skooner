@@ -1,3 +1,4 @@
+import * as cookie from 'js-cookie';
 import log from '../utils/log';
 
 const {host, href, hash, search} = window.location;
@@ -5,6 +6,12 @@ const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const isDev = process.env.NODE_ENV !== 'production';
 const BASE_HTTP_URL = isDev && host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
+
+const authorizationCookie = cookie.get('Authorization');
+if (authorizationCookie) {
+    setToken(authorizationCookie);
+    cookie.remove('Authorization');
+}
 
 export function getToken() {
     return localStorage.authToken;
@@ -36,7 +43,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
-    if (token) opts.headers.Authorization = `Bearer ${token}`;
+    if (token) opts.headers.Authorization = token;
 
     const url = combinePath(BASE_HTTP_URL, path);
     const response = await fetch(url, opts);
