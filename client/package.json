@@ -6,6 +6,7 @@
   "dependencies": {
     "ansi-to-react": "^5.0.0",
     "js-base64": "^2.5.1",
+    "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
