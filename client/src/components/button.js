@@ -20,9 +20,7 @@ export default class Button extends Base {
 
     render() {
         const {working} = this.state || {};
-        const {
-            children, disabled, className, title,
-        } = this.props;
+        const {children, disabled, className, title} = this.props;
 
         return (
             <button

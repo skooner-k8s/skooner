@@ -49,13 +49,13 @@ export function MetadataHeaders({includeNamespace, sort}) {
     );
 }
 
-export function MetadataColumns({item, href, includeNamespace, isError}) {
+export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
     return (
         <>
             <td className='td_icon optional_small'>
                 <ResourceSvg
                     resource={item.kind}
-                    className={isError ? 'svg_error' : undefined}
+                    className={resourceClass}
                 />
                 <div className='td_iconLabel'>{item.kind}</div>
             </td>
