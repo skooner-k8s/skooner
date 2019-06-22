@@ -5,12 +5,12 @@ import LoadingChart from './loadingChart';
 
 export default function PodStatusChart({items}) {
     const available = items && items.length;
-    const current = _.filter(items, x => x.status.phase === 'Running').length;
+    const count = _.sumBy(items, x => x.status.phase === 'Running' ? 1 : 0); // eslint-disable-line no-confusing-arrow
 
     return (
         <div className='charts_item'>
             {items ? (
-                <Chart used={current} pending={available - current} available={available} />
+                <Chart used={count} pending={available - count} available={available} />
             ) : (
                 <LoadingChart />
             )}
