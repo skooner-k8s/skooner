@@ -8,7 +8,6 @@
     "js-base64": "^2.5.1",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -18,6 +17,7 @@
     "react-swipeable": "^5.2.3",
     "react-switch": "^5.0.0",
     "swagger-parser": "^7.0.0",
+    "time-ago": "^0.2.1",
     "xterm": "^3.14.2",
     "yamljs": "^0.3.0"
   },
