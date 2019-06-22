@@ -1,3 +1,4 @@
+import * as cookie from 'js-cookie';
 import log from '../utils/log';
 
 const {host, href, hash, search} = window.location;
@@ -5,6 +6,12 @@ const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const isDev = process.env.NODE_ENV !== 'production';
 const BASE_HTTP_URL = isDev && host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
+
+const authorizationCookie = cookie.get('Authorization');
+if (authorizationCookie) {
+    setToken(authorizationCookie);
+    cookie.remove('Authorization');
+}
 
 export function getToken() {
     return localStorage.authToken;
@@ -36,7 +43,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
-    if (token) opts.headers.Authorization = `Bearer ${token}`;
+    if (token) opts.headers.Authorization = token;
 
     const url = combinePath(BASE_HTTP_URL, path);
     const response = await fetch(url, opts);
@@ -81,7 +88,7 @@ export async function streamResult(url, name, cb, errCb) {
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
-            socket = stream(watchUrl, x => cb(x.object));
+            socket = stream(watchUrl, x => cb(x.object), {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -112,7 +119,7 @@ export async function streamResults(url, cb, errCb) {
             add(items, kind);
 
             const watchUrl = `${url}?watch=1&resourceVersion=${metadata.resourceVersion}`;
-            socket = stream(watchUrl, update);
+            socket = stream(watchUrl, update, {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -177,9 +184,10 @@ export async function streamResults(url, cb, errCb) {
     }
 }
 
-export function stream(url, cb, isJson = true, additionalProtocols) {
+export function stream(url, cb, args) {
     let connection;
     let isCancelled;
+    const {isJson, additionalProtocols, connectCb} = args;
 
     connect();
 
@@ -195,6 +203,7 @@ export function stream(url, cb, isJson = true, additionalProtocols) {
     }
 
     function connect() {
+        if (connectCb) connectCb();
         connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
     }
 

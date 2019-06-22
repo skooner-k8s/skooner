@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import moment from 'moment';
+import fromNow from '../utils/dates';
 import Loading from './loading';
 import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
@@ -49,13 +49,13 @@ export function MetadataHeaders({includeNamespace, sort}) {
     );
 }
 
-export function MetadataColumns({item, href, includeNamespace, isError}) {
+export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
     return (
         <>
             <td className='td_icon optional_small'>
                 <ResourceSvg
                     resource={item.kind}
-                    className={isError ? 'svg_error' : undefined}
+                    className={resourceClass}
                 />
                 <div className='td_iconLabel'>{item.kind}</div>
             </td>
@@ -70,7 +70,7 @@ export function MetadataColumns({item, href, includeNamespace, isError}) {
             )}
 
             <td className='optional_medium'>
-                {moment(item.metadata.creationTimestamp).fromNow(true)}
+                {fromNow(item.metadata.creationTimestamp)}
             </td>
         </>
     );

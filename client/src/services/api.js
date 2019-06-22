@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {Base64} from 'js-base64';
 import {request, stream, streamResult, streamResults} from './apiProxy';
 import log from '../utils/log';
 
@@ -157,20 +158,26 @@ function swagger() {
 
 function exec(namespace, name, container, cb) {
     const url = `/api/v1/namespaces/${namespace}/pods/${name}/exec?container=${container}&command=sh&stdin=1&stderr=1&stdout=1&tty=1`;
-    const protocols = ['v4.channel.k8s.io', 'v3.channel.k8s.io', 'v2.channel.k8s.io', 'channel.k8s.io'];
-    return stream(url, cb, false, protocols);
+    const additionalProtocols = ['v4.channel.k8s.io', 'v3.channel.k8s.io', 'v2.channel.k8s.io', 'channel.k8s.io'];
+    return stream(url, cb, {additionalProtocols, isJson: false});
 }
 
-function logs(namespace, name, container, showPrevious, cb) {
-    const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&previous=${showPrevious}&tailLines=2000&follow=true`;
-    const {cancel} = stream(url, transformer, false);
+function logs(namespace, name, container, tailLines, showPrevious, cb) {
+    const items = [];
+    const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&previous=${showPrevious}&tailLines=${tailLines}&follow=true`;
+    const {cancel} = stream(url, transformer, {isJson: false, connectCb});
     return cancel;
+
+    function connectCb() {
+        items.length = 0;
+    }
 
     function transformer(item) {
         if (!item) return; // For some reason, this api returns a lot of empty strings
 
-        const message = atob(item);
-        cb(message);
+        const message = Base64.decode(item);
+        items.push(message);
+        cb(items);
     }
 }
 

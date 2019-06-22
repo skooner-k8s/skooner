@@ -3,6 +3,7 @@ import _ from 'lodash';
 import React from 'react';
 import Switch from 'react-switch';
 import Select from 'react-select';
+import Ansi from 'ansi-to-react';
 import Base from '../components/base';
 import InputFilter from '../components/inputFilter';
 import Loading from '../components/loading';
@@ -21,7 +22,7 @@ export default class Logs extends Base {
         // on the trailing edge of the timeout only if the debounced function is invoked more
         // than once during the wait timeout."
         const options = {leading: true, trailing: true, maxWait: 1000};
-        this.debouncedRefreshLogs = _.debounce(this.refreshLogs.bind(this), 1000, options);
+        this.debouncedSetState = _.debounce(this.setState.bind(this), 100, options);
     }
 
     componentDidMount() {
@@ -51,28 +52,17 @@ export default class Logs extends Base {
     startLogsStream(container, showPrevious) {
         if (!container) return;
 
-        const {namespace, name} = this.props;
         this.setState({container, showPrevious, items: []});
 
+        const {namespace, name} = this.props;
         this.registerApi({
-            items: api.logs(namespace, name, container, showPrevious, items => this.onLogs(items)),
+            items: api.logs(namespace, name, container, 1000, showPrevious, items => this.debouncedSetState({items})), // eslint-disable-line max-len
         });
-    }
-
-    onLogs(log) {
-        const {items} = this.state;
-        items.push(log);
-        this.debouncedRefreshLogs(items);
-    }
-
-    refreshLogs(logs) {
-        const items = logs.slice(-1000);
-        this.setState({items});
     }
 
     render() {
         const {namespace, name} = this.props;
-        const {items, container, containers = [], filter = '', showPrevious = false} = this.state || {};
+        const {items, container, containers = [], filter = '', showPrevious = false} = this.state;
 
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
@@ -111,13 +101,14 @@ export default class Logs extends Base {
                         filter={filter}
                         onChange={x => this.setState({filter: x})}
                     />
-
                 </div>
 
                 <div className='contentPanel'>
                     {!items ? <Loading /> : (
                         <pre>
-                            {filteredLogs.join('')}
+                            {filteredLogs.map((x, i) => (
+                                <Ansi key={i}>{x}</Ansi>
+                            ))}
                         </pre>
                     )}
                 </div>

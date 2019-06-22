@@ -44,7 +44,7 @@ const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
 app.use(logging);
 if (NODE_ENV !== 'production') app.use(cors());
-app.use('/', express.static('public'));
+app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
 app.use('/*', proxy(proxySettings));
@@ -52,6 +52,18 @@ app.use(handleErrors);
 
 http.createServer(app).listen(4654);
 console.log('Server started');
+
+function preAuth(req, res, next) {
+    const auth = req.header('Authorization');
+
+    // If the request already contains an authorization header, pass it through to the client (as a cookie)
+    if (auth) {
+        res.cookie('Authorization', auth, {maxAge: 60, httpOnly: false});
+        console.log('Authorization header found. Passing through to client.');
+    }
+
+    next();
+}
 
 function logging(req, res, next) {
     res.once('finish', () => console.log(req.method, req.url, res.statusCode));
