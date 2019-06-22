@@ -1,5 +1,5 @@
 import React from 'react';
-import moment from 'moment';
+import fromNow from '../utils/dates';
 import {TableBody} from './listViewHelpers';
 import log from '../utils/log';
 import ResourceSvg from '../art/resourceSvg';
@@ -48,7 +48,7 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                             {!shortList && (
                                 <td className='wrapped_name'>{getName(x.involvedObject)}</td>
                             )}
-                            <td>{moment(x.metadata.creationTimestamp).fromNow(true)}</td>
+                            <td>{fromNow(x.metadata.creationTimestamp)}</td>
                             <td className='optional_small'>{x.reason}</td>
                             <td>{x.message}</td>
                         </tr>

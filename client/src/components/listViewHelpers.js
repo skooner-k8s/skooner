@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import moment from 'moment';
+import fromNow from '../utils/dates';
 import Loading from './loading';
 import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
@@ -70,7 +70,7 @@ export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
             )}
 
             <td className='optional_medium'>
-                {moment(item.metadata.creationTimestamp).fromNow(true)}
+                {fromNow(item.metadata.creationTimestamp)}
             </td>
         </>
     );
