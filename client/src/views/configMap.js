@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import api from '../services/api';
@@ -48,7 +49,7 @@ export default class ConfigMap extends Base {
                 </div>
 
                 <div className='contentPanel'>
-                    {!item ? <Loading /> : Object.entries(item.data || {}).map(([key, value]) => (
+                    {!item ? <Loading /> : _.map(item.data, (value, key) => (
                         <Field key={key} name={key} value={value} />
                     ))}
                 </div>
