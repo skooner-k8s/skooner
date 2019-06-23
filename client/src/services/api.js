@@ -1,9 +1,35 @@
 import _ from 'lodash';
 import {Base64} from 'js-base64';
-import {request, stream, streamResult, streamResults} from './apiProxy';
+import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
 import log from '../utils/log';
 
-const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
+const configMap = apiFactoryWithNamespace('', 'v1', 'configmaps');
+const event = apiFactoryWithNamespace('', 'v1', 'events');
+const namespaceService = apiFactory('', 'v1', 'namespaces');
+const node = apiFactory('', 'v1', 'nodes');
+const persistentVolume = apiFactory('', 'v1', 'persistentvolumes');
+const persistentVolumeClaim = apiFactoryWithNamespace('', 'v1', 'persistentvolumeclaims');
+const pod = apiFactoryWithNamespace('', 'v1', 'pods');
+const secret = apiFactoryWithNamespace('', 'v1', 'secrets');
+const serviceAccount = apiFactoryWithNamespace('', 'v1', 'serviceaccounts');
+const serviceService = apiFactoryWithNamespace('', 'v1', 'services');
+
+const clusterRole = apiFactory('rbac.authorization.k8s.io', 'v1', 'clusterroles');
+const clusterRoleBinding = apiFactory('rbac.authorization.k8s.io', 'v1', 'clusterrolebindings');
+const role = apiFactoryWithNamespace('rbac.authorization.k8s.io', 'v1', 'roles');
+const roleBinding = apiFactoryWithNamespace('rbac.authorization.k8s.io', 'v1', 'rolebindings');
+
+const daemonSet = apiFactoryWithNamespace('apps', 'v1', 'daemonsets');
+const deployment = apiFactoryWithNamespace('apps', 'v1', 'deployments', true);
+const replicaSet = apiFactoryWithNamespace('apps', 'v1', 'replicasets', true);
+const statefulSet = apiFactoryWithNamespace('apps', 'v1', 'statefulsets', true);
+
+const cronJob = apiFactoryWithNamespace('batch', 'v1beta1', 'cronjobs');
+const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
+
+const ingress = apiFactoryWithNamespace('extensions', 'v1beta1', 'ingresses');
+
+const storageClass = apiFactory('storage.k8s.io', 'v1', 'storageclasses');
 
 const apis = {
     apply,
@@ -15,31 +41,28 @@ const apis = {
     metrics: metricsFactory(),
     oidc: oidcFactory(),
 
-    // Non-namespaced apis
-    clusterRole: apiFactory('/apis/rbac.authorization.k8s.io/v1', 'clusterroles'),
-    namespace: apiFactory('/api/v1', 'namespaces'),
-    node: apiFactory('/api/v1', 'nodes'),
-    persistentVolume: apiFactory('/api/v1', 'persistentvolumes'),
-    storageClass: apiFactory('/apis/storage.k8s.io/v1', 'storageclasses'),
-    clusterRoleBinding: apiFactory('/apis/rbac.authorization.k8s.io/v1', 'clusterrolebindings'),
-
-    // Namespaced apis
-    configMap: apiFactoryWithNamespace('/api/v1', 'configmaps'),
-    cronJob: apiFactoryWithNamespace('/apis/batch/v1beta1', 'cronjobs'),
-    daemonSet: apiFactoryWithNamespace('/apis/apps/v1', 'daemonsets'),
-    deployment: apiFactoryWithNamespace('/apis/apps/v1', 'deployments', true),
-    event: apiFactoryWithNamespace('/api/v1', 'events'),
-    ingress: apiFactoryWithNamespace('/apis/extensions/v1beta1', 'ingresses'),
-    job: apiFactoryWithNamespace('/apis/batch/v1', 'jobs'),
-    persistentVolumeClaim: apiFactoryWithNamespace('/api/v1', 'persistentvolumeclaims'),
-    pod: apiFactoryWithNamespace('/api/v1', 'pods'),
-    replicaSet: apiFactoryWithNamespace('/apis/apps/v1', 'replicasets', true),
-    role: apiFactoryWithNamespace('/apis/rbac.authorization.k8s.io/v1', 'roles'),
-    secret: apiFactoryWithNamespace('/api/v1', 'secrets'),
-    service: apiFactoryWithNamespace('/api/v1', 'services'),
-    serviceAccount: apiFactoryWithNamespace('/api/v1', 'serviceaccounts'),
-    statefulSet: apiFactoryWithNamespace('/apis/apps/v1', 'statefulsets', true),
-    roleBinding: apiFactoryWithNamespace('/apis/rbac.authorization.k8s.io/v1', 'rolebindings'),
+    clusterRole,
+    namespace: namespaceService,
+    node,
+    persistentVolume,
+    storageClass,
+    clusterRoleBinding,
+    configMap,
+    cronJob,
+    daemonSet,
+    deployment,
+    event,
+    ingress,
+    job,
+    persistentVolumeClaim,
+    pod,
+    replicaSet,
+    role,
+    secret,
+    service: serviceService,
+    serviceAccount,
+    statefulSet,
+    roleBinding,
 };
 
 async function testAuth() {
@@ -110,48 +133,6 @@ function metrics(url, cb) {
     }
 }
 
-function apiFactory(apiType, kind) {
-    const url = `${apiType}/${kind}`;
-    return {
-        list: (cb, errCb) => streamResults(url, cb, errCb),
-        get: (name, cb, errCb) => streamResult(url, name, cb, errCb),
-        post: body => post(url, body),
-        put: body => put(`${url}/${body.metadata.name}`, body),
-        delete: name => del(`${url}/${name}`),
-    };
-}
-
-function apiFactoryWithNamespace(apiType, kind, includeScale) {
-    const results = {
-        list: (namespace, cb, errCb) => streamResults(url(namespace), cb, errCb),
-        get: (namespace, name, cb, errCb) => streamResult(url(namespace), name, cb, errCb),
-        post: body => post(url(body.metadata.namespace), body),
-        put: body => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
-        delete: (namespace, name) => del(`${url(namespace)}/${name}`),
-    };
-
-    if (includeScale) {
-        results.scale = apiScaleFactory(apiType, kind);
-    }
-
-    return results;
-
-    function url(namespace) {
-        return namespace ? `${apiType}/namespaces/${namespace}/${kind}` : `${apiType}/${kind}`;
-    }
-}
-
-function apiScaleFactory(apiType, kind) {
-    return {
-        get: (namespace, name) => request(url(namespace, name)),
-        put: body => put(url(body.metadata.namespace, body.metadata.name), body),
-    };
-
-    function url(namespace, name) {
-        return `${apiType}/namespaces/${namespace}/${kind}/${name}/scale`;
-    }
-}
-
 function swagger() {
     return request('/openapi/v2');
 }
@@ -179,23 +160,6 @@ function logs(namespace, name, container, tailLines, showPrevious, cb) {
         items.push(message);
         cb(items);
     }
-}
-
-function post(url, json, autoLogoutOnAuthError = true) {
-    const body = JSON.stringify(json);
-    const opts = {method: 'POST', body, headers: JSON_HEADERS};
-    return request(url, opts, autoLogoutOnAuthError);
-}
-
-function put(url, json, autoLogoutOnAuthError = true) {
-    const body = JSON.stringify(json);
-    const opts = {method: 'PUT', body, headers: JSON_HEADERS};
-    return request(url, opts, autoLogoutOnAuthError);
-}
-
-function del(url) {
-    const opts = {method: 'DELETE', headers: JSON_HEADERS};
-    return request(url, opts);
 }
 
 export default apis;

@@ -1,7 +1,7 @@
 import './auth.scss';
 import React from 'react';
 import {addUserNotification} from '../components/notifier';
-import {setToken, deleteToken} from '../services/apiProxy';
+import {setToken, deleteToken} from '../services/auth';
 import api from '../services/api';
 import Base from '../components/base';
 import Button from '../components/button';

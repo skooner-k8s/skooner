@@ -9,10 +9,8 @@ import AddSvg from '../art/addSvg';
 
 export default class Menu extends Base {
     async componentDidMount() {
-        const rules = await api.getRules('default');
-        this.setState({rules});
-
-        console.log(rules);
+        const {status} = await api.getRules('default');
+        this.setState({rules: status.resourceRules});
     }
 
     render() {
@@ -28,33 +26,75 @@ export default class Menu extends Base {
                     {/* Cluster */}
                     <Group>
                         <MenuItem title='Cluster' path='' resource='Logo' onClick={onClick} />
-                        <MenuItem title='Nodes' path='node' resource='Node' onClick={onClick} />
-                        <MenuItem title='Namespaces' path='namespace' resource='Namespace' onClick={onClick} />
+
+                        {canView(rules, api.node) && (
+                            <MenuItem title='Nodes' path='node' resource='Node' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.namespace) && (
+                            <MenuItem title='Namespaces' path='namespace' resource='Namespace' onClick={onClick} />
+                        )}
                     </Group>
 
                     {/* Workloads */}
                     <Group>
-                        <MenuItem title='Workloads' path='workload' resource='Deployment' onClick={onClick} />
-                        <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
-                        <MenuItem title='Replicas' path='replicaset' resource='ReplicaSet' onClick={onClick} />
-                        <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
-                        <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
-                        <MenuItem title='Config' path='configmap' resource='ConfigMap' onClick={onClick} />
+                        {canView(rules, api.deployment) && (
+                            <MenuItem title='Workloads' path='workload' resource='Deployment' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.service) && (
+                            <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.replicaSet) && (
+                            <MenuItem title='Replicas' path='replicaset' resource='ReplicaSet' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.pod) && (
+                            <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.ingress) && (
+                            <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.configMap) && (
+                            <MenuItem title='Config' path='configmap' resource='ConfigMap' onClick={onClick} />
+                        )}
                     </Group>
 
                     {/* Storage */}
                     <Group>
-                        <MenuItem title='Storage' path='storageclass' resource='StorageClass' onClick={onClick} />
-                        <MenuItem title='Volumes' path='persistentvolume' resource='PersistentVolume' onClick={onClick} />
-                        <MenuItem title='Claims' path='persistentvolumeclaim' resource='PersistentVolumeClaim' onClick={onClick} />
+                        {canView(rules, api.storageClass) && (
+                            <MenuItem title='Storage' path='storageclass' resource='StorageClass' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.persistentVolume) && (
+                            <MenuItem title='Volumes' path='persistentvolume' resource='PersistentVolume' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.persistentVolumeClaim) && (
+                            <MenuItem title='Claims' path='persistentvolumeclaim' resource='PersistentVolumeClaim' onClick={onClick} />
+                        )}
                     </Group>
 
                     {/* Security */}
                     <Group>
-                        <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' onClick={onClick} />
-                        <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} onClick={onClick} />
-                        <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} onClick={onClick} />
-                        <MenuItem title='Secrets' path='secret' resource='Secret' onClick={onClick} />
+                        {canView(rules, api.serviceAccount) && (
+                            <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.role, api.clusterRole) && (
+                            <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.roleBinding, api.clusterRoleBinding) && (
+                            <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} onClick={onClick} />
+                        )}
+
+                        {canView(rules, api.secret) && (
+                            <MenuItem title='Secrets' path='secret' resource='Secret' onClick={onClick} />
+                        )}
                     </Group>
 
                     <Group>
@@ -83,8 +123,14 @@ export default class Menu extends Base {
     }
 }
 
-function canView(resources, group, resource) {
-    resources.some((x) => {
+function canView(resourcesRules, ...args) {
+    if (!resourcesRules) return false;
+
+    return args.some(x => canViewResource(resourcesRules, x.resource));
+}
+
+function canViewResource(resourcesRules, {group, resource}) {
+    return resourcesRules.some((x) => {
         const hasVerb = (x.verbs.includes('list') || x.verbs.includes('*'));
         const hasGroup = (x.apiGroups.includes(group) || x.apiGroups.includes('*'));
         const hasResource = (x.resources.includes(resource)) || x.resources.includes('*');
@@ -92,11 +138,11 @@ function canView(resources, group, resource) {
     });
 }
 
-function MenuItem(item) {
+function MenuItem(props) {
     const currentPath = getRootPath();
-    const paths = getPaths(item);
+    const paths = getPaths(props);
     const className = paths.includes(currentPath) ? 'menu_item menu_itemSelected' : 'menu_item';
-    const {path, title, resource, onClick} = item;
+    const {path, title, resource, onClick} = props;
 
     return (
         <a href={`#!${path}`} title={title} className={className} onClick={onClick}>
@@ -108,6 +154,8 @@ function MenuItem(item) {
 
 function Group({children = []}) {
     if (!Array.isArray(children)) children = [children]; // eslint-disable-line no-param-reassign
+    children = children.filter(Boolean); // eslint-disable-line no-param-reassign
+
     if (children.length === 0) return null;
 
     const paths = children.flatMap(x => getPaths(x.props));

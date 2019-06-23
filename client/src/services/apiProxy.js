@@ -1,4 +1,4 @@
-import * as cookie from 'js-cookie';
+import {getToken, logout} from './auth';
 import log from '../utils/log';
 
 const {host, href, hash, search} = window.location;
@@ -6,38 +6,7 @@ const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const isDev = process.env.NODE_ENV !== 'production';
 const BASE_HTTP_URL = isDev && host === 'localhost:4653' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
-
-const authorizationCookie = cookie.get('Authorization');
-if (authorizationCookie) {
-    setToken(authorizationCookie);
-    cookie.remove('Authorization');
-}
-
-export function getToken() {
-    return localStorage.authToken;
-}
-
-export function getUserInfo() {
-    const user = getToken().split('.')[1];
-    return JSON.parse(atob(user));
-}
-
-export function hasToken() {
-    return !!getToken();
-}
-
-export function setToken(token) {
-    localStorage.authToken = token;
-}
-
-export function deleteToken() {
-    delete localStorage.authToken;
-}
-
-export function logout() {
-    deleteToken();
-    window.location.reload();
-}
+const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
 
 export async function request(path, params, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
@@ -69,6 +38,73 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     }
 
     return response.json();
+}
+
+export function apiFactory(group, version, resource) {
+    const apiRoot = getApiRoot(group, version);
+    const url = `${apiRoot}/${resource}`;
+    return {
+        resource: {group, resource},
+        list: (cb, errCb) => streamResults(url, cb, errCb),
+        get: (name, cb, errCb) => streamResult(url, name, cb, errCb),
+        post: body => post(url, body),
+        put: body => put(`${url}/${body.metadata.name}`, body),
+        delete: name => remove(`${url}/${name}`),
+    };
+}
+
+export function apiFactoryWithNamespace(group, version, resource, includeScale) {
+    const apiRoot = getApiRoot(group, version);
+    const results = {
+        resource: {group, resource},
+        list: (namespace, cb, errCb) => streamResults(url(namespace), cb, errCb),
+        get: (namespace, name, cb, errCb) => streamResult(url(namespace), name, cb, errCb),
+        post: body => post(url(body.metadata.namespace), body),
+        put: body => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
+        delete: (namespace, name) => remove(`${url(namespace)}/${name}`),
+    };
+
+    if (includeScale) {
+        results.scale = apiScaleFactory(apiRoot, resource);
+    }
+
+    return results;
+
+    function url(namespace) {
+        return namespace ? `${apiRoot}/namespaces/${namespace}/${resource}` : `${apiRoot}/${resource}`;
+    }
+}
+
+function getApiRoot(group, version) {
+    return group ? `/apis/${group}/${version}` : `api/${version}`;
+}
+
+function apiScaleFactory(apiRoot, resource) {
+    return {
+        get: (namespace, name) => request(url(namespace, name)),
+        put: body => put(url(body.metadata.namespace, body.metadata.name), body),
+    };
+
+    function url(namespace, name) {
+        return `${apiRoot}/namespaces/${namespace}/${resource}/${name}/scale`;
+    }
+}
+
+export function post(url, json, autoLogoutOnAuthError = true) {
+    const body = JSON.stringify(json);
+    const opts = {method: 'POST', body, headers: JSON_HEADERS};
+    return request(url, opts, autoLogoutOnAuthError);
+}
+
+export function put(url, json, autoLogoutOnAuthError = true) {
+    const body = JSON.stringify(json);
+    const opts = {method: 'PUT', body, headers: JSON_HEADERS};
+    return request(url, opts, autoLogoutOnAuthError);
+}
+
+export function remove(url) {
+    const opts = {method: 'DELETE', headers: JSON_HEADERS};
+    return request(url, opts);
 }
 
 export async function streamResult(url, name, cb, errCb) {

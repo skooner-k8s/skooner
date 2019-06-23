@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../components/button';
 import ItemHeader from '../components/itemHeader';
-import {getUserInfo, logout} from '../services/apiProxy';
+import {getUserInfo, logout} from '../services/auth';
 import LogoutSvg from '../art/logoutSvg';
 
 const Account = () => (
