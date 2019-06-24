@@ -11,11 +11,6 @@ if (authorizationCookie) {
 }
 
 export function getToken() {
-    // This line deals with backwards compatability from when we used to only store the actual jwt
-    if (localStorage.authToken && !localStorage.authToken.startsWith('Bearer ')) {
-        localStorage.authToken = `Bearer ${localStorage.authToken}`;
-    }
-
     return localStorage.authToken;
 }
 
