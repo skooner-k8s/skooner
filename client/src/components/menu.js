@@ -4,11 +4,21 @@ import Base from './base';
 import {getRootPath} from '../router';
 import EditorModal from '../views/editorModal';
 import api from '../services/api';
+import {addHandler} from '../services/auth';
 import ResourceSvg from '../art/resourceSvg';
 import AddSvg from '../art/addSvg';
 
+
 export default class Menu extends Base {
-    async componentDidMount() {
+    componentDidMount() {
+        this.getRules();
+
+        this.registerApi({
+            status: addHandler(() => this.getRules()),
+        });
+    }
+
+    async getRules() {
         const {status} = await api.getRules('default');
         this.setState({rules: status.resourceRules});
     }
