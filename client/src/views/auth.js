@@ -97,7 +97,7 @@ async function oidcLogin(code, returnedState) {
 
 async function login(token, redirectUri) {
     try {
-        setToken(`Bearer ${token}`);
+        setToken(token);
         await api.testAuth();
 
         if (redirectUri) {

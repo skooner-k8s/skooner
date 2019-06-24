@@ -12,7 +12,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
-    if (token) opts.headers.Authorization = token;
+    if (token) opts.headers.Authorization = `Bearer ${token}`;
 
     const url = combinePath(BASE_HTTP_URL, path);
     const response = await fetch(url, opts);
