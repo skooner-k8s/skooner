@@ -53,19 +53,19 @@ export default class Role extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <th>Resources</th>
-                                <th>Names</th>
-                                <th>Verbs</th>
                                 <th>Groups</th>
+                                <th>Resources</th>
+                                <th>Verbs</th>
+                                <th>Names</th>
                             </tr>
                         </thead>
 
                         <TableBody items={rules} colSpan='4' row={(x, i) => (
                             <tr key={i}>
-                                <td>{_.map(x.resources, toDiv)}</td>
-                                <td>{_.map(x.resourceNames, toDiv)}</td>
-                                <td>{_.map(x.verbs, toDiv)}</td>
                                 <td>{_.map(x.apiGroups, toDiv)}</td>
+                                <td>{_.map(x.resources, toDiv)}</td>
+                                <td>{_.map(x.verbs, toDiv)}</td>
+                                <td>{_.map(x.resourceNames, toDiv)}</td>
                             </tr>
                         )} />
                     </table>
@@ -76,5 +76,5 @@ export default class Role extends Base {
 }
 
 function toDiv(item) {
-    return (<div key={item}>{item}</div>);
+    return (<div key={item}>{item || '""'}</div>);
 }

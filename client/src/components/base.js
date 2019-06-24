@@ -29,11 +29,10 @@ export default class Base extends Component {
         delete this.apis[name];
 
         const handler = await item;
-        if (!handler) {
+        if (handler) {
+            handler();
+        } else {
             log.warn('Found null handler when calling disposers');
-            return;
         }
-
-        handler();
     }
 }
