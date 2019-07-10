@@ -19,7 +19,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
 
     if (!response.ok) {
         const {status, statusText} = response;
-        if (autoLogoutOnAuthError && status === 401) {
+        if (autoLogoutOnAuthError && status === 401 && token) {
             log.error('Logging out due to auth error', {status, statusText, path});
             logout();
         }
