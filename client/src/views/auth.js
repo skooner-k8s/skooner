@@ -46,7 +46,9 @@ export default class Auth extends Base {
                         <LogoSvg className='optional_small' />
                         <input
                             type='password'
+                            name='password'
                             className='auth_input'
+                            autoComplete='current-password'
                             placeholder='Enter your auth token here...'
                             spellCheck='false'
                             value={token}
