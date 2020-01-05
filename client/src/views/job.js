@@ -16,6 +16,7 @@ import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
+import {formatDuration}  from '../utils/dates';
 
 const service = api.job;
 
@@ -79,6 +80,7 @@ export default class Job extends Base {
                             <MetadataFields item={item} />
                             <Field name='Start Time' value={item.status.startTime} />
                             <Field name='Completion Time' value={item.status.completionTime} />
+                            <Field name='Duration' value={item.status.completionTime ? formatDuration(Date.parse(item.status.completionTime) - Date.parse(item.status.startTime)) : ''} />
                         </div>
                     )}
                 </div>
