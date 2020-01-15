@@ -26,6 +26,15 @@ const shortEnglishHumanizer = HumanizeDuration.humanizer({
   * 
   */ 
 export default function fromNow(epochtimestampMs) {
-    var diff = Date.now() - new Date(epochtimestampMs).getTime()
-    return shortEnglishHumanizer(diff).split(",")[0]
+    const diff = Date.now() - new Date(epochtimestampMs).getTime();
+    return formatDuration(diff);
 }
+
+
+/**
+ * Humanize the given duration (in ms)
+ * @param {diffDurationMs} diffDurationMs 
+ */
+export function formatDuration(diffDurationMs){
+     return shortEnglishHumanizer(diffDurationMs).split(",")[0];
+} 
