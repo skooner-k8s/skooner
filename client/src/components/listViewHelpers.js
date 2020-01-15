@@ -1,16 +1,29 @@
 import _ from 'lodash';
 import React from 'react';
 import fromNow from '../utils/dates';
+import {isAValidURL} from '../utils/string';
 import Loading from './loading';
 import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
 
 export function objectMap(items = {}) {
-    return Object.entries(items).map(([key, value]) => (
-        <div key={key}>
-            <span>{key}</span> • <span title={value}>{value.length <= 50 ? value : `${value.substr(0, 50)}...`}</span>
-        </div>
-    ));
+    return Object.entries(items).map(([key, value]) => {
+        const substrValue = value.length <= 50 ? value : `${value.substr(0, 50)}...`;
+
+        if (isAValidURL(value)) {
+            // Check valid URL
+            return <div key={key}>
+                <span>{key}</span> • <a title={value} target="_blank" href={value}>{substrValue}</a>
+            </div>
+        }
+        // Note : alternative parsing could be implemented in other if clauses
+        else {
+            // By default, just display the raw value in a span
+            return <div key={key}>
+                <span>{key}</span> • <span title={value}> {substrValue} </span>
+            </div>
+        }
+    });
 }
 
 export function TableBody({items, filter, colSpan, sort, row}) {
