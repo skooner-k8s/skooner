@@ -79,6 +79,33 @@ button.titleBar_hamburger {
     font-size: $font-size-small;
 }
 
+%node-ready-status-shared {
+  font-size: $font-size-large;
+}
+
+.node-ready-status-True {
+  @extend %node-ready-status-shared;
+  color: green;
+}
+
+.node-ready-status-False {
+  @extend %node-ready-status-shared;
+  color: orange;
+}
+
+.node-ready-status-Unknown {
+  @extend %node-ready-status-shared;
+  color: $color-error;
+}
+
+.node-master {
+	color: $color-accent;
+}
+
+.center {
+	text-align: center;
+}
+
 @media only screen and (max-width: $media-medium) {
 	.optional_medium {
 		display: none;
