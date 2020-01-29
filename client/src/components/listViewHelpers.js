@@ -73,7 +73,7 @@ export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
                 <div className='td_iconLabel'>{item.kind}</div>
                 
                 {/** If the node is a master, display a simple "MASTER" label below the item.kind icon */}
-                {Object.entries(item.metadata.labels).some(([key, _]) => key === "node-role.kubernetes.io/master")
+                {item.metadata.labels && Object.entries(item.metadata.labels).some(([key, _]) => key === "node-role.kubernetes.io/master")
                     && <span className='td_iconLabel node-master'>MASTER</span>}
 
             </td>
