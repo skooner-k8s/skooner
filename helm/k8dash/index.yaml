@@ -3,7 +3,21 @@ entries:
   k8dash:
   - apiVersion: v1
     appVersion: 0.0.1
-    created: 2019-04-25T11:53:15.386073-05:00
+    created: "2020-01-30T12:57:53.1625874-05:00"
+    description: A Helm chart for Kubernetes K8Dash
+    digest: 032d1170af9317e6270b6a139f3a3a0fc3f7e25d3966e2ec30fed5077389e94e
+    maintainers:
+    - email: kiryanov.i@gmail.com
+      name: Ivan Kirianov
+    - email: eric@herbrandson.com
+      name: Eric Herbrandson
+    name: k8dash
+    urls:
+    - k8dash-0.0.2.tgz
+    version: 0.0.2
+  - apiVersion: v1
+    appVersion: 0.0.1
+    created: "2020-01-30T12:57:53.1615864-05:00"
     description: A Helm chart for Kubernetes K8Dash
     digest: 7a84cff8455803b1a5610987e054cebbe52b14878a2db6b22ae7b455a6105e09
     maintainers:
@@ -15,4 +29,4 @@ entries:
     urls:
     - k8dash-0.0.1.tgz
     version: 0.0.1
-generated: 2019-04-25T11:53:15.385127-05:00
+generated: "2020-01-30T12:57:53.1606022-05:00"
