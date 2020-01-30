@@ -30,6 +30,8 @@ ingress:
 
   ## Kubernetes Dashboard Ingress hostnames
   # host: kubernetes-dashboard.domain.com
+  paths:
+    - /
 
   ## Kubernetes Dashboard Ingress TLS configuration
   # tls:
