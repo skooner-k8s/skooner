@@ -17,7 +17,7 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-{{- range $p := $paths }}
+{{- range $p := .Values.ingress.paths }}
           - path: {{ $p }}
             backend:
               serviceName: k8dash
