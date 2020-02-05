@@ -1,5 +1,8 @@
 # Stage 1 - the build react app
-FROM node:12.4.0-alpine as build-deps
+FROM --platform=$BUILDPLATFORM node:12.4.0-alpine as build-deps
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+RUN echo "I'm running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 WORKDIR /usr/src/app
 COPY client/package.json client/package-lock.json ./
 RUN npm i
