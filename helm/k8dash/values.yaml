@@ -20,6 +20,9 @@ service:
   type: NodePort
   servicePort: 4654
 
+# If true will create k8dash-sa and associate with cluster-admin role. Secret can be used for auth page with:
+# kubectl describe secret k8dash-sa-token-xxxxx
+createServiceAccount: false
 
 ingress:
   enabled: false
@@ -30,6 +33,8 @@ ingress:
 
   ## Kubernetes Dashboard Ingress hostnames
   # host: kubernetes-dashboard.domain.com
+  paths:
+    - /
 
   ## Kubernetes Dashboard Ingress TLS configuration
   # tls:
