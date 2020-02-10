@@ -17,10 +17,12 @@ spec:
     - host: {{ .Values.ingress.host }}
       http:
         paths:
-          - path: /
+{{- range $p := .Values.ingress.paths }}
+          - path: {{ $p }}
             backend:
               serviceName: k8dash
               servicePort: 80
+{{- end -}}
   {{- if .Values.ingress.tls }}
   tls:
 {{ toYaml .Values.ingress.tls | indent 4 }}
