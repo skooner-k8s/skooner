@@ -38,7 +38,7 @@
 }
 
 .button_clear:disabled {
-	@extend .button:disabled;
+	@extend .button,:disabled;
 	background: none;
 	color: $color-lightest;
 
