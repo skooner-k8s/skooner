@@ -1,0 +1,30 @@
+
+> client@0.1.0 build /home/doh/git/k8dash/client
+> react-scripts build
+
+Creating an optimized production build...
+Compiled with warnings.
+
+./src/components/listViewHelpers.js
+  Line 16:55:  Using target="_blank" without rel="noopener noreferrer" is a security risk: see https://mathiasbynens.github.io/rel-noopener  react/jsx-no-target-blank
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+File sizes after gzip:
+
+  279.14 KB  build/static/js/2.696112f2.chunk.js
+  35.93 KB   build/static/js/main.0b98fd11.chunk.js
+  3.91 KB    build/static/css/main.7cd4b8f2.chunk.css
+  774 B      build/static/js/runtime-main.32b701c7.js
+  589 B      build/static/css/2.b522e268.chunk.css
+
+The project was built assuming it is hosted at ./.
+You can control this with the homepage field in your package.json.
+
+The build folder is ready to be deployed.
+
+Find out more about deployment here:
+
+  bit.ly/CRA-deploy
+
