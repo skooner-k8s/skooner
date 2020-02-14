@@ -1,0 +1,12 @@
+2020-02-14T22:56:07.711+0100	[34mINFO[0m	Detecting Alpine vulnerabilities...
+2020-02-14T22:56:07.717+0100	[34mINFO[0m	Detecting npm vulnerabilities...
+
+youcantbeserious/multiarch-k8dash:dev (alpine 3.11.3)
+=====================================================
+Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
+
+
+usr/src/app/package-lock.json
+=============================
+Total: 0 (UNKNOWN: 0, LOW: 0, MEDIUM: 0, HIGH: 0, CRITICAL: 0)
+

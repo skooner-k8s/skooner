@@ -1,15 +1,8 @@
 # Stage 1 - the build react app
-FROM --platform=$BUILDPLATFORM node:12.4.0-alpine as build-deps
+FROM node:lts-alpine as build-deps
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
-RUN echo "I'm running on $BUILDPLATFORM, building for $TARGETPLATFORM"
-#RUN apk add --no-cache --update \
-#    python \
-#    python-dev \
-#    py-pip \
-#    build-base
-#
-#RUN apk add --virtual build-deps gcc python-dev musl-dev
+RUN echo "Building for $TARGETPLATFORM"
 
 WORKDIR /usr/src/app
 COPY client/package.json ./
@@ -19,7 +12,7 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2 - the production environment
-FROM --platform=$BUILDPLATFORM node:12.4.0-alpine
+FROM node:lts-alpine
 
 RUN apk add --no-cache tini
 ENV NODE_ENV production
