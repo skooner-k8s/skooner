@@ -1,5 +1,5 @@
 # Stage 1 - the build react app
-FROM --platform=$BUILDPLATFORM node:lts-alpine as build-deps
+FROM node:lts-alpine as build-deps
 ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 RUN echo "Building for $TARGETPLATFORM"
@@ -12,7 +12,7 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2 - the production environment
-FROM --platform=$BUILDPLATFORM node:lts-alpine
+FROM node:lts-alpine
 
 RUN apk add --no-cache tini
 ENV NODE_ENV production
