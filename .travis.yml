@@ -1,12 +1,14 @@
 language: generic
+addons:
+  apt:
+    packages:
+      - docker-ce
 services:
   - docker
-
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
     - DOCKER_BUILDKIT=1
-
 before_install:
   - sudo apt-get -y update || true
   - sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support
