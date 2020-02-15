@@ -15,6 +15,7 @@ before_install:
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sudo sh get-docker.sh
   - sudo usermod -aG docker ${USER}
+  - docker buildx create --use
   - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t youcantbeserious/multiarch-k8dash:${COMMIT}
 #  - docker build -t youcantbeserious/multiarch-k8dash:${COMMIT} .
   - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
