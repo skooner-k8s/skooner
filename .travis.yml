@@ -3,25 +3,27 @@ services:
   - docker
 env:
   global:
+    - HUB_REPO=youcantbeserious/multiarch-k8dash
+    - BINFMT_TAG=a7996909642ee92942dcd6cff44b9b95f08dad64
     - COMMIT=${TRAVIS_COMMIT::8}
     - DOCKER_CLI_EXPERIMENTAL=enabled
 before_install:
   - sudo apt-get -y update || true
   - sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support
-  - docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
+  - docker run --rm --privileged docker/binfmt:${BINFMT_TAG}
   - sudo update-binfmts --display
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sudo sh get-docker.sh
   - sudo usermod -aG docker ${USER}
   - docker buildx create --use
-  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t youcantbeserious/multiarch-k8dash:${COMMIT}
+  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t ${HUB_REPO}:${COMMIT}
 #  - docker build -t youcantbeserious/multiarch-k8dash:${COMMIT} .
   - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
   - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
   - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
 script:
-  - ./trivy --exit-code 0 --severity HIGH --no-progress trivy-ci-test:${COMMIT}
-  - ./trivy --exit-code 1 --severity CRITICAL --no-progress trivy-ci-test:${COMMIT}
+  - ./trivy --exit-code 0 --severity HIGH --no-progress ${HUB_REPO}:${COMMIT}
+  - ./trivy --exit-code 1 --severity CRITICAL --no-progress ${HUB_REPO}:${COMMIT}
 cache:
   directories:
     - $HOME/.cache/trivy
