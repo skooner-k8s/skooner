@@ -1,9 +1,4 @@
 language: generic
-addons:
-  apt:
-    packages:
-      - qemu-system-arm
-      - binfmt-support
 services:
   - docker
 env:
@@ -11,6 +6,9 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
     - DOCKER_CLI_EXPERIMENTAL=enabled
 before_install:
+  - sudo apt-get -y update || true
+  - sudo apt-get -y install qemu-system-arm qemu-user-static binfmt-support
+  - docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
   - sudo update-binfmts --display
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sudo sh get-docker.sh
