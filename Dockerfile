@@ -6,7 +6,8 @@ RUN echo "Building for $TARGETPLATFORM"
 
 WORKDIR /usr/src/app
 COPY client/package.json ./
-RUN npm i
+ADD package.json ./
+RUN npm install
 
 COPY client/ ./
 RUN npm run build
@@ -21,7 +22,8 @@ RUN chown -R node:node /usr/src/app/
 EXPOSE 4654
 
 COPY server/package.json ./
-RUN npm i --production
+ADD package.json ./
+RUN npm install --production
 
 COPY --from=build-deps /usr/src/app/build /usr/src/app/public
 COPY /server ./
