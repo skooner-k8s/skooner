@@ -14,9 +14,9 @@ before_install:
   - sudo update-binfmts --display
   - curl -fsSL https://get.docker.com -o get-docker.sh
   - sudo sh get-docker.sh
-  - sudo usermod -aG docker ${USER}
+  - docker login --username ${HUB_USER} --password ${HUB_TOKEN}
   - docker buildx create --use
-  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t ${HUB_REPO}:${COMMIT}  2>&1 | egrep -o ".*(linux\/|exporting|pushing).*"
+  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t ${HUB_REPO}:${COMMIT} --push
   - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
   - wget https://github.com/aquasecurity/trivy/releases/download/v${VERSION}/trivy_${VERSION}_Linux-64bit.tar.gz
   - tar zxvf trivy_${VERSION}_Linux-64bit.tar.gz
