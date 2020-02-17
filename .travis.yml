@@ -23,7 +23,7 @@ before_install:
   - echo ${HUB_TOKEN} | docker login --username ${HUB_USER} --password-stdin
   - docker load -i docker_images/images.tar || true
   - docker buildx create --use
-  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t ${HUB_REPO}:${COMMIT} --push
+  - docker buildx build ./ --platform=linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64,linux/i386 -t ${HUB_REPO}:${COMMIT} -t ${HUB_REPO}:latest --push
   - docker tag ${HUB_REPO}:${COMMIT} ${HUB_REPO}:latest
   - docker push ${HUB_REPO}
   - export VERSION=$(curl --silent "https://api.github.com/repos/aquasecurity/trivy/releases/latest" | grep '"tag_name":' | sed -E 's/.*"v([^"]+)".*/\1/')
