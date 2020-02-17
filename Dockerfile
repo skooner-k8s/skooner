@@ -6,16 +6,13 @@ RUN npm install --quiet
 
 # Stage 2 - the build react app
 FROM --platform=$BUILDPLATFORM node:lts-alpine as build
-ARG TARGETPLATFORM
-RUN echo "Building for $TARGETPLATFORM"
 COPY --from=build-deps /usr/src/app/node_modules /usr/src/app/node_modules
 WORKDIR /usr/src/app
 COPY client/ ./
 RUN npm run build
 
 # Stage 3 - the production environment
-FROM --platform=$TARGETPLATFORM node:lts-alpine as server-runtime
-
+FROM --platform=$TARGETPLATFORM node:lts-alpine as runtime
 RUN apk add --no-cache tini
 ENV NODE_ENV production
 WORKDIR /usr/src/app
