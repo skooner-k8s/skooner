@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/thiscantbeserious/k8dash.svg?branch=master)](https://travis-ci.com/thiscantbeserious/k8dash) 
+
 # K8Dash - Kubernetes Dashboard
 
 K8Dash is the easiest way to manage your Kubernetes cluster. Why?
