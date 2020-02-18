@@ -3,7 +3,7 @@ services:
   - docker
 env:
   global:
-    - HUB_REPO=youcantbeserious/multiarch-k8dash
+    - HUB_REPO=herbrandson/k8dash
     - BINFMT_TAG=a7996909642ee92942dcd6cff44b9b95f08dad64
     - COMMIT=${TRAVIS_COMMIT::8}
     - DOCKER_CLI_EXPERIMENTAL=enabled
