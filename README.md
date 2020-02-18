@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/thiscantbeserious/k8dash.svg?branch=master)](https://travis-ci.com/thiscantbeserious/k8dash) - automatically built and published on [Docker Hub](https://hub.docker.com/repository/docker/youcantbeserious/multiarch-k8dash/tags) via the :latest and :commit-id(:8) tag. 
+[![Build Status](https://travis-ci.com/herbrandson/k8dash.svg?branch=master)](https://travis-ci.com/herbrandson/k8dash) - automatically built and published on [Docker Hub](https://hub.docker.com/repository/docker/herbrandson/k8dash/tags) via the :latest and :commit-id(:8) tag. 
 
 Builds are scanned with [trivy](https://github.com/aquasecurity/trivy) for exploits in base-container and/or npm-dependencies.
 
