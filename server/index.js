@@ -13,6 +13,9 @@ const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
+const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
+const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
+
 console.log('OIDC_URL: ', OIDC_URL || 'None');
 
 process.on('uncaughtException', err => console.error('Uncaught exception', err));
@@ -101,10 +104,10 @@ function onProxyRes(proxyRes, req, res) {
 }
 
 function handleErrors(err, req, res, next) {
-    console.error('An error occured during the request', err, req.method, req.url);
+    console.error('An error occurred during the request', err, req.method, req.url);
 
     res.status(err.httpStatusCode || 500);
-    res.send('Server serror');
+    res.send('Server error');
     next();
 }
 
@@ -123,7 +126,7 @@ async function oidcAuthenticate(code, redirectUri) {
 
 async function getOidcProvider() {
     const issuer = await Issuer.discover(OIDC_URL);
-    return new issuer.Client({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET});
+    return new issuer.Client(clientMetadata);
 }
 
 logClusterInfo();
