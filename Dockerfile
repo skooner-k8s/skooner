@@ -1,7 +1,7 @@
 # Stage 1 - install the heavy dependencies
 FROM --platform=$BUILDPLATFORM node:lts-alpine as build-deps
 WORKDIR /usr/src/app
-COPY client/package.json ./
+COPY client/package.json client/package-lock.json ./
 RUN npm install --quiet
 
 # Stage 2 - the build react app
@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 RUN chown -R node:node /usr/src/app/
 EXPOSE 4654
 
-COPY server/package.json ./
+COPY server/package.json server/package-lock.json ./
 RUN npm install --production --quiet
 
 COPY --from=build /usr/src/app/build /usr/src/app/public
