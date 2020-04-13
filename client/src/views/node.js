@@ -75,6 +75,7 @@ export default class Node extends Base {
                             <Field name='Container Runtime' value={item.status.nodeInfo.containerRuntimeVersion} />
                             <Field name='Kubelet' value={item.status.nodeInfo.kubeletVersion} />
                             <Field name='Kube Proxy' value={item.status.nodeInfo.kubeProxyVersion} />
+                            <Field name='Taints'>{getTaints(item)}</Field>
                         </div>
                     )}
                 </div>
@@ -116,6 +117,15 @@ export default class Node extends Base {
             </div>
         );
     }
+}
+
+/**
+ * Render "taints" divs from the node spec
+ * 
+ * @param spec spec from a node item
+ */
+function getTaints({ spec }) {
+    return _.map(spec.taints, ({key, effect}) => <div key={key}> <span>{key}</span> • <span title={key}> {effect} </span></div>);
 }
 
 function getUptime({status}) {
