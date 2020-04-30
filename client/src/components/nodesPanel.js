@@ -6,6 +6,7 @@ import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody, objectMap} from './listViewHelpers';
 import {unparseCpu, unparseRam} from '../utils/unitHelpers';
 import {getNodeResourceValue, getNodeResourcePercent, getNodeUsagePercent, getNodeUsage, getNodeResourcesAvailable} from '../utils/metricsHelpers';
+import getReadyStatus from '../utils/nodeHelpers';
 
 export default class NodesPanel extends Base {
     constructor(props) {
@@ -91,16 +92,6 @@ export default class NodesPanel extends Base {
     }
 }
 
-/**
- * 
- * @param {*status* object with a status field  (most likely the row from the TableBody)}
- * @returns the status text, as defined in https://kubernetes.io/docs/concepts/architecture/nodes/#condition
- */
-export function getReadyStatus({status}) {
-    if (!status.conditions) return null;
-    const ready = status.conditions.find(y => y.type === 'Ready');
-    return ready && ready.status;
-}
 
 /** Simple mapping between ready statuses and an UTF-8 symbol character */
 const statusesToUtf8 = { "True": "\u2713", "False": "\uD83D\uDEC7", "Unknown": "\u003F" }
