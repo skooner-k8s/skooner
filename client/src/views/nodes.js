@@ -7,6 +7,7 @@ import NodeStatusChart from '../components/nodeStatusChart';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import NodesPanel from '../components/nodesPanel';
+import getReadyStatus from '../utils/nodeHelpers';
 import NodeCpuChart from '../components/nodeCpuChart';
 import NodeRamChart from '../components/nodeRamChart';
 import getMetrics from '../utils/metricsHelpers';
@@ -14,7 +15,7 @@ import getMetrics from '../utils/metricsHelpers';
 export default class Nodes extends Base {
     state = {
         filter: '',
-        sort: defaultSortInfo(this),
+        sort: defaultSortInfo(this, getReadyStatus, 'asc'),
     };
 
     componentDidMount() {
