@@ -10,7 +10,7 @@ K8Dash is the easiest way to manage your Kubernetes cluster. Why?
 
 
 ## Click the video below to see K8Dash in action
-[![K8Dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "K8Dash - Kubernetes Dashboard")
+[![K8Dash - Kubernetes Dashboard](https://github.com/indeedeng/k8dash/blob/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "K8Dash - Kubernetes Dashboard")
 
 
 ## Prerequisites
@@ -21,10 +21,10 @@ K8Dash is the easiest way to manage your Kubernetes cluster. Why?
 ## Getting Started
 Deploy k8dash with something like the following...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash.yaml) before running the script below.
 
 ``` bash
-kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash.yaml
+kubectl apply -f https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash.yaml
 ```
 
 To access k8dash, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following
@@ -80,7 +80,7 @@ kubectl describe secret k8dash-sa-token-xxxxx
 Retrieve the `token` value from the secret and enter it into the login screen to access the dashboard.
 
 ## Running k8dash with OpenId Connect (oidc)
-K8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
+K8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash-oidc.yaml) config.
 
 To learn more about configuring a cluster for OIDC, check out these great links
 + [https://kubernetes.io/docs/reference/access-authn-authz/authentication/](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
@@ -90,7 +90,7 @@ To learn more about configuring a cluster for OIDC, check out these great links
 
 You can deploy k8dash with oidc support using something like the following script...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash-oidc.yaml) before running the script below.
 
 ``` bash
 OIDC_URL=<put your endpoint url here... something like https://accounts.google.com>
@@ -102,12 +102,12 @@ kubectl create secret -n kube-system generic k8dash \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET"
 
-kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml
+kubectl apply -f https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash-oidc.yaml
 
 ```
 
 ## Running k8dash with NodePort
-If you do not have an ingress server setup, you can utilize a NodePort service as configured in the [kubernetes-k8dash-nodeport.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
+If you do not have an ingress server setup, you can utilize a NodePort service as configured in the [kubernetes-k8dash-nodeport.yaml](https://github.com/indeedeng/k8dash/blob/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
 
 This will map the k8dash port 4654 to a randomly selected port on the running node. The assigned port can be found using
 ```
@@ -137,4 +137,4 @@ For the client, move to the `/client` directory, run `npm i` and then `npm start
 
 ## License
 
-[Apache License 2.0](https://raw.githubusercontent.com/herbrandson/k8dash/master/LICENSE)
+[Apache License 2.0](https://github.com/indeedeng/k8dash/blob/master/LICENSE)
