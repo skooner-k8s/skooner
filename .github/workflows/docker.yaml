@@ -1,0 +1,37 @@
+name: docker
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    env:
+      VERSION: $(basename $GITHUB_REF)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
+      - name: Login to GitHub Docker Registry
+        run: echo "${REGISTRY_PASSWORD}" | docker login -u "${REGISTRY_USERNAME}" --password-stdin
+        env:
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build Container Image
+        run: |
+          docker buildx build \
+            --platform linux/amd64,linux/arm64,linux/arm/v7 \
+            --tag indeedoss/k8dash:latest \
+            --tag indeedoss/k8dash:${{ env.VERSION }} \
+            -f ./Dockerfile \
+            . \
+            --push
