@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, {Fragment} from 'react';
 import Base from '../components/base';
 import api from '../services/api';
