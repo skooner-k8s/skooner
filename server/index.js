@@ -70,7 +70,7 @@ function preAuth(req, res, next) {
 }
 
 function logging(req, res, next) {
-    res.once('finish', () => console.log(req.method, req.url, res.statusCode));
+    res.once('finish', () => console.log(new Date(), req.method, req.url, res.statusCode));
     next();
 }
 
