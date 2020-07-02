@@ -12,16 +12,17 @@ export default function getMetrics(items, metrics) {
 
 
 // Node helpers
-export function getNodeResourceValue(node, pods, resource, type) {
+export function getNodeResourceValue(node, pods, resource, type, phases) {
     if (!node || !pods) return null;
 
     return _(pods)
         .filter(x => x.spec.nodeName === node.metadata.name)
+        .filter(x => !phases || phases.indexOf(x.status.phase) >= 0)
         .sumBy(x => getPodResourceValue(x, resource, type));
 }
 
 export function getNodeResourcePercent(node, pods, resource, type) {
-    const used = getNodeResourceValue(node, pods, resource, type);
+    const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     const available = getNodeResourcesAvailable(node, resource);
     return used / available;
 }
