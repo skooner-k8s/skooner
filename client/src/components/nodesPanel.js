@@ -115,7 +115,7 @@ function getPercentDisplay(node, metrics, resource) {
 }
 
 function getResourcePercentDisplay(node, pods, resource, type) {
-    const used = getNodeResourceValue(node, pods, resource, type);
+    const used = getNodeResourceValue(node, pods, resource, type, ["Running"]);
     return percent(node, used, resource);
 }
 
