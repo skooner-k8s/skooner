@@ -53,8 +53,9 @@ app.post('/oidc', postOidc);
 app.use('/*', proxy(proxySettings));
 app.use(handleErrors);
 
-http.createServer(app).listen(4654);
-console.log('Server started');
+const port = process.env.SERVER_PORT || 4654;
+http.createServer(app).listen(port);
+console.log(`Server started. Listening on port ${port}`);
 
 function preAuth(req, res, next) {
     const auth = req.header('Authorization');

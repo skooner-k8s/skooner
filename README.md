@@ -5,6 +5,7 @@ K8Dash is the easiest way to manage your Kubernetes cluster. Why?
 * Blazing fast and Always Live: no need to refresh pages to see the latest
 * Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
 * Easy CRUD and scaling: plus inline API docs to easily understand what each field does
+* 100% responsive (runs on your phone/tablet)
 * Simple OpenID integration: no special proxies required
 * Simple installation: use the provided yaml resources to have K8Dash up and running in under 1 minute (no, seriously)
 
