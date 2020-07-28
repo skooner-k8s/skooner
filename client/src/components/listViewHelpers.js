@@ -13,7 +13,7 @@ export function objectMap(items = {}) {
         if (isAValidURL(value)) {
             // Check valid URL
             return <div key={key}>
-                <span>{key}</span> • <a title={value} target="_blank" href={value}>{substrValue}</a>
+                <span>{key}</span> • <a title={value} target="_blank" rel="noopener noreferrer" href={value}>{substrValue}</a>
             </div>
         }
         // Note : alternative parsing could be implemented in other if clauses
