@@ -19,6 +19,7 @@ import {defaultSortInfo} from '../components/sorter';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ChartsContainer from '../components/chartsContainer';
+import HpaPanel from '../components/hpaPanel';
 
 const service = api.replicaSet;
 
@@ -36,12 +37,13 @@ export default class ReplicaSet extends Base {
             pods: api.pod.list(namespace, pods => this.setState({pods})),
             events: api.event.list(namespace, events => this.setState({events})),
             metrics: api.metrics.pods(namespace, metrics => this.setState({metrics})),
+            hpa: api.hpa.get(namespace, name, x => this.setState({hpa: x})),
         });
     }
 
     render() {
         const {namespace, name} = this.props;
-        const {item, pods, metrics, events, podsSort, eventsSort} = this.state;
+        const {item, pods, metrics, events, podsSort, eventsSort, hpa} = this.state;
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
@@ -93,6 +95,8 @@ export default class ReplicaSet extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
+
+                <HpaPanel spec={hpa && hpa.spec}/>
 
                 <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
