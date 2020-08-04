@@ -12,17 +12,20 @@ export function objectMap(items = {}) {
 
         if (isAValidURL(value)) {
             // Check valid URL
-            return <div key={key}>
-                <span>{key}</span> • <a title={value} target="_blank" rel="noopener noreferrer" href={value}>{substrValue}</a>
-            </div>
+            return (
+                <div key={key}>
+                    <span>{key}</span> • <a title={value} target="_blank" rel="noopener noreferrer" href={value}>{substrValue}</a>
+                </div>
+            );
         }
+
         // Note : alternative parsing could be implemented in other if clauses
-        else {
-            // By default, just display the raw value in a span
-            return <div key={key}>
+        // By default, just display the raw value in a span
+        return (
+            <div key={key}>
                 <span>{key}</span> • <span title={value}> {substrValue} </span>
             </div>
-        }
+        );
     });
 }
 
@@ -71,10 +74,11 @@ export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
                     className={resourceClass}
                 />
                 <div className='td_iconLabel'>{item.kind}</div>
-                
-                {/** If the node is a master, display a simple "MASTER" label below the item.kind icon */
-                 _.has(item.metadata.labels, ['node-role.kubernetes.io/master'])
-                    && <span className='td_iconLabel node-master'>MASTER</span>}
+
+                {// If node is a master, display a simple "MASTER" label below the item.kind icon
+                    _.has(item.metadata.labels, ['node-role.kubernetes.io/master'])
+                    && <span className='td_iconLabel node-master'>MASTER</span>
+                }
 
             </td>
             <td>

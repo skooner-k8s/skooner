@@ -121,11 +121,13 @@ export default class Node extends Base {
 
 /**
  * Render "taints" divs from the node spec
- * 
+ *
  * @param spec spec from a node item
  */
-function getTaints({ spec }) {
-    return _.map(spec.taints, ({key, effect}) => <div key={key}> <span>{key}</span> • <span title={key}> {effect} </span></div>);
+function getTaints({spec}) {
+    return _.map(spec.taints, ({key, effect}) => (
+        <div key={key}> <span>{key}</span> • <span title={key}> {effect} </span></div>
+    ));
 }
 
 function getUptime({status}) {

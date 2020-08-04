@@ -16,7 +16,7 @@ import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
-import {formatDuration}  from '../utils/dates';
+import {formatDuration} from '../utils/dates';
 
 const service = api.job;
 
