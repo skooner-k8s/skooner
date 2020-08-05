@@ -4,7 +4,7 @@
  */
 function getReadyStatus({status}: {status: {[key: string]: any}}) {
     if (!status.conditions) return null;
-    const ready = status.conditions.find((y: any) => y.type === 'Ready');
+    const ready = status.conditions.find((y: {type: string}) => y.type === 'Ready');
     return ready && ready.status;
 }
 
