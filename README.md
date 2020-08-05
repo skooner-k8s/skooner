@@ -130,15 +130,24 @@ K8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubato
 
 
 # Development
-K8dash is made up of 2 parts. The server and the client.
+## Prerequisites: 
++ A running Kubernetes cluster. 
+Installing and running [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/) is an easy way to get this.
+Once minikube is installed, you can run it with the command `minikube start --driver=docker`
++ Once the cluster is up and running, create some login credentials as described [above](https://github.com/indeedeng/k8dash#logging-in)
+
+## K8dash is made up of 2 parts. The server and the client.
 
 ### Server
 To run the server, run `npm i` from the `/server` directory to install dependencies and then `npm start` to run the server.
 The server is a simple express.js server that is primarily responsible for proxying requests to the Kubernetes api server.
-During development, the server will use whatever is configured in `~/.kube/config` to connect the desired cluster.
+
+During development, the server will use whatever is configured in `~/.kube/config` to connect the desired cluster. If you are using minikube, for example, you can run `kubectl config set-context minikube` to get `~/.kube/config` set up correctly.
 
 ### Client
-For the client, move to the `/client` directory, run `npm i` and then `npm start`. The client is a React application with minimal other dependencies.
+The client is a React application with minimal other dependencies. We are in the process of converting it from plain JavaScript to TypeScript.
+
+To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local k8dash dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
 
 ## License
 
