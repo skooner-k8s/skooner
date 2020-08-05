@@ -16,7 +16,7 @@ const URL_REGEXP = new RegExp(
 /**
 * Check whether a string is a valid URL
 */
-export function isAValidURL(str) {
+export function isAValidURL(str: string) {
     return URL_REGEXP.test(str.trim());
 }
 

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {parseRam, parseCpu} from './unitHelpers';
 
-export default function getMetrics(items, metrics) {
+export default function getMetrics(items: any[], metrics: any[]) {
     if (!items || !metrics) return null;
 
     const names = _.map(items, x => x.metadata.name);
@@ -12,7 +12,7 @@ export default function getMetrics(items, metrics) {
 
 
 // Node helpers
-export function getNodeResourceValue(node, pods, resource, type, phases) {
+export function getNodeResourceValue(node: {[key: string]: any}, pods: any[], resource: string, type: string, phases: string[]) {
     if (!node || !pods) return null;
 
     return _(pods)
@@ -21,23 +21,23 @@ export function getNodeResourceValue(node, pods, resource, type, phases) {
         .sumBy(x => getPodResourceValue(x, resource, type));
 }
 
-export function getNodeResourcePercent(node, pods, resource, type) {
+export function getNodeResourcePercent(node: {[key: string]: any}, pods: any[], resource: string, type: string) {
     const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     const available = getNodeResourcesAvailable(node, resource);
-    return used / available;
+    return used && available ? used / available: null;
 }
 
-export function getNodeUsagePercent(node, metrics, resource) {
+export function getNodeUsagePercent(node: {[key: string]: any}, metrics: {[key: string]: any}, resource: string) {
     const used = getNodeUsage(node, metrics, resource);
     const available = getNodeResourcesAvailable(node, resource);
-    return used / available;
+    return used && available ? used / available: null;
 }
 
-export function getNodeResourcesAvailable(node, resource) {
+export function getNodeResourcesAvailable(node: {[key: string]: any}, resource: string) {
     return node ? parse(resource, node.status.capacity) : null;
 }
 
-export function getNodeUsage(node, metrics, resource) {
+export function getNodeUsage(node: {[key: string]: any}, metrics: {[key: string]: any}, resource: string) {
     if (!node || !metrics) return null;
 
     const result = metrics[node.metadata.name];
@@ -46,26 +46,26 @@ export function getNodeUsage(node, metrics, resource) {
 
 
 // Pod helpers
-export function getPodResourcePercent(item, metrics, resource, type) {
+export function getPodResourcePercent(item: any, metrics: {[key: string]: any}, resource: string, type: string) {
     const actual = getPodUsage(item, metrics, resource);
     const request = getPodResourceValue(item, resource, type);
-    return actual / request;
+    return actual ? actual / request: null;
 }
 
-export function getPodUsage(pod, metrics, resource) {
+export function getPodUsage(pod: {[key: string]: any}, metrics: {[key: string]: any}, resource: string) {
     if (!pod || !metrics) return null;
 
     const metric = metrics[pod.metadata.name] || {};
-    return _.sumBy(metric.containers, x => parse(resource, x.usage));
+    return _.sumBy(metric.containers, (x: any) => parse(resource, x.usage));
 }
 
-export function getPodResourceValue(pod, resource, type) {
+export function getPodResourceValue(pod: {[key: string]: any}, resource: string, type: string) {
     return _(pod.spec.containers)
         .filter(x => x.resources && x.resources[type])
         .sumBy(x => parse(resource, x.resources[type]));
 }
 
-function parse(resource, target) {
+function parse(resource: string, target: {[key: string]: string}) {
     const parser = resource === 'cpu' ? parseCpu : parseRam;
     return parser(target[resource]);
 }
