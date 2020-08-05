@@ -2,7 +2,12 @@ import React from 'react';
 import Search from '../art/searchSvg';
 import Cancel from '../art/cancelSvg';
 
-const InputFilter = ({filter, onChange}) => (
+type InputFilterProps = {
+    filter: string;
+    onChange: (value: string) => void;
+}
+
+const InputFilter = ({filter, onChange}: InputFilterProps) => (
     <>
         <input
             className='header_filter header_fill optional_xsmall'
