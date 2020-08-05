@@ -7,21 +7,9 @@ const HpaPanel = ({spec}) => (
             <div>
                 <div className='contentPanel_header'>Container</div>
                 <div key="hpa" className='contentPanel'>
-                    {spec.minReplicas && (
-                        <>
-                            <Field name='Min Replicas'>{spec.minReplicas}</Field>
-                        </>
-                    )}
-                    {spec.maxReplicas && (
-                        <>
-                            <Field name='Max Replicas'>{spec.maxReplicas}</Field>
-                        </>
-                    )}
-                    {spec.targetCPUUtilizationPercentage && (
-                        <>
-                            <Field name='CPU Utilization %'>{spec.targetCPUUtilizationPercentage}</Field>
-                        </>
-                    )}
+                    <Field name='Min Replicas'>{spec.minReplicas}</Field>
+                    <Field name='Max Replicas'>{spec.maxReplicas}</Field>
+                    <Field name='CPU Utilization %'>{spec.targetCPUUtilizationPercentage}</Field>
                 </div>
             </div>
         }
