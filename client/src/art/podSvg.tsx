@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PodSvg = (props: {}) => (
+const PodSvg = (props: {[key: string]: any}) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18.04 17.5" {...props}>
         <path
             d="M8.96.46a1.14 1.13 0 0 0-.44.11L2.58 3.41a1.14 1.13 0 0 0-.61.77L.5 10.55a1.14 1.13 0 0 0 .16.86 1.14 1.13 0 0 0

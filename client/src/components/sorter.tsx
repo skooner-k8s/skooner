@@ -1,26 +1,35 @@
 import './sorter.scss';
-import React from 'react';
+import React, {Component} from 'react';
 import Base from './base';
 import ArrowUpSvg from '../art/arrowUpSvg';
 import ArrowDownSvg from '../art/arrowDownSvg';
 
-export function defaultSortInfo(target, field = 'metadata.name', direction = 'asc') {
+interface SorterProps {
+    sort: {field: string, direction: string, onSort: Function};
+    field: string;
+}
+
+interface SorterStates {
+    showEditor: boolean;
+}
+
+export function defaultSortInfo(target: Component, field = 'metadata.name', direction = 'asc') {
     return {
         field,
         direction,
         onSort: typeof target === 'function' ? target : defaultOnSort,
     };
 
-    function defaultOnSort(sort) {
+    function defaultOnSort(sort: SorterStates) {
         target.setState({sort});
     }
 }
 
-export function sortByDate(x) {
+export function sortByDate(x: {metadata: {creationTimestamp: string}}) {
     return -Date.parse(x.metadata.creationTimestamp);
 }
 
-export default class Sorter extends Base {
+export default class Sorter extends Base<SorterProps, SorterStates> {
     render() {
         const {children, sort} = this.props;
 
