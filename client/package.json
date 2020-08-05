@@ -9,6 +9,8 @@
     "@types/js-cookie": "^2.2.6",
     "@types/lodash": "^4.14.158",
     "@types/react": "^16.9.44",
+    "@types/react-dom": "^16.9.8",
+    "@types/react-modal": "1.6.8",
     "ansi-to-react": "^5.1.1",
     "humanize-duration": "^3.23.1",
     "js-base64": "^2.6.4",
