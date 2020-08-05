@@ -23,6 +23,7 @@ const daemonSet = apiFactoryWithNamespace('apps', 'v1', 'daemonsets');
 const deployment = apiFactoryWithNamespace('apps', 'v1', 'deployments', true);
 const replicaSet = apiFactoryWithNamespace('apps', 'v1', 'replicasets', true);
 const statefulSet = apiFactoryWithNamespace('apps', 'v1', 'statefulsets', true);
+const hpa = apiFactoryWithNamespace('autoscaling', 'v1', 'horizontalpodautoscalers', true);
 
 const cronJob = apiFactoryWithNamespace('batch', 'v1beta1', 'cronjobs');
 const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
@@ -63,6 +64,7 @@ const apis = {
     serviceAccount,
     statefulSet,
     roleBinding,
+    hpa,
 };
 
 async function testAuth() {
