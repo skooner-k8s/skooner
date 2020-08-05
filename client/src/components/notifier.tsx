@@ -4,10 +4,27 @@ import React from 'react';
 import Base from './base';
 import Button from './button';
 
-const messages = [];
-let singleton;
+type ActionButton = {
+    name: string;
+    className?: string;
+    action: () => void;
+}
 
-export function addUserNotification(message, isError) {
+type Notification = {
+    id: number;
+    isError: boolean;
+    message: string;
+    buttons: ActionButton[];
+};
+
+type State = {
+    messages?: Notification[];
+}
+
+const messages: Notification[] = [];
+let singleton: Notifier;
+
+export function addUserNotification(message: string, isError = false) {
     const item = {
         id: Date.now(),
         isError,
@@ -23,9 +40,10 @@ export function addUserNotification(message, isError) {
     pushNotification(item, true);
 }
 
-export function addUserConfirmation(message, callback) {
-    const item = {
+export function addUserConfirmation(message: string, callback: (result: boolean) => void) {
+    const item: Notification = {
         id: Date.now(),
+        isError: false,
         message,
         buttons: [
             {
@@ -49,7 +67,7 @@ export function addUserConfirmation(message, callback) {
     pushNotification(item, false);
 }
 
-function pushNotification(item, autoRemove) {
+function pushNotification(item: Notification, autoRemove: boolean) {
     messages.push(item);
     singleton.setState({messages});
 
@@ -59,14 +77,14 @@ function pushNotification(item, autoRemove) {
     setTimeout(() => remove(item), 15000);
 }
 
-function remove(item) {
+function remove(item: Notification) {
     _.pull(messages, item);
     singleton.setState({messages});
 }
 
-export class Notifier extends Base {
-    constructor() {
-        super();
+export class Notifier extends Base<{}, State> {
+    constructor(props: any) {
+        super(props);
         singleton = this;
     }
 

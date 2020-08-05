@@ -4,7 +4,11 @@ import Button from './button';
 import {addUserConfirmation} from './notifier';
 import DeleteSvg from '../art/deleteSvg';
 
-export default class DeleteButton extends Base {
+type Props = {
+    onDelete: () => void;
+}
+
+export default class DeleteButton extends Base<Props, {}> {
     render() {
         return (
             <Button title='Delete' className='button_headerAction' onClick={() => this.startDelete()}>

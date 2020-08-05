@@ -2,12 +2,20 @@ import React from 'react';
 import {Swipeable} from 'react-swipeable';
 import Base from './base';
 
-export default class ChartsContainer extends Base {
+type Props = {
+    children: React.ReactNode[];
+}
+
+type State = {
+    index: number;
+}
+
+export default class ChartsContainer extends Base<Props, State> {
     state = {
         index: 0,
     };
 
-    swipe(value) {
+    swipe(value: number) {
         let {index} = this.state;
         const {children} = this.props;
         index += value;
