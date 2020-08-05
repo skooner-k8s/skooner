@@ -5,9 +5,24 @@ import Base from './base';
 import Button from './button';
 import ScaleSvg from '../art/scaleSvg';
 
-export default class ScaleButton extends Base {
+interface ScaleButtonProps {
+    scaleApi: any;
+    name: string;
+    namespace: string;
+}
+
+interface ScaleButtonStates {
+    scaleInfo: {
+        spec: {
+            replicas: number,
+        }
+    } | null;
+    value: number;
+}
+
+export default class ScaleButton extends Base<ScaleButtonProps, ScaleButtonStates> {
     render() {
-        const {scaleInfo} = this.state || {};
+        const {scaleInfo = null} = this.state || {};
 
         return (
             <>
@@ -47,8 +62,9 @@ export default class ScaleButton extends Base {
 
     async scale() {
         const {scaleApi} = this.props;
-        const {value, scaleInfo} = this.state || {};
+        const {value = null, scaleInfo = null } = this.state || {};
         if (value == null) return;
+        if (scaleInfo == null) return;
 
         scaleInfo.spec.replicas = value;
         await scaleApi.put(scaleInfo);

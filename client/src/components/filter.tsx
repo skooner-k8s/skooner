@@ -2,7 +2,8 @@ import React from 'react';
 import InputFilter from './inputFilter';
 import NamespaceFilter from './namespaceFilter';
 
-const Filter = ({text, filter, onChange, onNamespaceChange}) => (
+const Filter = ({text, filter, onChange, onNamespaceChange}: {text?: string, filter?: string, onChange?: Function, onNamespaceChange?: Function }
+) => (
     <div id='header'>
         <span className='header_label'>{text}</span>
 

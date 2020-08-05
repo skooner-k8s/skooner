@@ -4,10 +4,19 @@ import Button from './button';
 import EditorModal from '../views/editorModal';
 import EditSvg from '../art/editSvg';
 
-export default class SaveButton extends Base {
+interface SaveButtonProps {
+    onSave: Function
+    item: {}
+}
+
+interface SaveButtonStates {
+    showEditor: boolean;
+}
+
+export default class SaveButton extends Base<SaveButtonProps, SaveButtonStates> {
     render() {
         const {onSave, item} = this.props;
-        const {showEditor} = this.state || {};
+        const {showEditor = null} = this.state || {};
 
         return (
             <>

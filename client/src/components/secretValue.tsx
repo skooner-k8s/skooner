@@ -5,15 +5,23 @@ import LockSvg from '../art/lockSvg';
 import UnlockSvg from '../art/unlockSvg';
 import Button from './button';
 
-export default class SecretValue extends Base {
+interface SecretValueProps {
+    text: string
+}
+
+interface SecretValueStates {
+    show: {}
+}
+
+export default class SecretValue extends Base<SecretValueProps, SecretValueStates> {
     toggle() {
-        const {show} = this.state || {};
+        const {show = {}} = this.state || {};
         this.setState({show: !show});
     }
 
     render() {
         const {text} = this.props;
-        const {show} = this.state || {};
+        const {show = {}} = this.state || {};
 
         return (
             <div className='secretValue'>
