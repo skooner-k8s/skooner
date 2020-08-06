@@ -38,7 +38,7 @@ button.menu_item, a.menu_item, a.menu_item:visited {
     align-items: center;
     flex-direction: column;
     padding: 12px 0;
-    color: $color-darkest;
+    color: inherit;
 
     svg {
         fill: $color-dark;

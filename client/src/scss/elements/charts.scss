@@ -21,7 +21,7 @@ $ct-series-colors: (
 .charts_item {
     color: $color-dark;
     box-shadow: 0 0 5px 0 $color-light;
-    background-color: $color-white;
+    background-color: $color-background;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -61,7 +61,6 @@ $ct-series-colors: (
 
 .charts_itemLabel {
     font-size: $font-size-medium;
-    color: $color-light;
     margin-top: 8px;
     text-align: right;
     text-transform: uppercase;

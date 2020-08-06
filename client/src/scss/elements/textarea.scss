@@ -7,13 +7,12 @@ textarea {
 	border: 1px solid transparent;
     resize: none;
     outline: none;
-    border-color: $color-lightest;
+    border-color: $color-border;
 	transition-duration: $animation-length;
     transition-property: border-color, padding;
 
 	&:focus {
 		outline: none !important;
-		// padding: .25rem;
 		border-color: $color-light;
 	}
 }
