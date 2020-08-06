@@ -3,7 +3,28 @@ import React from 'react';
 import Base from './base';
 import ArrowDownSvg from '../art/arrowDownSvg';
 
-export default class Doc extends Base {
+
+type DocItemValues = {
+    format?: string
+    type?: string
+    description: string
+    properties: Map<string, DocItemProps>;
+}
+
+type DocItemProps = {
+    name: string
+    value: DocItemValues;
+}
+
+type DocProps = {
+    properties: Map<string, DocItemProps>;
+};
+
+type State = {
+    expanded: boolean;
+};
+
+export default class Doc extends Base<DocProps, State> {
     render() {
         const {properties} = this.props;
         const pairs = Object.entries(properties || {});
@@ -18,7 +39,7 @@ export default class Doc extends Base {
     }
 }
 
-class DocItem extends Base {
+class DocItem extends Base<DocItemProps, State> {
     toggle() {
         const {expanded} = this.state || {};
         this.setState({expanded: !expanded});
@@ -27,7 +48,6 @@ class DocItem extends Base {
     render() {
         const {name, value} = this.props;
         const {expanded} = this.state || {};
-
         return (
             <>
                 <li className='doc_item' key={name} onClick={() => this.toggle()}>
