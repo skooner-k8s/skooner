@@ -3,10 +3,11 @@ import React, {Component} from 'react';
 import Base from './base';
 import ArrowUpSvg from '../art/arrowUpSvg';
 import ArrowDownSvg from '../art/arrowDownSvg';
+import {TODO} from "../utils/types";
 
 interface SorterProps {
     sort: {field: string, direction: string, onSort: Function};
-    field: string;
+    field: TODO;
 }
 
 interface SorterStates {

@@ -1,7 +1,12 @@
 import React from 'react';
 import Base from './base';
 
-export default class ItemHeader extends Base {
+interface ItemHeaderProps {
+    title: string[];
+    ready: boolean;
+}
+
+export default class ItemHeader extends Base<ItemHeaderProps, {}> {
     render() {
         const {title, ready, children} = this.props;
 
@@ -11,7 +16,7 @@ export default class ItemHeader extends Base {
                     {title.join(' • ')}
                 </span>
 
-                <div className='header_fill'></div>
+                <div className='header_fill' />
 
                 {children}
             </div>

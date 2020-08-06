@@ -4,8 +4,20 @@ import Switch from 'react-switch';
 import Base from './base';
 import Sorter from './sorter';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
+import {TODO} from "../utils/types";
 
-export default class ReplicaSetsPanel extends Base {
+interface ReplicaSetsPanelProps {
+    items: TODO[];
+    sort: {field: string, direction: string, onSort: Function};
+    filter: {};
+    includeNamespace: boolean;
+}
+
+interface ReplicaSetsPanelStates {
+    activeOnly: boolean;
+}
+
+export default class ReplicaSetsPanel extends Base<ReplicaSetsPanelProps, ReplicaSetsPanelStates> {
     state = {activeOnly: true};
 
     render() {
@@ -43,8 +55,8 @@ export default class ReplicaSetsPanel extends Base {
                         items={filtered}
                         filter={filter}
                         sort={sort}
-                        colSpan={5 + !!includeNamespace}
-                        row={x => (
+                        colSpan={5 + Number(includeNamespace)}
+                        row={(x: TODO) => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
@@ -62,7 +74,7 @@ export default class ReplicaSetsPanel extends Base {
     }
 }
 
-function filterItems(activeOnly, items) {
+function filterItems(activeOnly: boolean, items: TODO[]) {
     if (!items) return null;
 
     return items.filter(x => !((!x.status.replicas || !x.spec.replicas) && activeOnly));
