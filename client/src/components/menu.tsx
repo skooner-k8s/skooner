@@ -7,9 +7,27 @@ import api from '../services/api';
 import {addHandler} from '../services/auth';
 import ResourceSvg from '../art/resourceSvg';
 import AddSvg from '../art/addSvg';
+import {TODO} from "../utils/types";
 
+interface MenuProps {
+    onClick: TODO;
+    toggled: boolean;
+}
 
-export default class Menu extends Base {
+interface MenuStates {
+    rules: TODO[];
+    showAdd: boolean;
+}
+
+interface MenuItemProps {
+    path: string;
+    title: string;
+    resource: string;
+    onClick: TODO;
+    additionalPaths?: string[];
+}
+
+export default class Menu extends Base<MenuProps, MenuStates> {
     componentDidMount() {
         this.getRules();
 
@@ -29,7 +47,7 @@ export default class Menu extends Base {
 
         return (
             <>
-                <div className={toggled ? 'menu_background menu_backgroundToggled' : 'menu_background'} onClick={onClick}></div>
+                <div className={toggled ? 'menu_background menu_backgroundToggled' : 'menu_background'} onClick={onClick} />
 
                 <div id='menu' className={toggled ? 'menu_toggled' : undefined}>
 
@@ -122,7 +140,7 @@ export default class Menu extends Base {
 
                     {showAdd && (
                         <EditorModal
-                            onSave={x => api.apply(x)}
+                            onSave={(x: TODO) => api.apply(x)}
                             onRequestClose={() => this.setState({showAdd: false})}
                         />
                     )}
@@ -133,13 +151,13 @@ export default class Menu extends Base {
     }
 }
 
-function canView(resourcesRules, ...args) {
+function canView(resourcesRules: TODO[], ...args: TODO) {
     if (!resourcesRules) return false;
 
-    return args.some(x => canViewResource(resourcesRules, x.resource));
+    return args.some((x: TODO) => canViewResource(resourcesRules, x.resource));
 }
 
-function canViewResource(resourcesRules, {group, resource}) {
+function canViewResource(resourcesRules: TODO[], {group, resource}: {group: TODO, resource: string}) {
     return resourcesRules.some((x) => {
         const hasVerb = (x.verbs.includes('list') || x.verbs.includes('*'));
         const hasGroup = (x.apiGroups.includes(group) || x.apiGroups.includes('*'));
@@ -148,7 +166,7 @@ function canViewResource(resourcesRules, {group, resource}) {
     });
 }
 
-function MenuItem(props) {
+function MenuItem(props: MenuItemProps) {
     const currentPath = getRootPath();
     const paths = getPaths(props);
     const className = paths.includes(currentPath) ? 'menu_item menu_itemSelected' : 'menu_item';
@@ -162,16 +180,16 @@ function MenuItem(props) {
     );
 }
 
-function Group({children = []}) {
+function Group({children = []}: TODO) {
     if (!Array.isArray(children)) children = [children]; // eslint-disable-line no-param-reassign
     children = children.filter(Boolean); // eslint-disable-line no-param-reassign
 
     if (children.length === 0) return null;
 
-    const paths = children.flatMap(x => getPaths(x.props));
+    const paths = children.flatMap((x: TODO) => getPaths(x.props));
 
     const currentPath = getRootPath();
-    const isSelected = paths.some(x => x === currentPath);
+    const isSelected = paths.some((x: TODO) => x === currentPath);
 
     return (
         <div className='menu_group'>
@@ -186,6 +204,6 @@ function Group({children = []}) {
     );
 }
 
-function getPaths({path, additionalPaths = []}) {
+function getPaths({path, additionalPaths = []}: MenuItemProps) {
     return [path, ...additionalPaths];
 }
