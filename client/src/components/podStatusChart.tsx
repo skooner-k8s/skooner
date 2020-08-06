@@ -2,8 +2,9 @@ import _ from 'lodash';
 import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
+import {TODO} from "../utils/types";
 
-export default function PodStatusChart({items}) {
+export default function PodStatusChart({items}: {items: TODO[]}) {
     const available = items && items.length;
     const count = _.sumBy(items, x => x.status.phase === 'Running' ? 1 : 0); // eslint-disable-line no-confusing-arrow
 

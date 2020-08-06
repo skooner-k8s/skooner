@@ -15,13 +15,13 @@ interface SecretValueStates {
 
 export default class SecretValue extends Base<SecretValueProps, SecretValueStates> {
     toggle() {
-        const {show = {}} = this.state || {};
+        const {show = null} = this.state || {};
         this.setState({show: !show});
     }
 
     render() {
         const {text} = this.props;
-        const {show = {}} = this.state || {};
+        const {show = null} = this.state || {};
 
         return (
             <div className='secretValue'>
