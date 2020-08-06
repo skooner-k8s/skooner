@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import fromNow from '../utils/dates';
 import {isAValidURL} from '../utils/string';
 import Loading from './loading';
-import Sorter, {sortByDate} from './sorter';
+import Sorter, {sortByDate, SortInfo} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
 import {TODO} from '../utils/types';
 
@@ -30,7 +30,15 @@ export function objectMap(items: {[key: string]: string} = {}) {
     });
 }
 
-export function TableBody({items, filter, colSpan, sort, row}: { items: TODO; filter: TODO; colSpan: number; sort: TODO; row: TODO }) {
+type TableBodyProps<T> = {
+    items?: T[] | null; 
+    filter: TODO; 
+    colSpan: number; 
+    sort: SortInfo; 
+    row: (item: T) => ReactNode;
+}
+
+export function TableBody<T>({items, filter, colSpan, sort, row}: TableBodyProps<T>) {
     if (items && sort) {
         const {field, direction} = sort;
         items = _.orderBy(items, [field], [direction]); // eslint-disable-line no-param-reassign
@@ -45,7 +53,7 @@ export function TableBody({items, filter, colSpan, sort, row}: { items: TODO; fi
     );
 }
 
-export function MetadataHeaders({includeNamespace, sort}: {includeNamespace: boolean, sort: TODO}) {
+export function MetadataHeaders({includeNamespace, sort}: {includeNamespace?: boolean, sort: TODO}) {
     return (
         <>
             <th className='th_icon optional_small'>
@@ -66,7 +74,7 @@ export function MetadataHeaders({includeNamespace, sort}: {includeNamespace: boo
     );
 }
 
-export function MetadataColumns({item, href, includeNamespace, resourceClass}: {item: TODO, href: string, includeNamespace: boolean, resourceClass?: string}) {
+export function MetadataColumns({item, href, includeNamespace, resourceClass}: {item: TODO, href: string, includeNamespace?: boolean, resourceClass?: string}) {
     return (
         <>
             <td className='td_icon optional_small'>

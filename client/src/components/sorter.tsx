@@ -5,15 +5,21 @@ import ArrowUpSvg from '../art/arrowUpSvg';
 import ArrowDownSvg from '../art/arrowDownSvg';
 import {TODO} from '../utils/types';
 
+export type Direction = "asc" | "desc";
+
 export interface SortInfo {
     field: string,
-    direction: string,
+    direction: Direction,
     onSort: (sort: SorterStates) => void,
 }
 
 interface SorterProps {
-    sort: {field: string, direction: string, onSort: Function};
     field: TODO;
+    sort: {
+        field: string, 
+        direction: Direction, 
+        onSort: Function,
+    };
 }
 
 interface SorterStates {
@@ -22,7 +28,7 @@ interface SorterStates {
 
 type SortCallback = (item: TODO) => void;
 
-export function defaultSortInfo(target: Component | SortCallback, field = 'metadata.name', direction = 'asc'): SortInfo {
+export function defaultSortInfo(target: Component | SortCallback, field = 'metadata.name', direction: Direction = 'asc'): SortInfo {
     return {
         field,
         direction,
@@ -60,7 +66,7 @@ export default class Sorter extends Base<SorterProps, SorterStates> {
         const {field, sort} = this.props;
         if (!sort) return;
 
-        const direction = !this.isSelected() || this.isDownSelected() ? 'asc' : 'desc';
+        const direction: Direction = !this.isSelected() || this.isDownSelected() ? 'asc' : 'desc';
         sort.field = field;
         sort.direction = direction;
         sort.onSort(sort);

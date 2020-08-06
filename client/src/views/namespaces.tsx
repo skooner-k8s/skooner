@@ -2,12 +2,19 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import Sorter, {defaultSortInfo} from '../components/sorter';
+import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import { Namespace } from '../utils/types';
 
-export default class Namespaces extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: Namespace[];
+}
+
+export default class Namespaces extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
@@ -41,7 +48,7 @@ export default class Namespaces extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} colSpan='4' sort={sort} row={x => (
+                        <TableBody items={filtered} filter={filter} colSpan={4} sort={sort} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
