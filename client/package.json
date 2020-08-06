@@ -11,6 +11,7 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "1.6.8",
+    "@types/react-select": "^3.0.16",
     "ansi-to-react": "^5.1.1",
     "humanize-duration": "^3.23.1",
     "js-base64": "^2.6.4",
