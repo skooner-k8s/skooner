@@ -2,10 +2,13 @@ import _ from 'lodash';
 import {Base64} from 'js-base64';
 import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
 import log from '../utils/log';
+import { K8sEvent, Namespace, TODO, Metrics } from '../utils/types';
+
+type DataCallback<T> = (data: T) => void;
 
 const configMap = apiFactoryWithNamespace('', 'v1', 'configmaps');
-const event = apiFactoryWithNamespace('', 'v1', 'events');
-const namespaceService = apiFactory('', 'v1', 'namespaces');
+const event = apiFactoryWithNamespace<K8sEvent>('', 'v1', 'events');
+const namespaceService = apiFactory<Namespace>('', 'v1', 'namespaces');
 const node = apiFactory('', 'v1', 'nodes');
 const persistentVolume = apiFactory('', 'v1', 'persistentvolumes');
 const persistentVolumeClaim = apiFactoryWithNamespace('', 'v1', 'persistentvolumeclaims');
@@ -70,12 +73,14 @@ async function testAuth() {
     await post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
 }
 
-function getRules(namespace) {
+function getRules(namespace: string) {
     return post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec: {namespace}});
 }
 
-async function apply(body) {
+async function apply(body: TODO): Promise<TODO> {
     const serviceName = _.camelCase(body.kind);
+
+    // @ts-ignore
     const service = apis[serviceName];
     if (!service) {
         throw new Error(`No known service for kind: ${body.kind}`);
@@ -85,23 +90,23 @@ async function apply(body) {
         return await service.post(body);
     } catch (err) {
         // Check to see if failed because the record already exists.
-        // If the failure isn't a 409 (i.e. Confilct), just rethrow.
+        // If the failure isn't a 409 (i.e. Conflict), just rethrow.
         if (err.status !== 409) throw err;
 
-        // We had a confilct. Try a PUT
+        // We had a conflict. Try a PUT
         return service.put(body);
     }
 }
 
 function metricsFactory() {
     return {
-        nodes: cb => metrics('/apis/metrics.k8s.io/v1beta1/nodes', cb),
-        node: (name, cb) => metrics(`/apis/metrics.k8s.io/v1beta1/nodes/${name}`, cb),
-        pods: (namespace, cb) => metrics(url(namespace), cb),
-        pod: (namespace, name, cb) => metrics(`/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods/${name}`, cb),
+        nodes: (cb: DataCallback<Metrics[]>) => metrics('/apis/metrics.k8s.io/v1beta1/nodes', cb),
+        node: (name: string, cb: DataCallback<Metrics[]>) => metrics(`/apis/metrics.k8s.io/v1beta1/nodes/${name}`, cb),
+        pods: (namespace: string, cb: DataCallback<Metrics[]>) => metrics(url(namespace), cb),
+        pod: (namespace: string, name: string, cb: DataCallback<Metrics[]>) => metrics(`/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods/${name}`, cb),
     };
 
-    function url(namespace) {
+    function url(namespace: string) {
         return namespace ? `/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods` : '/apis/metrics.k8s.io/v1beta1/pods';
     }
 }
@@ -109,11 +114,11 @@ function metricsFactory() {
 function oidcFactory() {
     return {
         get: () => request('/oidc'),
-        post: (code, redirectUri) => post('/oidc', {code, redirectUri}),
+        post: (code: string, redirectUri: string) => post('/oidc', {code, redirectUri}),
     };
 }
 
-function metrics(url, cb) {
+function metrics(url: string, cb: DataCallback<Metrics[]>) {
     const handel = setInterval(getMetrics, 10000);
     getMetrics();
 
@@ -137,14 +142,14 @@ function swagger() {
     return request('/openapi/v2');
 }
 
-function exec(namespace, name, container, cb) {
+function exec(namespace: string, name: string, container: string, cb: DataCallback<string[]>) {
     const url = `/api/v1/namespaces/${namespace}/pods/${name}/exec?container=${container}&command=sh&stdin=1&stderr=1&stdout=1&tty=1`;
     const additionalProtocols = ['v4.channel.k8s.io', 'v3.channel.k8s.io', 'v2.channel.k8s.io', 'channel.k8s.io'];
     return stream(url, cb, {additionalProtocols, isJson: false});
 }
 
-function logs(namespace, name, container, tailLines, showPrevious, cb) {
-    const items = [];
+function logs(namespace: string, name: string, container: string, tailLines: number, showPrevious: boolean, cb: DataCallback<string[]>) {
+    const items: string[] = [];
     const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&previous=${showPrevious}&tailLines=${tailLines}&follow=true`;
     const {cancel} = stream(url, transformer, {isJson: false, connectCb});
     return cancel;
@@ -153,7 +158,7 @@ function logs(namespace, name, container, tailLines, showPrevious, cb) {
         items.length = 0;
     }
 
-    function transformer(item) {
+    function transformer(item: string) {
         if (!item) return; // For some reason, this api returns a lot of empty strings
 
         const message = Base64.decode(item);

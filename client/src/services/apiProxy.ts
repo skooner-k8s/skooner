@@ -1,5 +1,21 @@
 import {getToken, logout} from './auth';
 import log from '../utils/log';
+import {ApiItem} from '../utils/types';
+
+type StreamCallback<T> = (data: T) => void;
+type ErrorCallback = (err: Error) => void;
+type FailCallback = () => void;
+
+type StreamSocket = {
+    cancel: () => void;
+    getSocket: () => WebSocket;
+};
+
+type StreamArgs = {
+    isJson: boolean;
+    additionalProtocols?: string[];
+    connectCb?: () => void;
+}
 
 const {host, href, hash, search} = window.location;
 const nonHashedUrl = href.replace(hash, '').replace(search, '');
@@ -8,7 +24,7 @@ const BASE_HTTP_URL = isDev && host === 'localhost:4653' ? 'http://localhost:465
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
 
-export async function request(path, params, autoLogoutOnAuthError = true) {
+export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
@@ -33,6 +49,7 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
         }
 
         const error = new Error(message);
+        // @ts-ignore
         error.status = status;
         throw error;
     }
@@ -40,76 +57,71 @@ export async function request(path, params, autoLogoutOnAuthError = true) {
     return response.json();
 }
 
-export function apiFactory(group, version, resource) {
+export function apiFactory<T extends ApiItem<any, any>>(group: string, version: string, resource: string) {
     const apiRoot = getApiRoot(group, version);
     const url = `${apiRoot}/${resource}`;
     return {
         resource: {group, resource},
-        list: (cb, errCb) => streamResults(url, cb, errCb),
-        get: (name, cb, errCb) => streamResult(url, name, cb, errCb),
-        post: body => post(url, body),
-        put: body => put(`${url}/${body.metadata.name}`, body),
-        delete: name => remove(`${url}/${name}`),
+        list: (cb: StreamCallback<T[]>, errCb?: ErrorCallback) => streamResults(url, cb, errCb),
+        get: (name: string, cb: StreamCallback<T>, errCb?: ErrorCallback) => streamResult(url, name, cb, errCb),
+        post: (body: any) => post(url, body),
+        put: (body: any) => put(`${url}/${body.metadata.name}`, body),
+        delete: (name: string) => remove(`${url}/${name}`),
     };
 }
 
-export function apiFactoryWithNamespace(group, version, resource, includeScale) {
+export function apiFactoryWithNamespace<T extends ApiItem<any, any>>(group: string, version: string, resource: string, includeScale = false) {
     const apiRoot = getApiRoot(group, version);
-    const results = {
+    return {
         resource: {group, resource},
-        list: (namespace, cb, errCb) => streamResults(url(namespace), cb, errCb),
-        get: (namespace, name, cb, errCb) => streamResult(url(namespace), name, cb, errCb),
-        post: body => post(url(body.metadata.namespace), body),
-        put: body => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
-        delete: (namespace, name) => remove(`${url(namespace)}/${name}`),
+        list: (namespace: string, cb: StreamCallback<T[]>, errCb?: ErrorCallback) => streamResults(url(namespace), cb, errCb),
+        get: (namespace: string, name: string, cb: StreamCallback<T>, errCb?: ErrorCallback) => streamResult(url(namespace), name, cb, errCb),
+        post: (body: any) => post(url(body.metadata.namespace), body),
+        put: (body: any) => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
+        delete: (namespace: string, name: string) => remove(`${url(namespace)}/${name}`),
+        scale: includeScale ? apiScaleFactory(apiRoot, resource) : undefined,
     };
 
-    if (includeScale) {
-        results.scale = apiScaleFactory(apiRoot, resource);
-    }
-
-    return results;
-
-    function url(namespace) {
+    function url(namespace: string) {
         return namespace ? `${apiRoot}/namespaces/${namespace}/${resource}` : `${apiRoot}/${resource}`;
     }
 }
 
-function getApiRoot(group, version) {
+function getApiRoot(group: string, version: string) {
     return group ? `/apis/${group}/${version}` : `api/${version}`;
 }
 
-function apiScaleFactory(apiRoot, resource) {
+function apiScaleFactory(apiRoot: string, resource: string) {
     return {
-        get: (namespace, name) => request(url(namespace, name)),
-        put: body => put(url(body.metadata.namespace, body.metadata.name), body),
+        get: (namespace: string, name: string) => request(url(namespace, name)),
+        put: (body: any) => put(url(body.metadata.namespace, body.metadata.name), body),
     };
 
-    function url(namespace, name) {
+    function url(namespace: string, name: string) {
         return `${apiRoot}/namespaces/${namespace}/${resource}/${name}/scale`;
     }
 }
 
-export function post(url, json, autoLogoutOnAuthError = true) {
+export function post(url: string, json: any, autoLogoutOnAuthError = true) {
     const body = JSON.stringify(json);
     const opts = {method: 'POST', body, headers: JSON_HEADERS};
     return request(url, opts, autoLogoutOnAuthError);
 }
 
-export function put(url, json, autoLogoutOnAuthError = true) {
+export function put(url: string, json: any, autoLogoutOnAuthError = true) {
     const body = JSON.stringify(json);
     const opts = {method: 'PUT', body, headers: JSON_HEADERS};
     return request(url, opts, autoLogoutOnAuthError);
 }
 
-export function remove(url) {
+export function remove(url: string) {
     const opts = {method: 'DELETE', headers: JSON_HEADERS};
     return request(url, opts);
 }
 
-export async function streamResult(url, name, cb, errCb) {
+export async function streamResult<T>(url: string, name: string, cb: StreamCallback<T>, errCb?: ErrorCallback) {
     let isCancelled = false;
-    let socket;
+    let socket: StreamSocket;
     run();
 
     return cancel;
@@ -124,7 +136,9 @@ export async function streamResult(url, name, cb, errCb) {
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
-            socket = stream(watchUrl, x => cb(x.object), {isJson: true});
+            // TODO: fix me
+            // @ts-ignore
+            socket = stream<T>(watchUrl, x => cb(x.object), {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -139,10 +153,10 @@ export async function streamResult(url, name, cb, errCb) {
     }
 }
 
-export async function streamResults(url, cb, errCb) {
-    const results = {};
+export async function streamResults<T extends ApiItem<any, any>>(url: string, cb: StreamCallback<T[]>, errCb?: ErrorCallback) {
+    const results: {[id: string]: T} = {};
     let isCancelled = false;
-    let socket;
+    let socket: StreamSocket;
     run();
 
     return cancel;
@@ -169,7 +183,7 @@ export async function streamResults(url, cb, errCb) {
         if (socket) socket.cancel();
     }
 
-    function add(items, kind) {
+    function add(items: T[], kind: string) {
         const fixedKind = kind.slice(0, -4); // Trim off the word "List" from the end of the string
         for (const item of items) {
             item.kind = fixedKind;
@@ -179,7 +193,8 @@ export async function streamResults(url, cb, errCb) {
         push();
     }
 
-    function update({type, object}) {
+    function update({type, object}: {type: string, object: T}) {
+        // @ts-ignore
         object.actionType = type; // eslint-disable-line no-param-reassign
 
         switch (type) {
@@ -208,7 +223,7 @@ export async function streamResults(url, cb, errCb) {
                 log.error('Error in update', {type, object});
                 break;
             default:
-                log.error('Unknown update type', type);
+                log.error('Unknown update type', {type});
         }
 
         push();
@@ -220,9 +235,12 @@ export async function streamResults(url, cb, errCb) {
     }
 }
 
-export function stream(url, cb, args) {
-    let connection;
-    let isCancelled;
+export function stream<T>(url: string, cb: StreamCallback<T>, args: StreamArgs) {
+    let connection: {
+        close: () => void;
+        socket: WebSocket;
+    };
+    let isCancelled: boolean;
     const {isJson, additionalProtocols, connectCb} = args;
 
     connect();
@@ -240,7 +258,7 @@ export function stream(url, cb, args) {
 
     function connect() {
         if (connectCb) connectCb();
-        connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
+        connection = connectStream<T>(url, cb, onFail, isJson, additionalProtocols);
     }
 
     function onFail() {
@@ -251,7 +269,7 @@ export function stream(url, cb, args) {
     }
 }
 
-function connectStream(path, cb, onFail, isJson, additionalProtocols = []) {
+function connectStream<T>(path: string, cb: StreamCallback<T>, onFail: FailCallback, isJson: boolean, additionalProtocols: string[] = []) {
     let isClosing = false;
 
     const token = getToken();
@@ -277,14 +295,14 @@ function connectStream(path, cb, onFail, isJson, additionalProtocols = []) {
         socket.close();
     }
 
-    function onMessage(body) {
+    function onMessage(body: any) {
         if (isClosing) return;
 
         const item = isJson ? JSON.parse(body.data) : body.data;
         cb(item);
     }
 
-    function onClose(...args) {
+    function onClose(...args: any) {
         if (isClosing) return;
         isClosing = true;
 
@@ -296,12 +314,12 @@ function connectStream(path, cb, onFail, isJson, additionalProtocols = []) {
         onFail();
     }
 
-    function onError(err) {
+    function onError(err: any) {
         log.error('Error in api stream', {err, path});
     }
 }
 
-function combinePath(base, path) {
+function combinePath(base: string, path: string) {
     if (base.endsWith('/')) base = base.slice(0, -1); // eslint-disable-line no-param-reassign
     if (path.startsWith('/')) path = path.slice(1); // eslint-disable-line no-param-reassign
     return `${base}/${path}`;

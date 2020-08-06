@@ -3,7 +3,13 @@ import React, {Component} from 'react';
 import Base from './base';
 import ArrowUpSvg from '../art/arrowUpSvg';
 import ArrowDownSvg from '../art/arrowDownSvg';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
+
+export interface SortInfo {
+    field: string,
+    direction: string,
+    onSort: (sort: SorterStates) => void,
+}
 
 interface SorterProps {
     sort: {field: string, direction: string, onSort: Function};
@@ -14,7 +20,9 @@ interface SorterStates {
     showEditor: boolean;
 }
 
-export function defaultSortInfo(target: Component, field = 'metadata.name', direction = 'asc') {
+type SortCallback = (item: TODO) => void;
+
+export function defaultSortInfo(target: Component | SortCallback, field = 'metadata.name', direction = 'asc'): SortInfo {
     return {
         field,
         direction,
@@ -22,6 +30,7 @@ export function defaultSortInfo(target: Component, field = 'metadata.name', dire
     };
 
     function defaultOnSort(sort: SorterStates) {
+        // @ts-ignore
         target.setState({sort});
     }
 }

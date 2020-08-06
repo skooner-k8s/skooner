@@ -62,7 +62,7 @@ export default class ScaleButton extends Base<ScaleButtonProps, ScaleButtonState
 
     async scale() {
         const {scaleApi} = this.props;
-        const {value = null, scaleInfo = null } = this.state || {};
+        const {value = null, scaleInfo = null} = this.state || {};
         if (value == null) return;
         if (scaleInfo == null) return;
 

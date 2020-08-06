@@ -1,10 +1,10 @@
 import './field.scss';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 type FieldProps = {
     name: string;
     value?: string | null;
-    children?: React.ReactNode[] | null | string;
+    children?: ReactNode;
 }
 
 const Field = ({name, value, children}: FieldProps) => (

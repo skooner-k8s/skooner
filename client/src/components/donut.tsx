@@ -2,8 +2,8 @@ import React from 'react';
 import Base from './base';
 
 type Props = {
-    percent: number;
-    percent2: number;
+    percent?: number;
+    percent2?: number;
 }
 
 type State = {

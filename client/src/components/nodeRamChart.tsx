@@ -3,7 +3,7 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 export default function NodeRamChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
     const totals = getNodeRamTotals(items, metrics);

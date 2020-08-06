@@ -4,7 +4,7 @@ import Switch from 'react-switch';
 import Base from './base';
 import Sorter from './sorter';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 interface ReplicaSetsPanelProps {
     items: TODO[];

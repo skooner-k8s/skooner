@@ -3,7 +3,7 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 export default function NodeCpuChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
     const totals = getNodeCpuTotals(items, metrics);

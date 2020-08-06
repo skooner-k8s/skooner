@@ -1,4 +1,4 @@
-import {TODO} from "./types";
+import {TODO} from './types';
 
 export default function test(filter = '', ...values: string[]) {
     const value = filter.toLowerCase();
@@ -20,7 +20,7 @@ export function filterByOwner(items: TODO[], owner: TODO) {
     });
 }
 
-export function filterByOwners(items: TODO[] , owners: TODO) {
+export function filterByOwners(items: TODO[], owners: TODO) {
     if (!items || !owners) return null;
 
     const uids = owners.map((x: any) => x.metadata.uid);

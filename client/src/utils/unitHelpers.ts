@@ -7,15 +7,15 @@ export const TO_GB = 1024 * 1024 * 1024;
 export const TO_ONE_M_CPU = 1000000;
 export const TO_ONE_CPU = 1000000000;
 
-export function parseDiskSpace(value: string) {
+export function parseDiskSpace(value?: string) {
     return parseUnitsOfBytes(value);
 }
 
-export function parseRam(value: string) {
+export function parseRam(value?: string) {
     return parseUnitsOfBytes(value);
 }
 
-function parseUnitsOfBytes(value: string) {
+function parseUnitsOfBytes(value?: string) {
     if (!value) return 0;
 
     const groups = value.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/)!;
@@ -55,7 +55,7 @@ export function unparseRam(value: number) {
     };
 }
 
-export function parseCpu(value: string) {
+export function parseCpu(value?: string) {
     if (!value) return 0;
 
     const number = parseInt(value, 10);

@@ -3,9 +3,9 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
-import {TODO} from "../utils/types";
+import {Pod, Metrics} from '../utils/types';
 
-export default function RamChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
+export default function RamChart({items, metrics}: {items?: Pod[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
@@ -28,7 +28,7 @@ export default function RamChart({items, metrics}: {items: TODO[], metrics: TODO
     );
 }
 
-export function getPodRamTotals(items:TODO[], metrics:TODO[]) {
+export function getPodRamTotals(items?: Pod[], metrics?: _.Dictionary<Metrics>) {
     if (!items || !metrics) return null;
 
     const metricsContainers = Object.values(metrics).flatMap(x => x.containers);
@@ -37,7 +37,7 @@ export function getPodRamTotals(items:TODO[], metrics:TODO[]) {
         .filter(x => x.resources && x.resources.requests);
 
     const used = _.sumBy(metricsContainers, x => parseRam(x.usage.memory)) / TO_GB;
-    const available = _.sumBy(podContainers, x => parseRam(x.resources.requests.memory)) / TO_GB;
+    const available = _.sumBy(podContainers, x => parseRam(x.resources?.requests?.memory)) / TO_GB;
 
     return {used, available};
 }

@@ -5,7 +5,7 @@ import {isAValidURL} from '../utils/string';
 import Loading from './loading';
 import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 export function objectMap(items: {[key: string]: string} = {}) {
     return Object.entries(items).map(([key, value]) => {
@@ -126,5 +126,5 @@ function NoResults({items, filter, colSpan}: {items: TODO, filter: TODO, colSpan
 
     return (
         <tr />
-    )
+    );
 }

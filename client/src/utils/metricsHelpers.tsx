@@ -1,19 +1,19 @@
 import _ from 'lodash';
 import {parseRam, parseCpu} from './unitHelpers';
-import {TODO} from "./types";
+import {TODO, Pod, Node, Metrics} from './types';
 
-export default function getMetrics(items: TODO[], metrics: TODO) {
-    if (!items || !metrics) return null;
+export default function getMetrics(items?: Pod[], metrics?: Metrics[]) {
+    if (!items || !metrics) return undefined;
 
     const names = _.map(items, x => x.metadata.name);
-    const filteredMetrics = metrics.filter((x: TODO) => names.includes(x.metadata.name));
+    const filteredMetrics = metrics.filter(x => names.includes(x.metadata.name));
 
     return _.keyBy(filteredMetrics, 'metadata.name');
 }
 
 
 // Node helpers
-export function getNodeResourceValue(node: TODO, pods: TODO, resource: string, type: string, phases: string[]) {
+export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undefined, resource: string, type: string, phases: string[]) {
     if (!node || !pods) return null;
 
     return _(pods)
@@ -25,13 +25,13 @@ export function getNodeResourceValue(node: TODO, pods: TODO, resource: string, t
 export function getNodeResourcePercent(node: TODO, pods: TODO, resource: string, type: string) {
     const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     const available = getNodeResourcesAvailable(node, resource);
-    return used && available ? used / available: null;
+    return used && available ? used / available : null;
 }
 
 export function getNodeUsagePercent(node: TODO, metrics: TODO, resource: string) {
     const used = getNodeUsage(node, metrics, resource);
     const available = getNodeResourcesAvailable(node, resource);
-    return used && available ? used / available: null;
+    return used && available ? used / available : null;
 }
 
 export function getNodeResourcesAvailable(node: TODO, resource: string) {
@@ -50,7 +50,7 @@ export function getNodeUsage(node: TODO, metrics: TODO, resource: string) {
 export function getPodResourcePercent(item: TODO, metrics: TODO, resource: string, type: string) {
     const actual = getPodUsage(item, metrics, resource);
     const request = getPodResourceValue(item, resource, type);
-    return actual ? actual / request: null;
+    return actual ? actual / request : null;
 }
 
 export function getPodUsage(pod: TODO, metrics: TODO, resource: string) {

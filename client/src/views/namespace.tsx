@@ -8,17 +8,30 @@ import MetadataFields from '../components/metadataFields';
 import DeleteButton from '../components/deleteButton';
 import PodsPanel from '../components/podsPanel';
 import EventsPanel from '../components/eventsPanel';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
 import PodStatusChart from '../components/podStatusChart';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import getMetrics from '../utils/metricsHelpers';
+import { Namespace, K8sEvent, Pod, Metrics } from '../utils/types';
+
+type Props = {
+    namespace: string;
+}
+
+type State = {
+    podsSort: SortInfo;
+    item?: Namespace;
+    events?: K8sEvent[];
+    pods?: Pod[];
+    podMetrics?: Metrics[];
+}
 
 const service = api.namespace;
 
-export default class Namespace extends Base {
-    state = {
+export default class NamespaceView extends Base<Props, State> {
+    state:State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
     };
 
@@ -73,6 +86,9 @@ export default class Namespace extends Base {
                 />
 
                 <div className='contentPanel_header'>Events</div>
+                
+                {/* 
+                // @ts-ignore */}
                 <EventsPanel items={events} />
             </div>
         );

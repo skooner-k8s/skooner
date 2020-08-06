@@ -1,4 +1,4 @@
-import {TODO} from "./types";
+import {TODO} from './types';
 
 /**
  * @param {*status* object with a status field  (most likely the row from the TableBody)}

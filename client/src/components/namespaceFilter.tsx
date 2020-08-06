@@ -2,7 +2,7 @@ import React from 'react';
 import Select, {ValueType} from 'react-select';
 import Base from './base';
 import api from '../services/api';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 interface NamespaceFilterProps {
     onChange?: Function;
