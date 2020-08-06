@@ -1,22 +1,36 @@
 import React from 'react';
 import Base from './base';
 
-export default class Donut extends Base {
+type Props = {
+    percent: number;
+    percent2: number;
+}
+
+type State = {
+    currentPercent: number,
+    currentPercent2: number,
+};
+export default class Donut extends Base<Props, State> {
     state = {
         currentPercent: 0,
         currentPercent2: 0,
     };
 
-    constructor(props) {
+    private unmounted: boolean = false;
+
+    private animationQueued: boolean = false;
+
+    constructor(props: Props) {
         super(props);
         requestAnimationFrame(() => this.animate());
     }
 
-    componentWillUnmount() {
+    async componentWillUnmount() {
+        await this.clearDisposers();
         this.unmounted = true;
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps: Props) {
         if (this.animationQueued) return;
 
         const {percent, percent2} = this.props;
@@ -57,7 +71,7 @@ export default class Donut extends Base {
     }
 }
 
-function getNextStep(target, current) {
+function getNextStep(target: number, current: number) {
     const diff = current - target;
     const absDiff = Math.abs(diff);
     const change = Math.min(absDiff, 0.02);
