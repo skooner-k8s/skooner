@@ -10,7 +10,7 @@ interface NamespaceFilterProps {
 
 interface NamespaceFilterStates {
     namespace: {};
-    namespaces?: any[];
+    namespaces?: TODO[];
 }
 
 export default class NamespaceFilter extends Base<NamespaceFilterProps, NamespaceFilterStates> {
@@ -24,7 +24,7 @@ export default class NamespaceFilter extends Base<NamespaceFilterProps, Namespac
         onChange(namespace);
 
         this.registerApi({
-            namespaces: api.namespace.list((namespaces: any[]) => this.setState({namespaces})),
+            namespaces: api.namespace.list((namespaces: TODO[]) => this.setState({namespaces})),
         });
     }
 

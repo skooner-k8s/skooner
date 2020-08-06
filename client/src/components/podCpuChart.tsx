@@ -3,8 +3,9 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
+import {TODO} from "../utils/types";
 
-export default function PodCpuChart({items, metrics}: {items: any[], metrics: any[]}) {
+export default function PodCpuChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
     const totals = getPodCpuTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
@@ -25,7 +26,7 @@ export default function PodCpuChart({items, metrics}: {items: any[], metrics: an
     );
 }
 
-function getPodCpuTotals(pods: any[], metrics: any[]) {
+function getPodCpuTotals(pods: TODO[], metrics: TODO[]) {
     if (!pods || !metrics) return null;
 
     const used = _(metrics)
