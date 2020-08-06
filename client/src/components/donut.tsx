@@ -7,8 +7,8 @@ type Props = {
 }
 
 type State = {
-    currentPercent: number,
-    currentPercent2: number,
+    currentPercent: number;
+    currentPercent2: number;
 };
 export default class Donut extends Base<Props, State> {
     state = {
@@ -26,7 +26,7 @@ export default class Donut extends Base<Props, State> {
     }
 
     async componentWillUnmount() {
-        await this.clearDisposers();
+        super.componentWillUnmount();
         this.unmounted = true;
     }
 
