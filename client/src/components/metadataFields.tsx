@@ -2,7 +2,7 @@ import React from 'react';
 import Field from './field';
 import {objectMap} from './listViewHelpers';
 
-const MetadataFields = ({item}) => (
+const MetadataFields = ({item}: {[key: string]: any}) => (
     <>
         <Field name='Name' value={item.metadata.name} />
         <Field name='Kind' value={item.kind} />

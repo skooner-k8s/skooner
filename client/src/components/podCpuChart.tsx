@@ -4,7 +4,7 @@ import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 
-export default function PodCpuChart({items, metrics}) {
+export default function PodCpuChart({items, metrics}: {items: any[], metrics: any[]}) {
     const totals = getPodCpuTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
@@ -25,7 +25,7 @@ export default function PodCpuChart({items, metrics}) {
     );
 }
 
-function getPodCpuTotals(pods, metrics) {
+function getPodCpuTotals(pods: any[], metrics: any[]) {
     if (!pods || !metrics) return null;
 
     const used = _(metrics)

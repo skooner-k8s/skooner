@@ -4,7 +4,7 @@ import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
 
-export default function RamChart({items, metrics}) {
+export default function RamChart({items, metrics}: {items: any[], metrics: any[]}) {
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
@@ -27,7 +27,7 @@ export default function RamChart({items, metrics}) {
     );
 }
 
-export function getPodRamTotals(items, metrics) {
+export function getPodRamTotals(items:any[], metrics:any[]) {
     if (!items || !metrics) return null;
 
     const metricsContainers = Object.values(metrics).flatMap(x => x.containers);

@@ -4,7 +4,7 @@ import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 
-export default function NodeCpuChart({items, metrics}) {
+export default function NodeCpuChart({items, metrics}: {items: any[], metrics: any[]}) {
     const totals = getNodeCpuTotals(items, metrics);
 
     return (
@@ -20,7 +20,7 @@ export default function NodeCpuChart({items, metrics}) {
     );
 }
 
-function getNodeCpuTotals(items, metrics) {
+function getNodeCpuTotals(items: any[], metrics: any[]) {
     if (!items || !metrics) return null;
 
     const metricValues = Object.values(metrics);

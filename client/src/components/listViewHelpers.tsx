@@ -5,8 +5,9 @@ import {isAValidURL} from '../utils/string';
 import Loading from './loading';
 import Sorter, {sortByDate} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
+import {TODO} from "../utils/types";
 
-export function objectMap(items = {}) {
+export function objectMap(items: {[key: string]: string} = {}) {
     return Object.entries(items).map(([key, value]) => {
         const substrValue = value.length <= 50 ? value : `${value.substr(0, 50)}...`;
 
@@ -29,7 +30,7 @@ export function objectMap(items = {}) {
     });
 }
 
-export function TableBody({items, filter, colSpan, sort, row}) {
+export function TableBody({items, filter, colSpan, sort, row}: { items: TODO; filter: TODO; colSpan: number; sort: TODO; row: TODO }) {
     if (items && sort) {
         const {field, direction} = sort;
         items = _.orderBy(items, [field], [direction]); // eslint-disable-line no-param-reassign
@@ -44,7 +45,7 @@ export function TableBody({items, filter, colSpan, sort, row}) {
     );
 }
 
-export function MetadataHeaders({includeNamespace, sort}) {
+export function MetadataHeaders({includeNamespace, sort}: {includeNamespace: boolean, sort: TODO}) {
     return (
         <>
             <th className='th_icon optional_small'>
@@ -65,7 +66,7 @@ export function MetadataHeaders({includeNamespace, sort}) {
     );
 }
 
-export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
+export function MetadataColumns({item, href, includeNamespace, resourceClass}: {item: TODO, href: string, includeNamespace: boolean, resourceClass?: string}) {
     return (
         <>
             <td className='td_icon optional_small'>
@@ -98,7 +99,7 @@ export function MetadataColumns({item, href, includeNamespace, resourceClass}) {
     );
 }
 
-function NoResults({items, filter, colSpan}) {
+function NoResults({items, filter, colSpan}: {items: TODO, filter: TODO, colSpan: number}) {
     if (!items) {
         return (
             <tr>
@@ -122,4 +123,8 @@ function NoResults({items, filter, colSpan}) {
             </tr>
         );
     }
+
+    return (
+        <tr />
+    )
 }
