@@ -18,6 +18,7 @@ import getMetrics from '../utils/metricsHelpers';
 import {defaultSortInfo} from '../components/sorter';
 import ReplicasChart from '../components/replicasChart';
 import ChartsContainer from '../components/chartsContainer';
+import HpaPanel from '../components/hpaPanel';
 
 const service = api.deployment;
 
@@ -37,6 +38,7 @@ export default class Deployment extends Base {
             events: api.event.list(namespace, x => this.setState({events: x})),
             pods: api.pod.list(namespace, x => this.setState({pods: x})),
             metrics: api.metrics.pods(namespace, x => this.setState({metrics: x})),
+            hpa: api.hpa.get(namespace, name, x => this.setState({hpa: x}))
         });
     }
 
@@ -48,6 +50,7 @@ export default class Deployment extends Base {
             replicaSets,
             pods,
             metrics,
+            hpa,
             replicaSetsSort,
             podsSort,
             eventsSort,
@@ -94,6 +97,8 @@ export default class Deployment extends Base {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
+
+                <HpaPanel spec={hpa && hpa.spec}/>
 
                 <div className='contentPanel_header'>Replica Sets</div>
                 <ReplicaSetsPanel
