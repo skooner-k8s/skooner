@@ -3,9 +3,32 @@ import fromNow from '../utils/dates';
 import {TableBody} from './listViewHelpers';
 import log from '../utils/log';
 import ResourceSvg from '../art/resourceSvg';
-import Sorter, {sortByDate} from './sorter';
+import Sorter, {sortByDate, SortInfo} from './sorter';
 
-export default function EventsPanel({items, filter, shortList, sort}) {
+type Metadata = {
+    name: string;
+    creationTimestamp: number;
+}
+type InvolvedObject = {
+    kind: string;
+    namespace: string;
+    name: string;
+}
+type Event = {
+    metadata: Metadata;
+    involvedObject: InvolvedObject;
+    message: string;
+    reason: string;
+    type: string;
+}
+type EventsPanelProps = {
+    items: Event[];
+    filter: React.ReactNode;
+    shortList?: boolean;
+    sort: SortInfo;
+}
+
+export default function EventsPanel({items, filter, shortList, sort} : EventsPanelProps) {
     return (
         <div className='contentPanel'>
             <table className='wrapped'>
@@ -36,21 +59,21 @@ export default function EventsPanel({items, filter, shortList, sort}) {
                     filter={filter}
                     colSpan={shortList ? 4 : 5}
                     sort={sort}
-                    row={x => (
-                        <tr key={x.metadata.name}>
+                    row={(event: Event) => (
+                        <tr key={event.metadata.name}>
                             <td className='td_icon optional_medium'>
                                 <ResourceSvg
-                                    resource={x.involvedObject.kind}
-                                    className={getTypeClass(x.type)}
+                                    resource={event.involvedObject.kind}
+                                    className={getTypeClass(event.type)}
                                 />
-                                <div className='td_iconLabel'>{x.involvedObject.kind}</div>
+                                <div className='td_iconLabel'>{event.involvedObject.kind}</div>
                             </td>
                             {!shortList && (
-                                <td className='wrapped_name'>{getName(x.involvedObject)}</td>
+                                <td className='wrapped_name'>{getName(event.involvedObject)}</td>
                             )}
-                            <td>{fromNow(x.metadata.creationTimestamp)}</td>
-                            <td className='optional_small'>{x.reason}</td>
-                            <td>{x.message}</td>
+                            <td>{fromNow(event.metadata.creationTimestamp)}</td>
+                            <td className='optional_small'>{event.reason}</td>
+                            <td>{event.message}</td>
                         </tr>
                     )}
                 />
@@ -59,13 +82,14 @@ export default function EventsPanel({items, filter, shortList, sort}) {
     );
 }
 
-function getName({kind, namespace, name}) {
+
+function getName({kind, namespace, name} : InvolvedObject) {
     const text = namespace ? `${namespace}:${name}` : name;
-    const href = getHref(kind, namespace, name);
+    const href = getHref({kind, namespace, name});
     return href ? (<a href={href}>{text}</a>) : text;
 }
 
-function getHref(kind, namespace, name) {
+function getHref({kind, namespace, name} : InvolvedObject) {
     switch (kind) {
         case 'ClusterRole': return `/#!clusterrole/${name}`;
         case 'ClusterRoleBinding': return `/#!clusterrolebinding/${name}`;
@@ -89,11 +113,11 @@ function getHref(kind, namespace, name) {
     }
 }
 
-function sortByName({involvedObject}) {
-    return `${involvedObject.namespace}:${involvedObject.name}`;
+function sortByName(event: Event) {
+    return `${event.involvedObject.namespace}:${event.involvedObject.name}`;
 }
 
-function getTypeClass(type) {
+function getTypeClass(type: string) {
     switch (type) {
         case 'Normal': return undefined;
         case 'Warning': return 'svg_warn';
