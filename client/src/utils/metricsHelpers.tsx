@@ -1,8 +1,10 @@
 import _ from 'lodash';
 import {parseRam, parseCpu} from './unitHelpers';
-import {TODO, Pod, Node, Metrics} from './types';
+import {TODO, ApiItem, Pod, Node, Metrics, MetricsUsage} from './types';
 
-export default function getMetrics(items?: Pod[], metrics?: Metrics[]) {
+type ResourceType = 'cpu' | 'memory'
+
+export default function getMetrics(items?: ApiItem<any, any>[], metrics?: Metrics[]) {
     if (!items || !metrics) return undefined;
 
     const names = _.map(items, x => x.metadata.name);
@@ -13,7 +15,7 @@ export default function getMetrics(items?: Pod[], metrics?: Metrics[]) {
 
 
 // Node helpers
-export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undefined, resource: string, type: string, phases: string[]) {
+export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undefined, resource: ResourceType, type: string, phases: string[]) {
     if (!node || !pods) return null;
 
     return _(pods)
@@ -22,23 +24,23 @@ export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undef
         .sumBy(x => getPodResourceValue(x, resource, type));
 }
 
-export function getNodeResourcePercent(node: TODO, pods: TODO, resource: string, type: string) {
+export function getNodeResourcePercent(node: Node, pods: Pod[], resource: ResourceType, type: string) {
     const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     const available = getNodeResourcesAvailable(node, resource);
     return used && available ? used / available : null;
 }
 
-export function getNodeUsagePercent(node: TODO, metrics: TODO, resource: string) {
+export function getNodeUsagePercent(node: Node, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
     const used = getNodeUsage(node, metrics, resource);
     const available = getNodeResourcesAvailable(node, resource);
     return used && available ? used / available : null;
 }
 
-export function getNodeResourcesAvailable(node: TODO, resource: string) {
+export function getNodeResourcesAvailable(node: Node, resource: ResourceType) {
     return node ? parse(resource, node.status.capacity) : null;
 }
 
-export function getNodeUsage(node: TODO, metrics: TODO, resource: string) {
+export function getNodeUsage(node: Node, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
     if (!node || !metrics) return null;
 
     const result = metrics[node.metadata.name];
@@ -47,26 +49,27 @@ export function getNodeUsage(node: TODO, metrics: TODO, resource: string) {
 
 
 // Pod helpers
-export function getPodResourcePercent(item: TODO, metrics: TODO, resource: string, type: string) {
-    const actual = getPodUsage(item, metrics, resource);
-    const request = getPodResourceValue(item, resource, type);
+export function getPodResourcePercent(pod: Pod, metrics: _.Dictionary<Metrics>, resource: ResourceType, type: string) {
+    const actual = getPodUsage(pod, metrics, resource);
+    const request = getPodResourceValue(pod, resource, type);
     return actual ? actual / request : null;
 }
 
-export function getPodUsage(pod: TODO, metrics: TODO, resource: string) {
+export function getPodUsage(pod: Pod, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
     if (!pod || !metrics) return null;
 
     const metric = metrics[pod.metadata.name] || {};
-    return _.sumBy(metric.containers, (x: TODO) => parse(resource, x.usage));
+    return _.sumBy(metric.containers, x => parse(resource, x.usage));
 }
 
-export function getPodResourceValue(pod: TODO, resource: string, type: string) {
+export function getPodResourceValue(pod: TODO, resource: ResourceType, type: string) {
     return _(pod.spec.containers)
         .filter(x => x.resources && x.resources[type])
         .sumBy(x => parse(resource, x.resources[type]));
 }
 
-function parse(resource: string, target: {[key: string]: string}) {
+function parse(resource: ResourceType, target: MetricsUsage) {
     const parser = resource === 'cpu' ? parseCpu : parseRam;
+    // @ts-ignore
     return parser(target[resource]);
 }

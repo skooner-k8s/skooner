@@ -4,28 +4,13 @@ import {TableBody} from './listViewHelpers';
 import log from '../utils/log';
 import ResourceSvg from '../art/resourceSvg';
 import Sorter, {sortByDate, SortInfo} from './sorter';
+import { K8sEvent, InvolvedObject } from '../utils/types';
 
-type Metadata = {
-    name: string;
-    creationTimestamp: number;
-}
-type InvolvedObject = {
-    kind: string;
-    namespace: string;
-    name: string;
-}
-type Event = {
-    metadata: Metadata;
-    involvedObject: InvolvedObject;
-    message: string;
-    reason: string;
-    type: string;
-}
 type EventsPanelProps = {
-    items: Event[];
-    filter: React.ReactNode;
+    items?: K8sEvent[];
+    filter?: React.ReactNode;
     shortList?: boolean;
-    sort: SortInfo;
+    sort?: SortInfo;
 }
 
 export default function EventsPanel({items, filter, shortList, sort} : EventsPanelProps) {
@@ -59,17 +44,17 @@ export default function EventsPanel({items, filter, shortList, sort} : EventsPan
                     filter={filter}
                     colSpan={shortList ? 4 : 5}
                     sort={sort}
-                    row={(event: Event) => (
+                    row={(event) => (
                         <tr key={event.metadata.name}>
                             <td className='td_icon optional_medium'>
                                 <ResourceSvg
-                                    resource={event.involvedObject.kind}
+                                    resource={event.involvedObject!.kind}
                                     className={getTypeClass(event.type)}
                                 />
-                                <div className='td_iconLabel'>{event.involvedObject.kind}</div>
+                                <div className='td_iconLabel'>{event.involvedObject!.kind}</div>
                             </td>
                             {!shortList && (
-                                <td className='wrapped_name'>{getName(event.involvedObject)}</td>
+                                <td className='wrapped_name'>{getName(event.involvedObject!)}</td>
                             )}
                             <td>{fromNow(event.metadata.creationTimestamp)}</td>
                             <td className='optional_small'>{event.reason}</td>
@@ -85,11 +70,11 @@ export default function EventsPanel({items, filter, shortList, sort} : EventsPan
 
 function getName({kind, namespace, name} : InvolvedObject) {
     const text = namespace ? `${namespace}:${name}` : name;
-    const href = getHref({kind, namespace, name});
+    const href = getHref(kind, namespace, name);
     return href ? (<a href={href}>{text}</a>) : text;
 }
 
-function getHref({kind, namespace, name} : InvolvedObject) {
+function getHref(kind: string, namespace: string, name: string) {
     switch (kind) {
         case 'ClusterRole': return `/#!clusterrole/${name}`;
         case 'ClusterRoleBinding': return `/#!clusterrolebinding/${name}`;
@@ -113,8 +98,8 @@ function getHref({kind, namespace, name} : InvolvedObject) {
     }
 }
 
-function sortByName(event: Event) {
-    return `${event.involvedObject.namespace}:${event.involvedObject.name}`;
+function sortByName(event: K8sEvent) {
+    return `${event.involvedObject!.namespace}:${event.involvedObject!.name}`;
 }
 
 function getTypeClass(type: string) {

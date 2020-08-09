@@ -1,4 +1,4 @@
-import {TODO} from './types';
+import {ApiItem} from './types';
 
 export default function test(filter = '', ...values: string[]) {
     const value = filter.toLowerCase();
@@ -7,8 +7,8 @@ export default function test(filter = '', ...values: string[]) {
         .some(x => x.toLowerCase().includes(value));
 }
 
-export function filterByOwner(items: TODO[], owner: TODO) {
-    if (!items || !owner) return null;
+export function filterByOwner<T extends ApiItem<any, any>>(items?: T[], owner?: ApiItem<any, any>): T[] | undefined {
+    if (!items || !owner) return undefined;
 
     const {uid} = owner.metadata;
 
@@ -20,15 +20,15 @@ export function filterByOwner(items: TODO[], owner: TODO) {
     });
 }
 
-export function filterByOwners(items: TODO[], owners: TODO) {
-    if (!items || !owners) return null;
+export function filterByOwners<T extends ApiItem<any, any>>(items?: T[], owners?: ApiItem<any, any>[]): T[] | undefined {
+    if (!items || !owners) return undefined;
 
-    const uids = owners.map((x: any) => x.metadata.uid);
+    const uidList = owners.map(x => x.metadata.uid);
 
     return items.filter((x) => {
-        if (x.involvedObject && uids.includes(x.involvedObject.uid)) return true;
+        if (x.involvedObject && uidList.includes(x.involvedObject.uid)) return true;
 
         const {ownerReferences} = x.metadata;
-        return ownerReferences && ownerReferences.some((y: {uid: string}) => uids.includes(y.uid));
+        return ownerReferences && ownerReferences.some((y: {uid: string}) => uidList.includes(y.uid));
     });
 }

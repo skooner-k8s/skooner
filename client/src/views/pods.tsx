@@ -7,20 +7,29 @@ import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import PodsPanel from '../components/podsPanel';
 import PodStatusChart from '../components/podStatusChart';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import getMetrics from '../utils/metricsHelpers';
 import ChartsContainer from '../components/chartsContainer';
+import {Pod, Metrics} from '../utils/types';
 
-export default class Pods extends Base {
-    state = {
+type State = {
+    namespace: string;
+    filter: string;
+    sort: SortInfo;
+    items?: Pod[];
+    metrics?: Metrics[];
+}
+
+export default class Pods extends Base<{}, State> {
+    state: State = {
         namespace: '',
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
+    setNamespace(namespace: string) {
         this.setState({namespace});
-        this.setState({items: null});
+        this.setState({items: undefined});
 
         this.registerApi({
             items: api.pod.list(namespace, items => this.setState({items})),

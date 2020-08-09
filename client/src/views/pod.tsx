@@ -19,10 +19,22 @@ import getMetrics from '../utils/metricsHelpers';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import ChartsContainer from '../components/chartsContainer';
+import { Pod, Metrics, K8sEvent } from '../utils/types';
+
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+type State = {
+    item?: Pod;
+    metrics?: Metrics[];
+    events?: K8sEvent[];
+}
 
 const service = api.pod;
 
-export default class Pod extends Base {
+export default class PodView extends Base<Props, State> {
     componentDidMount() {
         const {namespace, name} = this.props;
 
@@ -39,6 +51,7 @@ export default class Pod extends Base {
 
         const errors = getErrors(item);
         const filteredEvents = filterByOwner(events, item);
+        // @ts-ignore
         const filteredMetrics = getMetrics(item && [item], metrics && [metrics]);
 
         return (
@@ -56,7 +69,7 @@ export default class Pod extends Base {
                         </a>
 
                         <SaveButton
-                            item={item}
+                            item={item!}
                             onSave={x => service.put(x)}
                         />
 
@@ -125,10 +138,10 @@ export default class Pod extends Base {
     }
 }
 
-function getErrors(item) {
+function getErrors(item?: Pod) {
     if (!item) return [];
     if (item.status.message) return [item.status.message];
     if (item.status.conditions) return item.status.conditions.map(x => x.message).filter(x => !!x);
 
-    return null;
+    return undefined;
 }

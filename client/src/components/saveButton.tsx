@@ -3,17 +3,18 @@ import Base from './base';
 import Button from './button';
 import EditorModal from '../views/editorModal';
 import EditSvg from '../art/editSvg';
+import { ApiItem } from '../utils/types';
 
-interface SaveButtonProps {
-    onSave: Function
-    item: {}
+interface SaveButtonProps<T extends ApiItem<any, any>> {
+    item: T;
+    onSave: (item: T) => Promise<boolean>;
 }
 
 interface SaveButtonStates {
     showEditor: boolean;
 }
 
-export default class SaveButton extends Base<SaveButtonProps, SaveButtonStates> {
+export default class SaveButton<T extends ApiItem<any, any>> extends Base<SaveButtonProps<T>, SaveButtonStates> {
     render() {
         const {onSave, item} = this.props;
         const {showEditor = null} = this.state || {};

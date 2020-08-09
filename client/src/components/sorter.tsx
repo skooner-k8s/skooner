@@ -15,7 +15,7 @@ export interface SortInfo {
 
 interface SorterProps {
     field: TODO;
-    sort: {
+    sort?: {
         field: string, 
         direction: Direction, 
         onSort: Function,
@@ -28,7 +28,7 @@ interface SorterStates {
 
 type SortCallback = (item: TODO) => void;
 
-export function defaultSortInfo(target: Component | SortCallback, field = 'metadata.name', direction: Direction = 'asc'): SortInfo {
+export function defaultSortInfo(target: Component | SortCallback, field: TODO = 'metadata.name', direction: Direction = 'asc'): SortInfo {
     return {
         field,
         direction,
@@ -79,11 +79,11 @@ export default class Sorter extends Base<SorterProps, SorterStates> {
 
     isUpSelected() {
         const {sort} = this.props;
-        return (this.isSelected() && sort.direction === 'asc');
+        return (this.isSelected() && sort!.direction === 'asc');
     }
 
     isDownSelected() {
         const {sort} = this.props;
-        return (this.isSelected() && sort.direction === 'desc');
+        return (this.isSelected() && sort!.direction === 'desc');
     }
 }

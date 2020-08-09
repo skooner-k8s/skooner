@@ -30,7 +30,7 @@ export default class Exec extends Base {
         const {namespace, name} = this.props;
         const exec = api.exec(namespace, name, container, items => this.onData(items));
 
-        this.socket = exec.getSocket(); // TODO: this won't work if the socket failes
+        this.socket = exec.getSocket(); // TODO: this won't work if the socket fails
         this.registerApi({cancel: exec.cancel});
 
         if (this.xterm) this.xterm.reset();

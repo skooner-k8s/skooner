@@ -3,9 +3,9 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
-import {TODO} from '../utils/types';
+import {Node, Metrics} from '../utils/types';
 
-export default function NodeCpuChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
+export default function NodeCpuChart({items, metrics}: {items?: Node[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getNodeCpuTotals(items, metrics);
 
     return (
@@ -21,7 +21,7 @@ export default function NodeCpuChart({items, metrics}: {items: TODO[], metrics: 
     );
 }
 
-function getNodeCpuTotals(items: TODO[], metrics: TODO[]) {
+function getNodeCpuTotals(items?: Node[], metrics?: _.Dictionary<Metrics>) {
     if (!items || !metrics) return null;
 
     const metricValues = Object.values(metrics);

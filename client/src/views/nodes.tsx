@@ -2,7 +2,7 @@ import React from 'react';
 import Base from '../components/base';
 import ChartsContainer from '../components/chartsContainer';
 import Filter from '../components/filter';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import NodeStatusChart from '../components/nodeStatusChart';
 import api from '../services/api';
 import test from '../utils/filterHelper';
@@ -11,9 +11,18 @@ import getReadyStatus from '../utils/nodeHelpers';
 import NodeCpuChart from '../components/nodeCpuChart';
 import NodeRamChart from '../components/nodeRamChart';
 import getMetrics from '../utils/metricsHelpers';
+import { Node, Metrics, Pod } from '../utils/types';
 
-export default class Nodes extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: Node[];
+    metrics?: Metrics[];
+    pods?: Pod[];
+};
+
+export default class Nodes extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this, getReadyStatus, 'asc'),
     };
@@ -22,7 +31,7 @@ export default class Nodes extends Base {
         this.registerApi({
             items: api.node.list(items => this.setState({items})),
             metrics: api.metrics.nodes(metrics => this.setState({metrics})),
-            pods: api.pod.list(null, pods => this.setState({pods})),
+            pods: api.pod.list(undefined, pods => this.setState({pods})),
         });
     }
 
@@ -57,8 +66,8 @@ export default class Nodes extends Base {
     }
 }
 
-function filterNodes(items, filter) {
-    if (!items) return null;
+function filterNodes(items?: Node[], filter?: string) {
+    if (!items) return undefined;
 
     return items.filter((x) => {
         const labels = x.metadata.labels || {};

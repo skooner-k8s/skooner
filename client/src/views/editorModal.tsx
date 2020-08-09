@@ -8,9 +8,22 @@ import Doc from '../components/doc';
 import getDocDefinitions from '../services/docs';
 import LightBulbSvg from '../art/lightBulbSvg';
 import EditSvg from '../art/editSvg';
+import { ApiItem, TODO } from '../utils/types';
 
-export default class EditorModal extends Base {
-    state = {
+interface Props<T extends ApiItem<any, any>> {
+    body: T;
+    onSave: (item: T) => Promise<boolean>;
+    onRequestClose: () => void;
+}
+
+type State = {
+    showDocs: boolean;
+    yaml?: string;
+    properties?: TODO;
+}
+
+export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props<T>, State> {
+    state: State = {
         showDocs: false,
     };
 
@@ -18,7 +31,7 @@ export default class EditorModal extends Base {
         this.findDocs(this.props.body);
     }
 
-    async onEdit(yaml) {
+    async onEdit(yaml: string) {
         this.setState({yaml});
 
         try {
@@ -39,10 +52,10 @@ export default class EditorModal extends Base {
         if (shouldClose) this.close();
     }
 
-    async findDocs(body) {
+    async findDocs(body: T) {
         if (!body || !body.apiVersion || !body.kind) return;
 
-        const result = await getDocDefinitions(body.apiVersion, body.kind);
+        const result: TODO = await getDocDefinitions(body.apiVersion, body.kind);
         if (!result) return;
 
         this.setState({properties: result.properties});

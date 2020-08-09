@@ -3,9 +3,9 @@ import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
-import {TODO} from '../utils/types';
+import {Node, Metrics} from '../utils/types';
 
-export default function NodeRamChart({items, metrics}: {items: TODO[], metrics: TODO[]}) {
+export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getNodeRamTotals(items, metrics);
     return (
         <div className='charts_item'>
@@ -20,7 +20,7 @@ export default function NodeRamChart({items, metrics}: {items: TODO[], metrics: 
     );
 }
 
-function getNodeRamTotals(items: TODO[], metrics: TODO[]) {
+function getNodeRamTotals(items?: Node[], metrics?: _.Dictionary<Metrics>) {
     if (!items || !metrics) return null;
 
     const metricValues = Object.values(metrics);

@@ -6,7 +6,7 @@ type FilterProps = {
     text: string;
     filter: string;
     onChange: (value: string) => void;
-    onNamespaceChange?: Function;
+    onNamespaceChange?: (namespace: string) => void;
 }
 
 const Filter = ({text, filter, onChange, onNamespaceChange}: FilterProps) => (

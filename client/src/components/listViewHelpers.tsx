@@ -7,6 +7,14 @@ import Sorter, {sortByDate, SortInfo} from './sorter';
 import ResourceSvg from '../art/resourceSvg';
 import {TODO} from '../utils/types';
 
+type TableBodyProps<T> = {
+    items?: T[] | null; 
+    filter: TODO; 
+    colSpan: number; 
+    sort?: SortInfo; 
+    row: (item: T) => ReactNode;
+}
+
 export function objectMap(items: {[key: string]: string} = {}) {
     return Object.entries(items).map(([key, value]) => {
         const substrValue = value.length <= 50 ? value : `${value.substr(0, 50)}...`;
@@ -28,14 +36,6 @@ export function objectMap(items: {[key: string]: string} = {}) {
             </div>
         );
     });
-}
-
-type TableBodyProps<T> = {
-    items?: T[] | null; 
-    filter: TODO; 
-    colSpan: number; 
-    sort: SortInfo; 
-    row: (item: T) => ReactNode;
 }
 
 export function TableBody<T>({items, filter, colSpan, sort, row}: TableBodyProps<T>) {

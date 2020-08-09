@@ -74,7 +74,7 @@ export function apiFactoryWithNamespace<T extends ApiItem<any, any>>(group: stri
     const apiRoot = getApiRoot(group, version);
     return {
         resource: {group, resource},
-        list: (namespace: string, cb: StreamCallback<T[]>, errCb?: ErrorCallback) => streamResults(url(namespace), cb, errCb),
+        list: (namespace: string | undefined, cb: StreamCallback<T[]>, errCb?: ErrorCallback) => streamResults(url(namespace), cb, errCb),
         get: (namespace: string, name: string, cb: StreamCallback<T>, errCb?: ErrorCallback) => streamResult(url(namespace), name, cb, errCb),
         post: (body: any) => post(url(body.metadata.namespace), body),
         put: (body: any) => put(`${url(body.metadata.namespace)}/${body.metadata.name}`, body),
@@ -82,7 +82,7 @@ export function apiFactoryWithNamespace<T extends ApiItem<any, any>>(group: stri
         scale: includeScale ? apiScaleFactory(apiRoot, resource) : undefined,
     };
 
-    function url(namespace: string) {
+    function url(namespace?: string) {
         return namespace ? `${apiRoot}/namespaces/${namespace}/${resource}` : `${apiRoot}/${resource}`;
     }
 }

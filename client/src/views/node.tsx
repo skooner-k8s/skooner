@@ -8,7 +8,7 @@ import Loading from '../components/loading';
 import LoadingChart from '../components/loadingChart';
 import MetadataFields from '../components/metadataFields';
 import PodsPanel from '../components/podsPanel';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import Field from '../components/field';
 import ChartsContainer from '../components/chartsContainer';
 import NodeCpuChart from '../components/nodeCpuChart';
@@ -17,9 +17,22 @@ import PodStatusChart from '../components/podStatusChart';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import getMetrics from '../utils/metricsHelpers';
+import {Node, Pod, Metrics, TODO} from '../utils/types';
 
-export default class Node extends Base {
-    state = {
+type Props = {
+    name: string;
+}
+
+type State = {
+    podsSort: SortInfo;
+    item?: Node;
+    metrics?: Metrics[];
+    pods?: Pod[];
+    podMetrics?: Metrics[];
+}
+
+export default class NodeView extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
     };
 
@@ -29,8 +42,8 @@ export default class Node extends Base {
         this.registerApi({
             item: api.node.get(name, item => this.setState({item})),
             metrics: api.metrics.node(name, metrics => this.setState({metrics})),
-            pods: api.pod.list(null, pods => this.setState({pods})),
-            podMetrics: api.metrics.pods(null, podMetrics => this.setState({podMetrics})),
+            pods: api.pod.list(undefined, pods => this.setState({pods})),
+            podMetrics: api.metrics.pods(undefined, podMetrics => this.setState({podMetrics})),
         });
     }
 
@@ -54,7 +67,13 @@ export default class Node extends Base {
                         )}
                         <div className='charts_itemLabel'>Uptime</div>
                     </div>
+                    
+                    {/* 
+                    // @ts-ignore */}
                     <NodeCpuChart items={item && [item]} metrics={metrics && [metrics]} />
+
+                    {/* 
+                    // @ts-ignore */}
                     <NodeRamChart items={item && [item]} metrics={metrics && [metrics]} />
                 </ChartsContainer>
 
@@ -119,18 +138,14 @@ export default class Node extends Base {
     }
 }
 
-/**
- * Render "taints" divs from the node spec
- *
- * @param spec spec from a node item
- */
-function getTaints({spec}) {
-    return _.map(spec.taints, ({key, effect}) => (
+
+function getTaints({spec}: Node) {
+    return _.map(spec.taints, ({key, effect}: TODO) => (
         <div key={key}> <span>{key}</span> • <span title={key}> {effect} </span></div>
     ));
 }
 
-function getUptime({status}) {
+function getUptime({status}: Node) {
     const ready = status.conditions.find(y => y.type === 'Ready');
     if (!ready) return 'N/A';
 

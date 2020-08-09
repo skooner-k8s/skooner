@@ -3,7 +3,7 @@ import Base from './base';
 
 interface ItemHeaderProps {
     title: string[];
-    ready: boolean;
+    ready?: boolean;
 }
 
 export default class ItemHeader extends Base<ItemHeaderProps, {}> {

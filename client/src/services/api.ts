@@ -102,11 +102,11 @@ function metricsFactory() {
     return {
         nodes: (cb: DataCallback<Metrics[]>) => metrics('/apis/metrics.k8s.io/v1beta1/nodes', cb),
         node: (name: string, cb: DataCallback<Metrics[]>) => metrics(`/apis/metrics.k8s.io/v1beta1/nodes/${name}`, cb),
-        pods: (namespace: string, cb: DataCallback<Metrics[]>) => metrics(url(namespace), cb),
+        pods: (namespace: string | undefined, cb: DataCallback<Metrics[]>) => metrics(url(namespace), cb),
         pod: (namespace: string, name: string, cb: DataCallback<Metrics[]>) => metrics(`/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods/${name}`, cb),
     };
 
-    function url(namespace: string) {
+    function url(namespace?: string) {
         return namespace ? `/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods` : '/apis/metrics.k8s.io/v1beta1/pods';
     }
 }
