@@ -7,18 +7,38 @@ import {MetadataHeaders, MetadataColumns, TableBody, objectMap} from './listView
 import {unparseCpu, unparseRam} from '../utils/unitHelpers';
 import {getNodeResourceValue, getNodeResourcePercent, getNodeUsagePercent, getNodeUsage, getNodeResourcesAvailable} from '../utils/metricsHelpers';
 import getReadyStatus from '../utils/nodeHelpers';
+import {TODO} from "../utils/types";
 
-export default class NodesPanel extends Base {
-    constructor(props) {
+interface NodesPanelProps {
+    metrics: TODO;
+    pods: TODO[];
+    items: TODO[];
+    sort: TODO;
+    filter: TODO;
+}
+
+interface NodesPanelStates {
+    show: {}
+}
+
+export default class NodesPanel extends Base<NodesPanelProps, NodesPanelStates> {
+    private sortByCpuUsage: TODO;
+    private sortByCpuRequest: TODO;
+    private sortByCpuLimit: TODO;
+    private sortByRamUsage: TODO;
+    private sortByRamRequest: TODO;
+    private sortByRamLimit: TODO;
+
+    constructor(props: TODO) {
         super(props);
 
-        this.sortByCpuUsage = x => getNodeUsagePercent(x, this.props.metrics, 'cpu');
-        this.sortByCpuRequest = x => getNodeResourcePercent(x, this.props.pods, 'cpu', 'requests');
-        this.sortByCpuLimit = x => getNodeResourcePercent(x, this.props.pods, 'cpu', 'limits');
+        this.sortByCpuUsage = (x: TODO) => getNodeUsagePercent(x, this.props.metrics, 'cpu');
+        this.sortByCpuRequest = (x: TODO) => getNodeResourcePercent(x, this.props.pods, 'cpu', 'requests');
+        this.sortByCpuLimit = (x: TODO) => getNodeResourcePercent(x, this.props.pods, 'cpu', 'limits');
 
-        this.sortByRamUsage = x => getNodeUsagePercent(x, this.props.metrics, 'memory');
-        this.sortByRamRequest = x => getNodeResourcePercent(x, this.props.pods, 'memory', 'requests');
-        this.sortByRamLimit = x => getNodeResourcePercent(x, this.props.pods, 'memory', 'limits');
+        this.sortByRamUsage = (x: TODO) => getNodeUsagePercent(x, this.props.metrics, 'memory');
+        this.sortByRamRequest = (x: TODO) => getNodeResourcePercent(x, this.props.pods, 'memory', 'requests');
+        this.sortByRamLimit = (x: TODO) => getNodeResourcePercent(x, this.props.pods, 'memory', 'limits');
     }
 
     render() {
@@ -73,7 +93,7 @@ export default class NodesPanel extends Base {
                         </tr>
                     </thead>
 
-                    <TableBody items={items} filter={filter} sort={sort} colSpan='11' row={x => (
+                    <TableBody items={items} filter={filter} sort={sort} colSpan={11} row={(x: TODO) => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns item={x} href={`#!node/${x.metadata.name}`} />
                             <td className='smallText optional_medium'>{objectMap(x.metadata.labels)}</td>
@@ -94,39 +114,39 @@ export default class NodesPanel extends Base {
 
 
 /** Simple mapping between ready statuses and an UTF-8 symbol character */
-const statusesToUtf8 = {True: '\u2713', False: '\uD83D\uDEC7', Unknown: '\u003F'};
+const statusesToUtf8: {[key: string]: string} = {True: '\u2713', False: '\uD83D\uDEC7', Unknown: '\u003F'};
 
 /**
  *
- * @param {*statusTxt a status text (as returned by getReadyStatus for example) }
+ * @param statusTxt {*statusTxt a status text (as returned by getReadyStatus for example) }
  * @returns a dedicated span element with an UTF-8 symbol representing the status
  */
-function statusSymbol(statusTxt) {
+function statusSymbol(statusTxt: string) {
     const cssClass = `node-ready-status-${statusTxt}`;
     const utf8Symbol = statusesToUtf8[statusTxt] || statusesToUtf8.Unknown;
     return <span className={cssClass} title={statusTxt}>{utf8Symbol}</span>;
 }
 
 
-function getPercentDisplay(node, metrics, resource) {
+function getPercentDisplay(node: TODO, metrics: TODO, resource: string) {
     const used = getNodeUsage(node, metrics, resource);
     return percent(node, used, resource);
 }
 
-function getResourcePercentDisplay(node, pods, resource, type) {
+function getResourcePercentDisplay(node: TODO, pods: TODO[], resource: string, type: TODO) {
     const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     return percent(node, used, resource);
 }
 
-function percent(node, used, resource) {
+function percent(node: TODO, used: number | string | null, resource: string) {
     if (used == null) return <LoadingEllipsis />;
     if (!used) return <span className='smallText'>-</span>;
 
-    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const unparser: TODO = resource === 'cpu' ? unparseCpu : unparseRam;
     const result = unparser(used);
 
     const available = getNodeResourcesAvailable(node, resource);
-    const displayPercent = _.round(used / available * 100, 1);
+    const displayPercent = available? _.round(Number(used)  / available * 100, 1): "";
     const className = displayPercent >= 85 ? 'contentPanel_warn' : undefined;
 
     return (

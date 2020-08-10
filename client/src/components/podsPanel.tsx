@@ -6,23 +6,43 @@ import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {unparseRam, unparseCpu} from '../utils/unitHelpers';
 import {getPodResourcePercent, getPodUsage, getPodResourceValue} from '../utils/metricsHelpers';
+import {Pod, TODO} from "../utils/types";
 
-export default class PodsPanel extends Base {
-    constructor(props) {
+interface PodsPanelProps {
+    metrics: TODO;
+    pods?: TODO[];
+    items?: Pod[];
+    sort?: TODO;
+    filter?: TODO;
+    skipNamespace: boolean;
+}
+
+interface PodsPanelStates {
+}
+
+export default class PodsPanel extends Base<PodsPanelProps, PodsPanelStates> {
+    private sortByCpuUsage: TODO;
+    private sortByCpuRequest: TODO;
+    private sortByCpuLimit: TODO;
+    private sortByRamUsage: TODO;
+    private sortByRamRequest: TODO;
+    private sortByRamLimit: TODO;
+
+    constructor(props: TODO) {
         super(props);
 
-        this.sortByCpuUsage = x => getPodUsage(x, this.props.metrics, 'cpu');
-        this.sortByCpuRequest = x => sortBy(x, this.props.metrics, 'cpu', 'requests');
-        this.sortByCpuLimit = x => sortBy(x, this.props.metrics, 'cpu', 'limits');
+        this.sortByCpuUsage = (x: TODO) => getPodUsage(x, this.props.metrics, 'cpu');
+        this.sortByCpuRequest = (x: TODO) => sortBy(x, this.props.metrics, 'cpu', 'requests');
+        this.sortByCpuLimit = (x: TODO) => sortBy(x, this.props.metrics, 'cpu', 'limits');
 
-        this.sortByRamUsage = x => getPodUsage(x, this.props.metrics, 'memory');
-        this.sortByRamRequest = x => sortBy(x, this.props.metrics, 'memory', 'requests');
-        this.sortByRamLimit = x => sortBy(x, this.props.metrics, 'memory', 'limits');
+        this.sortByRamUsage = (x: TODO) => getPodUsage(x, this.props.metrics, 'memory');
+        this.sortByRamRequest = (x: TODO) => sortBy(x, this.props.metrics, 'memory', 'requests');
+        this.sortByRamLimit = (x: TODO) => sortBy(x, this.props.metrics, 'memory', 'limits');
     }
 
     render() {
         const {items, metrics, sort, filter, skipNamespace} = this.props;
-        const col = 10 + !skipNamespace;
+        const col = 10 + Number(!skipNamespace);
 
         return (
             <div className='contentPanel'>
@@ -70,7 +90,7 @@ export default class PodsPanel extends Base {
                         </tr>
                     </thead>
 
-                    <TableBody items={items} filter={filter} sort={sort} colSpan={col} row={x => (
+                    <TableBody items={items} filter={filter} sort={sort} colSpan={col} row={(x: TODO) => (
                         <tr key={x.metadata.uid}>
                             <MetadataColumns
                                 item={x}
@@ -89,7 +109,7 @@ export default class PodsPanel extends Base {
     }
 }
 
-function getPhaseStyle(phase) {
+function getPhaseStyle(phase: string) {
     switch (phase) {
         case 'Pending':
             return 'svg_warn';
@@ -108,31 +128,31 @@ function getPhaseStyle(phase) {
     }
 }
 
-function sortBy(item, metrics, resource, type) {
+function sortBy(item: TODO, metrics: TODO, resource: string, type: string) {
     const result = getPodResourcePercent(item, metrics, resource, type);
-    return Number.isFinite(result) ? result : -1;
+    return result && Number.isFinite(result) ? result : -1;
 }
 
-function getRestartCount({status}) {
+function getRestartCount({status}: {status: TODO}) {
     return _.sumBy(status.containerStatuses, 'restartCount');
 }
 
-function getChart(item, metrics, resource) {
+function getChart(item: TODO, metrics: TODO, resource: string) {
     const actual = getPodUsage(item, metrics, resource);
 
     return (
         <>
-            {getRawDisplay(item, metrics, actual, resource)}
-            {getPercentDisplay(item, metrics, actual, resource, 'requests')}
-            {getPercentDisplay(item, metrics, actual, resource, 'limits')}
+            {actual && getRawDisplay(item, metrics, actual, resource)}
+            {actual && getPercentDisplay(item, metrics, actual, resource, 'requests')}
+            {actual && getPercentDisplay(item, metrics, actual, resource, 'limits')}
         </>
     );
 }
 
-function getRawDisplay(item, metrics, actual, resource) {
+function getRawDisplay(item: TODO, metrics: TODO, actual: number | string | null, resource: string) {
     if (!item || !metrics) return <td><LoadingEllipsis /></td>;
 
-    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const unparser: TODO = resource === 'cpu' ? unparseCpu : unparseRam;
     const actualResult = unparser(actual);
 
     return (
@@ -143,13 +163,13 @@ function getRawDisplay(item, metrics, actual, resource) {
     );
 }
 
-function getPercentDisplay(item, metrics, actual, resource, type) {
+function getPercentDisplay(item: TODO, metrics: TODO, actual: number, resource: string, type: TODO) {
     if (!item || !metrics) return <td className='optional_xsmall'><LoadingEllipsis /></td>;
 
     const request = getPodResourceValue(item, resource, type);
     if (!request) return <td className='smallText optional_xsmall'>-</td>;
 
-    const unparser = resource === 'cpu' ? unparseCpu : unparseRam;
+    const unparser: TODO = resource === 'cpu' ? unparseCpu : unparseRam;
     const result = unparser(request);
     const percent = request ? _.round(actual / request * 100, 1) : 0;
     const className = percent > 85 ? 'optional_xsmall contentPanel_warn' : 'optional_xsmall';

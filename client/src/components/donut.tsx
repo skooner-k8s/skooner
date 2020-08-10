@@ -63,9 +63,9 @@ export default class Donut extends Base<Props, State> {
 
         return (
             <svg className='donut' xmlns='http://www.w3.org/2000/svg' viewBox="0 0 42 42" width='100%' height='100%'>
-                <circle className='donut_background' cx='21' cy='21' r='16'></circle>
-                <circle className='donut_layer1' cx='21' cy='21' r='16' strokeDasharray={`${percent} ${100 - percent}`} strokeDashoffset="25"></circle>
-                <circle className='donut_layer2' cx='21' cy='21' r='16' strokeDasharray={`${percent2} ${100 - percent2}`} strokeDashoffset={25 + (100 - percent)}></circle>
+                <circle className='donut_background' cx='21' cy='21' r='16' />
+                <circle className='donut_layer1' cx='21' cy='21' r='16' strokeDasharray={`${percent} ${100 - percent}`} strokeDashoffset="25" />
+                <circle className='donut_layer2' cx='21' cy='21' r='16' strokeDasharray={`${percent2} ${100 - percent2}`} strokeDashoffset={25 + (100 - percent)} />
             </svg>
         );
     }
