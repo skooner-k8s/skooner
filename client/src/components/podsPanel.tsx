@@ -6,14 +6,14 @@ import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {unparseRam, unparseCpu} from '../utils/unitHelpers';
 import {getPodResourcePercent, getPodUsage, getPodResourceValue} from '../utils/metricsHelpers';
-import {TODO} from "../utils/types";
+import {Pod, TODO} from "../utils/types";
 
 interface PodsPanelProps {
     metrics: TODO;
-    pods: TODO[];
-    items: TODO[];
-    sort: TODO;
-    filter: TODO;
+    pods?: TODO[];
+    items?: Pod[];
+    sort?: TODO;
+    filter?: TODO;
     skipNamespace: boolean;
 }
 

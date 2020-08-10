@@ -14,6 +14,9 @@ interface Metadata {
 }
 
 interface Container {
+    name?: string;
+    image?: string;
+    args?: string[];
     resources?: {
         requests?: {
             cpu?: string;

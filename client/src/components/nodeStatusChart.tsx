@@ -2,9 +2,9 @@ import _ from 'lodash';
 import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
-import {TODO} from "../utils/types";
+import {TODO, Node} from "../utils/types";
 
-export default function NodeStatusChart({items}: {items: TODO[]}) {
+export default function NodeStatusChart({items}: {items: Node[]}) {
     const readyCount = _.sumBy(items, x => getReadyStatus(x) === 'True' ? 1 : 0); // eslint-disable-line no-confusing-arrow
 
     return (
