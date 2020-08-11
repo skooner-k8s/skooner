@@ -1,5 +1,6 @@
 import {getToken, logout} from './auth';
 import log from '../utils/log';
+import _ from 'lodash';
 
 const {host, href, hash, search} = window.location;
 const nonHashedUrl = href.replace(hash, '').replace(search, '');
@@ -240,7 +241,7 @@ export function stream(url, cb, args) {
 
     function connect() {
         if (connectCb) connectCb();
-        connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
+        connection = _.debounce(connectStream, 250)(url, cb, onFail, isJson, additionalProtocols);
     }
 
     function onFail() {
