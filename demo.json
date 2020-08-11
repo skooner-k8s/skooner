@@ -1,0 +1,85 @@
+{
+    "tests" : {
+    "bgcolortst" : {
+      "version" : 1,
+      "description" : "background color test",
+      "constants" : {
+      },
+      "rule" : null,
+      "salt" : "bgcolortst",
+      "buckets" : [ {
+        "name" : "inactive",
+        "value" : -1,
+        "description" : "",
+        "payload" : {
+            "stringValue" : ""
+        }
+      }, {
+        "name" : "altColor1",
+        "value" : 0,
+        "description" : "indeed orange for android",
+        "payload" : {
+            "stringValue" : "#ff6600"
+        }
+      }, {
+        "name" : "altColor2",
+        "value" : 1,
+        "description" : "magenta for android >= 5",
+        "payload" : {
+            "stringValue" : "#CD29C0"
+        }
+      }, {
+        "name" : "altColor3",
+        "value" : 2,
+        "description" : "indeed blue for iOS",
+        "payload" : {
+            "stringValue" : "#2164f3"
+        }
+      }, {
+        "name" : "altColor4",
+        "value" : 3,
+        "description" : "green for iOS >= 8",
+        "payload" : {
+            "stringValue" : "#008040"
+        }
+      }],
+      "allocations" : [ {
+        "rule" : "${userAgent.android && userAgent.OS.majorVersion >= 5}",
+        "ranges" : [ {
+          "length" : 1.0,
+          "bucketValue" : 1
+        } ]
+      }, {
+        "rule" : "${userAgent.android}",
+        "ranges" : [ {
+          "length" : 1.0,
+          "bucketValue" : 0
+        } ]
+      }, {
+        "rule" : "${userAgent.IOS && userAgent.OS.majorVersion >= 8}",
+        "ranges" : [ {
+          "length" : 1.0,
+          "bucketValue" : 3
+        } ]
+      }, {
+        "rule" : "${userAgent.IOS}",
+        "ranges" : [ {
+          "length" : 1.0,
+          "bucketValue" : 2
+        } ]
+      }, {
+        "rule" : null,
+        "ranges" : [ {
+          "length" : 1.0,
+          "bucketValue" : -1
+        } ]
+      } ],
+      "testType" : "USER"
+    }
+  },
+  "audit" : {
+        "version" : 1,
+        "updatedBy" : "jack",
+        "updated" : 1379048400000
+  }
+}

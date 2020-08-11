@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include header.html %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{{ page.title }}</title>
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.css">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v0.4.1/dist/bootstrap-toc.min.js"></script>
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/normalize.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/gridism.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/syntax.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/indeed-styles.css">
+        <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles-minimalist.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+    </head>
+    <body data-spy="scroll" data-target="#toc">
+        <div id="blogHeader" class="full-width-wrapper">
+            <div class="container">
+                <div class="row">
+                    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+                        <div class="navbar-header">
+                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#headerNavLinks">
+                                <span class="sr-only">Toggle navigation</span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <a href="https://engineering.indeedblog.com/" class="navbar-brand">
+                                <img src="https://rac4ou2q3g246tjk3rxqbt1c-wpengine.netdna-ssl.com/wp-content/themes/indeedblog/images/ind-eng-logo.png" alt="Indeed Engineering" width="300" scale="0">     
+                            </a>             
+                        </div>
+                        <div id="headerNavLinks" class="collapse navbar-collapse">
+                            <ul class="">
+                                <li id="menu-item-1211" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1211">
+                                    <a href="https://engineering.indeedblog.com/blog">Engineering Blog</a>
+                                </li>
+                                <li id="menu-item-1212" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1212">
+                                    <a href="https://engineering.indeedblog.com/talks">Tech Talks</a>
+                                </li>
+			                    <li id="menu-item-1214" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1214">
+			                        <a href="https://opensource.indeedeng.io/">Open Source</a>
+			                    </li>
+      		                    <li id="menu-item-1213" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-1213">
+      		                        <a href="https://indeed.jobs">Work at Indeed</a>
+      		                    </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <section>
+                <div class="grid">
+                    <div class="unit one-fifth" id="leftnav">
+                        <div id="stickyNav" data-spy="affix" data-offset-bottom="50">
+                            {% include sidenav_items.html %}
+                            <nav id="toc" data-toggle="toc"></nav>
+                             <!--custom script to hide/show the floating page TOC-->
+                            <script>
+                                function hideObject( element ) {
+                                    $( element ).toggle();
+                                }
+                                $( "#navbutton" ).click(function() {
+                                    hideObject( "#toc");
+                                });
+                                $( "#stickyNav" ).attr( "data-offset-top", $( "#blogHeader" ).height()+10 );
+                                $( "#stickyNav" ).attr( "style", "width:" + $( "#leftnav" ).width() + "px;" );
+                                $( window ).resize(function() {
+                                    $( "#stickyNav" ).attr( "style", "width:" + $( "#leftnav" ).width() + "px;" );
+                                    $('#stickyNav').data('bs.affix').options.offset = $('#stickyNav').offset().top;
+                            });
+                            </script>
+                            <!---->
+                        </div>
+                    </div>
+                <div class="unit four-fifths" style="min-height:775px;">
+                    <article>
+                        <h1>{{ page.title }}</h1> 
+                        {{ content }}
+                    </article>
+                </div>
+                <div class="clear"></div>
+                </div>
+            </section>
+            <footer>
+                {% include footer.html %}
+            </footer>
+            </div>
+        <!--{% if page.exclude_toc == nil or page.exclude_toc == false %}
+        <script src="{{ site.baseurl }}/assets/js/toc.js"></script>
+        {% endif %}-->
+    {% include analytics.html %}
+    </body>
+</html>

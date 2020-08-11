@@ -1,0 +1,9 @@
+{% assign buckets = include.buckets | split: ' ' %}
+{% assign ranges = include.ranges | split: ' ' %}
+{% assign values = include.values | split: ' ' %}
+
+<div class="ui-allocation-bar">
+  {% for bucket in buckets %}
+    <span class="ui-allocation-range ui-color{{ values[forloop.index0] }}" style="width: {{ ranges[forloop.index0] }}%;"><span class="ui-allocation-range-lbl">{{ bucket }}<br/>{{ ranges[forloop.index0] }}%</span></span>
+  {% endfor %}  
+</div>
