@@ -140,7 +140,7 @@ export default class Menu extends Base<MenuProps, MenuStates> {
 
                     {showAdd && (
                         <EditorModal
-                            onSave={(x: TODO) => api.apply(x)}
+                            onSave={x => api.apply(x)}
                             onRequestClose={() => this.setState({showAdd: false})}
                         />
                     )}

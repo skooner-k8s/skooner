@@ -11,7 +11,7 @@ import EditSvg from '../art/editSvg';
 import { ApiItem, TODO } from '../utils/types';
 
 interface Props<T extends ApiItem<any, any>> {
-    body: T;
+    body?: T;
     onSave: (item: T) => Promise<boolean>;
     onRequestClose: () => void;
 }
@@ -52,7 +52,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         if (shouldClose) this.close();
     }
 
-    async findDocs(body: T) {
+    async findDocs(body?: T) {
         if (!body || !body.apiVersion || !body.kind) return;
 
         const result: TODO = await getDocDefinitions(body.apiVersion, body.kind);

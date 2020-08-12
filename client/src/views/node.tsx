@@ -67,12 +67,12 @@ export default class NodeView extends Base<Props, State> {
                         )}
                         <div className='charts_itemLabel'>Uptime</div>
                     </div>
-                    
-                    {/* 
+
+                    {/*
                     // @ts-ignore */}
                     <NodeCpuChart items={item && [item]} metrics={metrics && [metrics]} />
 
-                    {/* 
+                    {/*
                     // @ts-ignore */}
                     <NodeRamChart items={item && [item]} metrics={metrics && [metrics]} />
                 </ChartsContainer>

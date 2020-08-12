@@ -5,8 +5,8 @@ import Sorter from './sorter';
 import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {unparseRam, unparseCpu} from '../utils/unitHelpers';
-import {getPodResourcePercent, getPodUsage, getPodResourceValue} from '../utils/metricsHelpers';
-import {Pod, TODO} from "../utils/types";
+import {getPodResourcePercent, getPodUsage, getPodResourceValue, ResourceType} from '../utils/metricsHelpers';
+import {Pod, TODO} from '../utils/types';
 
 interface PodsPanelProps {
     metrics: TODO;
@@ -14,7 +14,7 @@ interface PodsPanelProps {
     items?: Pod[];
     sort?: TODO;
     filter?: TODO;
-    skipNamespace: boolean;
+    skipNamespace?: boolean;
 }
 
 interface PodsPanelStates {
@@ -22,10 +22,15 @@ interface PodsPanelStates {
 
 export default class PodsPanel extends Base<PodsPanelProps, PodsPanelStates> {
     private sortByCpuUsage: TODO;
+
     private sortByCpuRequest: TODO;
+
     private sortByCpuLimit: TODO;
+
     private sortByRamUsage: TODO;
+
     private sortByRamRequest: TODO;
+
     private sortByRamLimit: TODO;
 
     constructor(props: TODO) {
@@ -128,7 +133,7 @@ function getPhaseStyle(phase: string) {
     }
 }
 
-function sortBy(item: TODO, metrics: TODO, resource: string, type: string) {
+function sortBy(item: TODO, metrics: TODO, resource: ResourceType, type: string) {
     const result = getPodResourcePercent(item, metrics, resource, type);
     return result && Number.isFinite(result) ? result : -1;
 }
@@ -137,7 +142,7 @@ function getRestartCount({status}: {status: TODO}) {
     return _.sumBy(status.containerStatuses, 'restartCount');
 }
 
-function getChart(item: TODO, metrics: TODO, resource: string) {
+function getChart(item: TODO, metrics: TODO, resource: ResourceType) {
     const actual = getPodUsage(item, metrics, resource);
 
     return (
@@ -149,7 +154,7 @@ function getChart(item: TODO, metrics: TODO, resource: string) {
     );
 }
 
-function getRawDisplay(item: TODO, metrics: TODO, actual: number | string | null, resource: string) {
+function getRawDisplay(item: TODO, metrics: TODO, actual: number | null, resource: ResourceType) {
     if (!item || !metrics) return <td><LoadingEllipsis /></td>;
 
     const unparser: TODO = resource === 'cpu' ? unparseCpu : unparseRam;
@@ -163,7 +168,13 @@ function getRawDisplay(item: TODO, metrics: TODO, actual: number | string | null
     );
 }
 
-function getPercentDisplay(item: TODO, metrics: TODO, actual: number, resource: string, type: TODO) {
+function getPercentDisplay(
+    item: TODO,
+    metrics: TODO,
+    actual: number,
+    resource: ResourceType,
+    type: string,
+) {
     if (!item || !metrics) return <td className='optional_xsmall'><LoadingEllipsis /></td>;
 
     const request = getPodResourceValue(item, resource, type);

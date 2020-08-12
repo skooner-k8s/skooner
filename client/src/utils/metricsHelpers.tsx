@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {parseRam, parseCpu} from './unitHelpers';
 import {TODO, ApiItem, Pod, Node, Metrics, MetricsUsage} from './types';
 
-type ResourceType = 'cpu' | 'memory'
+export type ResourceType = 'cpu' | 'memory'
 
 export default function getMetrics(items?: ApiItem<any, any>[], metrics?: Metrics[]) {
     if (!items || !metrics) return undefined;
@@ -15,7 +15,13 @@ export default function getMetrics(items?: ApiItem<any, any>[], metrics?: Metric
 
 
 // Node helpers
-export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undefined, resource: ResourceType, type: string, phases: string[]) {
+export function getNodeResourceValue(
+    node: Node | undefined,
+    pods: Pod[] | undefined,
+    resource: ResourceType,
+    type: string,
+    phases: string[],
+) {
     if (!node || !pods) return null;
 
     return _(pods)
@@ -24,13 +30,22 @@ export function getNodeResourceValue(node: Node | undefined, pods: Pod[] | undef
         .sumBy(x => getPodResourceValue(x, resource, type));
 }
 
-export function getNodeResourcePercent(node: Node, pods: Pod[], resource: ResourceType, type: string) {
+export function getNodeResourcePercent(
+    node: Node,
+    pods: Pod[] | undefined,
+    resource: ResourceType,
+    type: string,
+) {
     const used = getNodeResourceValue(node, pods, resource, type, ['Running']);
     const available = getNodeResourcesAvailable(node, resource);
     return used && available ? used / available : null;
 }
 
-export function getNodeUsagePercent(node: Node, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
+export function getNodeUsagePercent(
+    node: Node,
+    metrics: _.Dictionary<Metrics>,
+    resource: ResourceType,
+) {
     const used = getNodeUsage(node, metrics, resource);
     const available = getNodeResourcesAvailable(node, resource);
     return used && available ? used / available : null;
@@ -49,14 +64,19 @@ export function getNodeUsage(node: Node, metrics: _.Dictionary<Metrics>, resourc
 
 
 // Pod helpers
-export function getPodResourcePercent(pod: Pod, metrics: _.Dictionary<Metrics>, resource: ResourceType, type: string) {
+export function getPodResourcePercent(
+    pod: Pod,
+    metrics: _.Dictionary<Metrics>,
+    resource: ResourceType,
+    type: string,
+) {
     const actual = getPodUsage(pod, metrics, resource);
     const request = getPodResourceValue(pod, resource, type);
     return actual ? actual / request : null;
 }
 
 export function getPodUsage(pod: Pod, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
-    if (!pod || !metrics) return null;
+    if (!pod || !metrics) return undefined;
 
     const metric = metrics[pod.metadata.name] || {};
     return _.sumBy(metric.containers, x => parse(resource, x.usage));
