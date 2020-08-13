@@ -1,0 +1,20 @@
+{% assign buckets = include.buckets | split: ' ' %}
+{% assign ranges = include.ranges | split: ' ' %}
+{% assign values = include.values | split: ' ' %}
+
+<div class="ui-allocation-table">{% comment %}Without this extra div, jekyll {% endcomment %}
+  <table>
+    <tr>
+    {% for bucket in buckets %}
+      <th style="width: {{ ranges[forloop.index0] }}%;">{{ bucket }}</th>
+    {% endfor %}  
+    </tr>
+    <tr>
+      {% for bucket in buckets %}
+      <td class="ui-color{{ values[forloop.index0] }}">
+        {{ ranges[forloop.index0] }}%
+      </td>
+      {% endfor %}
+    </tr>
+  </table>
+</div>

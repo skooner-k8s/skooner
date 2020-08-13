@@ -1,0 +1,15 @@
+name: K8dash Kubernetes dashboard by Indeed
+# https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0
+highlighter: rouge
+markdown: kramdown
+kramdown:
+    input: GFM #Enable GitHub Flavored Markdown (fenced code blocks)
+    auto_ids: true
+    hard_wrap: false
+    syntax_highlighter: rouge
+
+    exclude: ['Gemfile', 'Gemfile.lock', 'Rakefile.rb', 'README.md']
+
+# jekyll serve --watch --baseurl=
+# baseurl: "https://indeedeng.github.io/k8dash"
+

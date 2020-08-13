@@ -1,0 +1,71 @@
+
+article {
+    padding: 0 20px 20px;
+    margin: 0 10px;
+}
+aside {
+    padding: 0 0 20px;
+}
+
+aside h1, aside h2, aside h3, aside h4, aside h5, aside h6 {
+    margin-bottom: 5px;
+}
+
+table code {
+    white-space: nowrap;
+    color: #000000;
+    background-color: #E8E8EE;
+}
+
+td {
+    vertical-align: top;
+}
+
+span.smallcode code {
+    font-family: 'Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal';
+    font-size: 12px;
+    white-space: normal;
+}
+
+span.xscode code {
+    font-family: 'Monaco, Bitstream Vera Sans Mono, Lucida Console, Terminal';
+    font-size: 10px;
+    white-space: normal;
+}
+
+span.smallcode,span.xscode a code {
+    color: #39c;
+}
+
+.ui-allocation-bar{
+    display:block;
+    border:1px solid #BBB;
+    overflow:hidden;
+    padding:5px;
+    background-color:#FFF;
+}
+.ui-allocation-range{
+    display:inline-block;
+    float:left;
+    text-align:center;
+    white-space:nowrap;
+    padding:5px 0;
+    overflow:hidden;
+}
+
+.ui-allocation-range-lbl{
+    text-align:center;
+}
+
+.ui-color-1{background-color:#FFED6F;}
+.ui-color0{background-color:#8DD3C7;}
+.ui-color1{background-color:#FFFFB3;}
+.ui-color2{background-color:#BEBADA;}
+.ui-color3{background-color:#FB8072;}
+.ui-color4{background-color:#80B1D3;}
+.ui-color5{background-color:#FDB462;}
+.ui-color6{background-color:#B3DE69;}
+.ui-color7{background-color:#FCCDE5;}
+.ui-color8{background-color:#D9D9D9;}
+.ui-color9{background-color:#BC80BD;}
+.ui-color10{background-color:#CCEBC5;}
