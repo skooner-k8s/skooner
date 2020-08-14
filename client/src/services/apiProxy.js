@@ -120,7 +120,7 @@ export async function streamResult(url, name, cb, errCb) {
             const item = await request(`${url}/${name}`);
 
             if (isCancelled) return;
-            cb(item);
+            _.debounce((item)=>{cb(item)}, 250, {leading: true})(item);
 
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
@@ -216,8 +216,10 @@ export async function streamResults(url, cb, errCb) {
     }
 
     function push() {
-        const values = Object.values(results);
-        cb(values);
+        return _.debounce(() => {
+            const values = Object.values(results);
+            cb(values);
+        }, 250, {leading: true})();
     }
 }
 
@@ -241,7 +243,7 @@ export function stream(url, cb, args) {
 
     function connect() {
         if (connectCb) connectCb();
-        connection = _.debounce(connectStream, 250)(url, cb, onFail, isJson, additionalProtocols);
+        connection = connectStream(url, cb, onFail, isJson, additionalProtocols);
     }
 
     function onFail() {
