@@ -7,33 +7,43 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
+import { PersistentVolumeClaim } from '../utils/types';
 
-const service = api.persistentVolume;
+type State = {
+    item?: PersistentVolumeClaim;
+}
 
-export default class PersistentVolume extends Base {
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+const service = api.persistentVolumeClaim;
+
+export default class PersistentVolumeClaimView extends Base<Props, State> {
     componentDidMount() {
-        const {name} = this.props;
+        const {namespace, name} = this.props;
 
         this.registerApi({
-            item: service.get(name, item => this.setState({item})),
+            item: service.get(namespace, name, item => this.setState({item})),
         });
     }
 
     render() {
-        const {name} = this.props;
+        const {namespace, name} = this.props;
         const {item} = this.state || {};
 
         return (
             <div id='content'>
-                <ItemHeader title={['Persistent Volume', name]} ready={!!item}>
+                <ItemHeader title={['Volume Claim', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
-                            item={item}
+                            item={item!}
                             onSave={x => service.put(x)}
                         />
 
                         <DeleteButton
-                            onDelete={() => service.delete(name)}
+                            onDelete={() => service.delete(namespace, name)}
                         />
                     </>
                 </ItemHeader>
@@ -48,17 +58,13 @@ export default class PersistentVolume extends Base {
                                     {item.spec.storageClassName}
                                 </a>
                             </Field>
-                            <Field name='Claim'>
-                                {item.spec.claimRef && (
-                                    <a href={`#!persistentvolumeclaim/${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}>
-                                        {`${item.spec.claimRef.namespace}/${item.spec.claimRef.name}`}
-                                    </a>
-                                )}
+                            <Field name='Volume'>
+                                <a href={`#!persistentvolume/${item.spec.volumeName}`}>
+                                    {item.spec.volumeName}
+                                </a>
                             </Field>
-                            <Field name='Access Modes' value={item.spec.accessModes && item.spec.accessModes.join(' • ')} />
-                            <Field name='Capacity' value={item.spec.capacity && item.spec.capacity.storage} />
-                            <Field name='Reclaim Policy' value={item.spec.persistentVolumeReclaimPolicy} />
-                            <Field name='Local Path' value={item.spec.local && item.spec.local.path} />
+                            <Field name='Modes' value={item.spec.accessModes.join(' • ')} />
+                            <Field name='Capacity' value={item.status.capacity && item.status.capacity.storage} />
                         </div>
                     )}
                 </div>

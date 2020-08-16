@@ -15,15 +15,30 @@ import Field from '../components/field';
 import PodsPanel from '../components/podsPanel';
 import SaveButton from '../components/saveButton';
 import ScaleButton from '../components/scaleButton';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ChartsContainer from '../components/chartsContainer';
+import { ReplicaSet, Pod, K8sEvent, Metrics } from '../utils/types';
+
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+type State = {
+    podsSort: SortInfo;
+    eventsSort: SortInfo;
+    item?: ReplicaSet;
+    pods?: Pod[];
+    events?: K8sEvent[];
+    metrics?: Metrics[];
+}
 
 const service = api.replicaSet;
 
-export default class ReplicaSet extends Base {
-    state = {
+export default class ReplicaSetView extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
         eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
     };

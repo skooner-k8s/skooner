@@ -2,25 +2,25 @@ import _ from 'lodash';
 import {Base64} from 'js-base64';
 import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
 import log from '../utils/log';
-import { K8sEvent, Namespace, TODO, Metrics } from '../utils/types';
+import { K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding } from '../utils/types';
 
 type DataCallback<T> = (data: T) => void;
 
-const configMap = apiFactoryWithNamespace('', 'v1', 'configmaps');
+const configMap = apiFactoryWithNamespace<ConfigMap>('', 'v1', 'configmaps');
 const event = apiFactoryWithNamespace<K8sEvent>('', 'v1', 'events');
 const namespaceService = apiFactory<Namespace>('', 'v1', 'namespaces');
-const node = apiFactory('', 'v1', 'nodes');
-const persistentVolume = apiFactory('', 'v1', 'persistentvolumes');
+const node = apiFactory<Node>('', 'v1', 'nodes');
+const persistentVolume = apiFactory<PersistentVolume>('', 'v1', 'persistentvolumes');
 const persistentVolumeClaim = apiFactoryWithNamespace('', 'v1', 'persistentvolumeclaims');
-const pod = apiFactoryWithNamespace('', 'v1', 'pods');
+const pod = apiFactoryWithNamespace<Pod>('', 'v1', 'pods');
 const secret = apiFactoryWithNamespace('', 'v1', 'secrets');
 const serviceAccount = apiFactoryWithNamespace('', 'v1', 'serviceaccounts');
 const serviceService = apiFactoryWithNamespace('', 'v1', 'services');
 
-const clusterRole = apiFactory('rbac.authorization.k8s.io', 'v1', 'clusterroles');
-const clusterRoleBinding = apiFactory('rbac.authorization.k8s.io', 'v1', 'clusterrolebindings');
+const clusterRole = apiFactory<ClusterRole>('rbac.authorization.k8s.io', 'v1', 'clusterroles');
+const clusterRoleBinding = apiFactory<ClusterRoleBinding>('rbac.authorization.k8s.io', 'v1', 'clusterrolebindings');
 const role = apiFactoryWithNamespace('rbac.authorization.k8s.io', 'v1', 'roles');
-const roleBinding = apiFactoryWithNamespace('rbac.authorization.k8s.io', 'v1', 'rolebindings');
+const roleBinding = apiFactoryWithNamespace<RoleBinding>('rbac.authorization.k8s.io', 'v1', 'rolebindings');
 
 const daemonSet = apiFactoryWithNamespace('apps', 'v1', 'daemonsets');
 const deployment = apiFactoryWithNamespace('apps', 'v1', 'deployments', true);

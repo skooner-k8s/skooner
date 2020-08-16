@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component, Fragment, ReactNode} from 'react';
 import Menu from './components/menu';
 import {Notifier} from './components/notifier';
 import Error from './components/error';
@@ -8,21 +8,28 @@ import Button from './components/button';
 import LogoSvg from './art/logoSvg';
 import HamburgerSvg from './art/hamburgerSvg';
 
+type State = {
+    content?: ReactNode;
+    contentDate?: number;
+    hasError?: boolean;
+    menuToggled?: boolean;
+}
+
 const genericError = (
     <div id='content'>
         <Error messages={['There was an error and this content was unable to be displayed.']} />
     </div>
 );
 
-class App extends Component {
+class App extends Component<{}, State> {
     componentDidMount() {
-        initRouter((content) => {
+        initRouter((content: ReactNode) => {
             this.setState({content, contentDate: Date.now(), hasError: false});
             window.scrollTo(0, 0);
         });
     }
 
-    componentDidCatch(err, info) { // eslint-disable-line class-methods-use-this
+    componentDidCatch(err: Error, info: any) { // eslint-disable-line class-methods-use-this
         log.error('Error rendering ', {err, info});
         this.setState({hasError: true});
     }

@@ -6,7 +6,7 @@ import EditSvg from '../art/editSvg';
 import { ApiItem } from '../utils/types';
 
 interface SaveButtonProps<T extends ApiItem<any, any>> {
-    item: T;
+    item?: T;
     onSave: (item: T) => Promise<boolean>;
 }
 

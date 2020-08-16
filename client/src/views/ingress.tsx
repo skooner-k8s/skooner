@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {Fragment} from 'react';
 import Base from '../components/base';
 import api from '../services/api';
 import ItemHeader from '../components/itemHeader';
@@ -8,26 +8,36 @@ import MetadataFields from '../components/metadataFields';
 import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
+import { Ingress } from '../utils/types';
 
-const service = api.clusterRole;
+type Props = {
+    namespace: string;
+    name: string;
+}
 
-export default class ClusterRole extends Base {
+type State = {
+    item?: Ingress;
+}
+
+const service = api.ingress;
+
+export default class IngressView extends Base<Props, State> {
     componentDidMount() {
-        const {name} = this.props;
+        const {namespace, name} = this.props;
 
         this.registerApi({
-            item: service.get(name, item => this.setState({item})),
+            item: service.get(namespace, name, item => this.setState({item})),
         });
     }
 
     render() {
-        const {name} = this.props;
+        const {namespace, name} = this.props;
         const {item} = this.state || {};
-        const rules = item && item.rules;
+        const rules = item && item.spec.rules;
 
         return (
             <div id='content'>
-                <ItemHeader title={['Cluster Role', name]} ready={!!item}>
+                <ItemHeader title={['Ingress', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
@@ -35,7 +45,7 @@ export default class ClusterRole extends Base {
                         />
 
                         <DeleteButton
-                            onDelete={() => service.delete(name)}
+                            onDelete={() => service.delete(namespace, name)}
                         />
                     </>
                 </ItemHeader>
@@ -53,30 +63,28 @@ export default class ClusterRole extends Base {
                     <table>
                         <thead>
                             <tr>
-                                <th>Groups</th>
-                                <th>Resources</th>
-                                <th>Non Resource</th>
-                                <th>Verbs</th>
-                                <th>Names</th>
+                                <th>Host</th>
+                                <th>Path</th>
+                                <th>Service Name</th>
+                                <th>Service Port</th>
                             </tr>
                         </thead>
 
-                        <TableBody items={rules} colSpan='4' row={(x, i) => (
-                            <tr key={i}>
-                                <td>{_.map(x.apiGroups, toDiv)}</td>
-                                <td>{_.map(x.resources, toDiv)}</td>
-                                <td>{_.map(x.nonResourceURLs, toDiv)}</td>
-                                <td>{_.map(x.verbs, toDiv)}</td>
-                                <td>{_.map(x.resourceNames, toDiv)}</td>
-                            </tr>
+                        <TableBody items={rules} colSpan={4} row={rule => (
+                            <Fragment key={rule.host}>
+                                {_.map(rule.http.paths, path => (
+                                    <tr key={`${rule.host}:${path.path}`}>
+                                        <td>{rule.host}</td>
+                                        <td>{path.path}</td>
+                                        <td>{path.backend && path.backend.serviceName}</td>
+                                        <td>{path.backend && path.backend.servicePort}</td>
+                                    </tr>
+                                ))}
+                            </Fragment>
                         )} />
                     </table>
                 </div>
             </div>
         );
     }
-}
-
-function toDiv(item) {
-    return (<div key={item}>{item || '""'}</div>);
 }

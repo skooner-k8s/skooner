@@ -10,8 +10,8 @@ import AddSvg from '../art/addSvg';
 import {TODO} from "../utils/types";
 
 interface MenuProps {
-    onClick: TODO;
-    toggled: boolean;
+    onClick: () => void;
+    toggled?: boolean;
 }
 
 interface MenuStates {
@@ -23,7 +23,7 @@ interface MenuItemProps {
     path: string;
     title: string;
     resource: string;
-    onClick: TODO;
+    onClick: () => void;
     additionalPaths?: string[];
 }
 

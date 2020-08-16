@@ -2,18 +2,25 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import ReplicaSetsPanel from '../components/replicaSetsPanel';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import { ReplicaSet } from '../utils/types';
 
-export default class ReplicaSets extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: ReplicaSet[];
+}
+
+export default class ReplicaSets extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
-        this.setState({items: null});
+    setNamespace(namespace: string) {
+        this.setState({items: undefined});
 
         this.registerApi({
             items: api.replicaSet.list(namespace, items => this.setState({items})),

@@ -2,19 +2,27 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import { ClusterRole, ClusterRoleBinding } from '../utils/types';
 
-export default class RoleBindings extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    clusterRoles?: ClusterRole[];
+    clusterRoleBindings?: ClusterRoleBinding[];
+}
+
+export default class RoleBindings extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
     componentDidMount() {
         this.registerApi({
-            role: api.roleBinding.list(null, x => this.setState({clusterRoles: x})),
+            role: api.roleBinding.list(undefined, x => this.setState({clusterRoles: x})),
             clusterRole: api.clusterRoleBinding.list(x => this.setState({clusterRoleBindings: x})),
         });
     }
@@ -45,7 +53,7 @@ export default class RoleBindings extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={4} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}

@@ -2,19 +2,27 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import { Role, ClusterRole } from '../utils/types';
 
-export default class Roles extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    roles?: Role[];
+    clusterRoles?: ClusterRole[];
+}
+
+export default class RolesView extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
     componentDidMount() {
         this.registerApi({
-            role: api.role.list(null, roles => this.setState({roles})),
+            role: api.role.list(undefined, roles => this.setState({roles})),
             clusterRole: api.clusterRole.list(clusterRoles => this.setState({clusterRoles})),
         });
     }
@@ -45,7 +53,7 @@ export default class Roles extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='4' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={4} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}

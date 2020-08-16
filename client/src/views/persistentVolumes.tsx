@@ -2,22 +2,27 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import Sorter, {defaultSortInfo} from '../components/sorter';
+import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import {parseDiskSpace} from '../utils/unitHelpers';
+import {PersistentVolume} from '../utils/types';
 
-export default class PersistentVolumeClaims extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: PersistentVolume[];
+}
+
+export default class PersistentVolumes extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
-        this.setState({items: null});
-
+    componentDidMount() {
         this.registerApi({
-            items: api.persistentVolumeClaim.list(namespace, items => this.setState({items})),
+            items: api.persistentVolume.list(items => this.setState({items})),
         });
     }
 
@@ -28,25 +33,18 @@ export default class PersistentVolumeClaims extends Base {
         return (
             <div id='content'>
                 <Filter
-                    text='Persistent Volume Claims'
+                    text='Persistent Volumes'
                     filter={filter}
                     onChange={x => this.setState({filter: x})}
-                    onNamespaceChange={x => this.setNamespace(x)}
                 />
 
                 <div className='contentPanel'>
                     <table>
                         <thead>
                             <tr>
-                                <MetadataHeaders includeNamespace={true} sort={sort} />
+                                <MetadataHeaders sort={sort} />
                                 <th className='optional_small'>
                                     <Sorter field='status.phase' sort={sort}>Status</Sorter>
-                                </th>
-                                <th className='optional_medium'>
-                                    <Sorter field='spec.storageClassName' sort={sort}>Class Name</Sorter>
-                                </th>
-                                <th className='optional_medium'>
-                                    <Sorter field='spec.volumeName' sort={sort}>Volume</Sorter>
                                 </th>
                                 <th>
                                     <Sorter field={getDiskSpace} sort={sort}>Capacity</Sorter>
@@ -54,17 +52,14 @@ export default class PersistentVolumeClaims extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='9' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={5} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
-                                    includeNamespace={true}
-                                    href={`#!persistentvolumeclaim/${x.metadata.namespace}/${x.metadata.name}`}
+                                    href={`#!persistentvolume/${x.metadata.name}`}
                                 />
                                 <td className='optional_small'>{x.status.phase}</td>
-                                <td className='optional_medium'>{x.spec.storageClassName}</td>
-                                <td className='optional_medium'>{x.spec.volumeName}</td>
-                                <td>{x.status.capacity && x.status.capacity.storage}</td>
+                                <td>{x.spec.capacity && x.spec.capacity.storage}</td>
                             </tr>
                         )} />
                     </table>
@@ -74,6 +69,6 @@ export default class PersistentVolumeClaims extends Base {
     }
 }
 
-function getDiskSpace({status}) {
-    return status.capacity && parseDiskSpace(status.capacity.storage);
+function getDiskSpace({spec}: PersistentVolume) {
+    return spec.capacity && parseDiskSpace(spec.capacity.storage);
 }

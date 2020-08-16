@@ -3,17 +3,24 @@ import Base from '../components/base';
 import Filter from '../components/filter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import {MetadataColumns, MetadataHeaders, TableBody} from '../components/listViewHelpers';
+import { ConfigMap } from '../utils/types';
 
-export default class ConfigMaps extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: ConfigMap[];
+}
+
+export default class ConfigMaps extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
-        this.setState({items: null});
+    setNamespace(namespace: string) {
+        this.setState({items: undefined});
 
         this.registerApi({
             items: api.configMap.list(namespace, items => this.setState({items})),
@@ -41,7 +48,7 @@ export default class ConfigMaps extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} colSpan='4' sort={sort} row={x => (
+                        <TableBody items={filtered} filter={filter} colSpan={4} sort={sort} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}

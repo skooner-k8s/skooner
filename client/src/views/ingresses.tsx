@@ -5,16 +5,23 @@ import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
+import { Ingress } from '../utils/types';
 
-export default class Ingresses extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: Ingress[];
+}
+
+export default class Ingresses extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
-        this.setState({items: null});
+    setNamespace(namespace: string) {
+        this.setState({items: undefined});
 
         this.registerApi({
             items: api.ingress.list(namespace, items => this.setState({items})),
@@ -44,7 +51,7 @@ export default class Ingresses extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='6' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={6} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
@@ -62,12 +69,12 @@ export default class Ingresses extends Base {
     }
 }
 
-function getHosts({spec}, join) {
+function getHosts({spec}: Ingress, join: string) {
     return _.map(spec.rules, y => y.host)
         .join(join);
 }
 
-function getPaths({spec}, join) {
+function getPaths({spec}: Ingress, join: string) {
     return _.flatMap(spec.rules, x => x.http.paths)
         .map(x => x.path)
         .join(join);

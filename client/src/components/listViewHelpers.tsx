@@ -8,11 +8,11 @@ import ResourceSvg from '../art/resourceSvg';
 import {TODO} from '../utils/types';
 
 type TableBodyProps<T> = {
-    items?: T[] | null; 
-    filter: TODO; 
-    colSpan: number; 
-    sort?: SortInfo; 
-    row: (item: T) => ReactNode;
+    items?: T[] | null;
+    filter?: TODO;
+    colSpan: number;
+    sort?: SortInfo;
+    row: (item: T, index: number) => ReactNode;
 }
 
 export function objectMap(items: {[key: string]: string} = {}) {
