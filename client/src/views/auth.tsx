@@ -9,11 +9,16 @@ import Loading from '../components/loading';
 import log from '../utils/log';
 import LogoSvg from '../art/logoSvg';
 
-const LOGIN_MESSAGE = 'Invalid credentials';
-const ERROR_MESSAGE = 'Error occured attempting to login';
+type State = {
+    token: string;
+    useTokenLogin?: boolean;
+}
 
-export default class Auth extends Base {
-    state = {
+const LOGIN_MESSAGE = 'Invalid credentials';
+const ERROR_MESSAGE = 'Error occurred attempting to login';
+
+export default class Auth extends Base<{}, State> {
+    state: State = {
         token: '',
     };
 
@@ -23,7 +28,7 @@ export default class Auth extends Base {
         const state = url.searchParams.get('state');
 
         if (code && state) {
-            oidcLogin(code, state);
+            this.oidcLogin(code, state);
             return;
         }
 
@@ -62,9 +67,30 @@ export default class Auth extends Base {
             </div>
         );
     }
+
+    async oidcLogin(code: string, returnedState: string) {
+        const {state, redirectUri} = JSON.parse(sessionStorage.oidc) || {};
+        delete sessionStorage.oidc;
+
+        window.history.replaceState(null, '', redirectUri);
+
+        if (returnedState !== state) {
+            log.error('Invalid state', {state, returnedState});
+            return;
+        }
+
+        try {
+            const {token} = await api.oidc.post(code, redirectUri);
+            login(token, state);
+        } catch (err) {
+            log.error('OIDC login failed', {err});
+            addUserNotification('Login failed.', true);
+            this.setState({useTokenLogin: true});
+        }
+    }
 }
 
-async function redirectToOidc(authEndpoint) {
+async function redirectToOidc(authEndpoint: string) {
     const state = window.location.href;
     const redirectUri = window.location.href.replace(window.location.hash, '');
     sessionStorage.oidc = JSON.stringify({state, redirectUri});
@@ -73,36 +99,17 @@ async function redirectToOidc(authEndpoint) {
     url.searchParams.set('state', state);
     url.searchParams.set('redirect_uri', redirectUri);
 
+    // @ts-ignore
     window.location = url.href;
 }
 
-async function oidcLogin(code, returnedState) {
-    const {state, redirectUri} = JSON.parse(sessionStorage.oidc) || {};
-    delete sessionStorage.oidc;
-
-    window.history.replaceState(null, null, redirectUri);
-
-    if (returnedState !== state) {
-        log.error('Invalid state', {state, returnedState});
-        return;
-    }
-
-    try {
-        const {token} = await api.oidc.post(code, redirectUri);
-        login(token, state);
-    } catch (err) {
-        log.error('OICD login failed', {err});
-        addUserNotification('Login failed.', true);
-        this.setState({useTokenLogin: true});
-    }
-}
-
-async function login(token, redirectUri) {
+async function login(token: string, redirectUri?: string) {
     try {
         setToken(token);
         await api.testAuth();
 
         if (redirectUri) {
+            // @ts-ignore
             window.location = redirectUri;
         } else {
             window.location.reload();

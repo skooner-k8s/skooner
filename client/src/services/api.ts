@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {Base64} from 'js-base64';
 import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
 import log from '../utils/log';
-import { K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding } from '../utils/types';
+import { K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret } from '../utils/types';
 
 type DataCallback<T> = (data: T) => void;
 
@@ -13,7 +13,7 @@ const node = apiFactory<Node>('', 'v1', 'nodes');
 const persistentVolume = apiFactory<PersistentVolume>('', 'v1', 'persistentvolumes');
 const persistentVolumeClaim = apiFactoryWithNamespace('', 'v1', 'persistentvolumeclaims');
 const pod = apiFactoryWithNamespace<Pod>('', 'v1', 'pods');
-const secret = apiFactoryWithNamespace('', 'v1', 'secrets');
+const secret = apiFactoryWithNamespace<Secret>('', 'v1', 'secrets');
 const serviceAccount = apiFactoryWithNamespace('', 'v1', 'serviceaccounts');
 const serviceService = apiFactoryWithNamespace('', 'v1', 'services');
 

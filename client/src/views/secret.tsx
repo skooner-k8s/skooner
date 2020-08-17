@@ -8,10 +8,20 @@ import MetadataFields from '../components/metadataFields';
 import SecretValue from '../components/secretValue';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
+import { Secret } from '../utils/types';
+
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+type State = {
+    item?: Secret;
+}
 
 const service = api.secret;
 
-export default class Secret extends Base {
+export default class SecretView extends Base<Props, State> {
     componentDidMount() {
         const {namespace, name} = this.props;
 

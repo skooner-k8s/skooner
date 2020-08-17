@@ -2,18 +2,25 @@ import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import Sorter, {defaultSortInfo} from '../components/sorter';
+import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
+import { Secret } from '../utils/types';
 
-export default class Secrets extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    items?: Secret[];
+}
+
+export default class Secrets extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
-        this.setState({items: null});
+    setNamespace(namespace: string) {
+        this.setState({items: undefined});
 
         this.registerApi({
             items: api.secret.list(namespace, items => this.setState({items})),
@@ -42,7 +49,7 @@ export default class Secrets extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='5' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={5} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}

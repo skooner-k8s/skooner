@@ -106,6 +106,7 @@ export interface K8sEvent extends ApiItem<undefined, undefined> {
     type: string;
     reason: string;
     message: string;
+    involvedObject: InvolvedObject;
 }
 
 interface PodSpec {
@@ -287,4 +288,15 @@ interface ReplicaSetStatus {
 }
 
 export interface ReplicaSet extends ApiItem<ReplicaSetSpec, ReplicaSetStatus> {
+}
+
+interface SecretSpec {
+}
+
+interface SecretStatus {
+}
+
+export interface Secret extends ApiItem<SecretSpec, SecretStatus> {
+    type: string;
+    data: {[key: string]: string};
 }

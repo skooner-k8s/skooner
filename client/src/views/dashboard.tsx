@@ -6,25 +6,36 @@ import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
 import NodeStatusChart from '../components/nodeStatusChart';
 import test from '../utils/filterHelper';
-import {defaultSortInfo, sortByDate} from '../components/sorter';
+import {defaultSortInfo, sortByDate, SortInfo} from '../components/sorter';
 import PodStatusChart from '../components/podStatusChart';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import NodeCpuChart from '../components/nodeCpuChart';
 import NodeRamChart from '../components/nodeRamChart';
 import getMetrics from '../utils/metricsHelpers';
+import { K8sEvent, Pod, Metrics, Node } from '../utils/types';
 
-export default class Dashboard extends Base {
-    state = {
+type State = {
+    filter: string;
+    sort: SortInfo;
+    events?: K8sEvent[];
+    pods?: Pod[];
+    podMetrics?: Metrics[];
+    nodes?: Node[];
+    nodeMetrics?: Metrics[];
+}
+
+export default class Dashboard extends Base<{}, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this, sortByDate),
     };
 
     componentDidMount() {
         this.registerApi({
-            events: api.event.list(null, events => this.setState({events})),
-            pods: api.pod.list(null, pods => this.setState({pods})),
-            podMetrics: api.metrics.pods(null, podMetrics => this.setState({podMetrics})),
+            events: api.event.list(undefined, events => this.setState({events})),
+            pods: api.pod.list(undefined, pods => this.setState({pods})),
+            podMetrics: api.metrics.pods(undefined, podMetrics => this.setState({podMetrics})),
             nodes: api.node.list(nodes => this.setState({nodes})),
             nodeMetrics: api.metrics.nodes(nodeMetrics => this.setState({nodeMetrics})),
         });
@@ -63,8 +74,8 @@ export default class Dashboard extends Base {
     }
 }
 
-function filterEvents(events, filter) {
-    if (!events) return null;
+function filterEvents(events?: K8sEvent[], filter?: string) {
+    if (!events) return undefined;
 
     return events
         .filter(x => test(filter, x.involvedObject.name, x.reason, x.message))
