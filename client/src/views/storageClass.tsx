@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 import Base from '../components/base';
 import api from '../services/api';
@@ -8,25 +7,34 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
+import { StorageClass } from '../utils/types';
 
-const service = api.serviceAccount;
+type Props = {
+    name: string;
+}
 
-export default class ServiceAccount extends Base {
+type State = {
+    item?: StorageClass;
+}
+
+const service = api.storageClass;
+
+export default class StorageClassView extends Base<Props, State> {
     componentDidMount() {
-        const {namespace, name} = this.props;
+        const {name} = this.props;
 
         this.registerApi({
-            item: service.get(namespace, name, item => this.setState({item})),
+            item: service.get(name, item => this.setState({item})),
         });
     }
 
     render() {
-        const {namespace, name} = this.props;
+        const {name} = this.props;
         const {item} = this.state || {};
 
         return (
             <div id='content'>
-                <ItemHeader title={['Service Account', namespace, name]} ready={!!item}>
+                <ItemHeader title={['Storage Class', name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
@@ -34,7 +42,7 @@ export default class ServiceAccount extends Base {
                         />
 
                         <DeleteButton
-                            onDelete={() => service.delete(namespace, name)}
+                            onDelete={() => service.delete(name)}
                         />
                     </>
                 </ItemHeader>
@@ -43,13 +51,9 @@ export default class ServiceAccount extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
-                            <Field name='Secrets'>
-                                {_.map(item.secrets, x => (
-                                    <div key={x.name}>
-                                        <a href={`#!secret/${namespace}/${x.name}`}>{x.name}</a>
-                                    </div>
-                                ))}
-                            </Field>
+                            <Field name='Provisioner' value={item.provisioner} />
+                            <Field name='Policy' value={item.reclaimPolicy} />
+                            <Field name='Mode' value={item.volumeBindingMode} />
                         </div>
                     )}
                 </div>

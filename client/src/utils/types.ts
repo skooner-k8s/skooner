@@ -300,3 +300,27 @@ export interface Secret extends ApiItem<SecretSpec, SecretStatus> {
     type: string;
     data: {[key: string]: string};
 }
+
+interface ServiceAccountSpec {
+}
+
+interface ServiceAccountStatus {
+}
+
+export interface ServiceAccount extends ApiItem<ServiceAccountSpec, ServiceAccountStatus> {
+    secrets: {
+        name: string;
+    }[];
+}
+
+interface StorageClassSpec {
+}
+
+interface StorageClassStatus {
+}
+
+export interface StorageClass extends ApiItem<StorageClassSpec, StorageClassStatus> {
+    reclaimPolicy: string;
+    volumeBindingMode: string;
+    provisioner: string;
+}

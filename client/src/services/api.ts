@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {Base64} from 'js-base64';
 import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
 import log from '../utils/log';
-import { K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret } from '../utils/types';
+import { K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret, ServiceAccount, StorageClass } from '../utils/types';
 
 type DataCallback<T> = (data: T) => void;
 
@@ -14,7 +14,7 @@ const persistentVolume = apiFactory<PersistentVolume>('', 'v1', 'persistentvolum
 const persistentVolumeClaim = apiFactoryWithNamespace('', 'v1', 'persistentvolumeclaims');
 const pod = apiFactoryWithNamespace<Pod>('', 'v1', 'pods');
 const secret = apiFactoryWithNamespace<Secret>('', 'v1', 'secrets');
-const serviceAccount = apiFactoryWithNamespace('', 'v1', 'serviceaccounts');
+const serviceAccount = apiFactoryWithNamespace<ServiceAccount>('', 'v1', 'serviceaccounts');
 const serviceService = apiFactoryWithNamespace('', 'v1', 'services');
 
 const clusterRole = apiFactory<ClusterRole>('rbac.authorization.k8s.io', 'v1', 'clusterroles');
@@ -32,7 +32,7 @@ const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
 
 const ingress = apiFactoryWithNamespace('extensions', 'v1beta1', 'ingresses');
 
-const storageClass = apiFactory('storage.k8s.io', 'v1', 'storageclasses');
+const storageClass = apiFactory<StorageClass>('storage.k8s.io', 'v1', 'storageclasses');
 
 const apis = {
     apply,
