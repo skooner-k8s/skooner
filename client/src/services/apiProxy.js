@@ -1,5 +1,6 @@
 import {getToken, logout} from './auth';
 import log from '../utils/log';
+import _ from 'lodash';
 
 const {host, href, hash, search} = window.location;
 const nonHashedUrl = href.replace(hash, '').replace(search, '');
@@ -117,14 +118,15 @@ export async function streamResult(url, name, cb, errCb) {
     async function run() {
         try {
             const item = await request(`${url}/${name}`);
+            const debouncedCallback = _.debounce(item=>cb(item), 250, {leading: true});
 
             if (isCancelled) return;
-            cb(item);
+            debouncedCallback(item);
 
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
-            socket = stream(watchUrl, x => cb(x.object), {isJson: true});
+            socket = stream(watchUrl, x => debouncedCallback(x.object), {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -141,6 +143,10 @@ export async function streamResult(url, name, cb, errCb) {
 
 export async function streamResults(url, cb, errCb) {
     const results = {};
+    const debouncedCallback = _.debounce(() => {
+        const values = Object.values(results);
+        cb(values);
+    }, 250, {leading: true});
     let isCancelled = false;
     let socket;
     run();
@@ -176,7 +182,7 @@ export async function streamResults(url, cb, errCb) {
             results[item.metadata.uid] = item;
         }
 
-        push();
+        debouncedCallback();
     }
 
     function update({type, object}) {
@@ -211,12 +217,7 @@ export async function streamResults(url, cb, errCb) {
                 log.error('Unknown update type', type);
         }
 
-        push();
-    }
-
-    function push() {
-        const values = Object.values(results);
-        cb(values);
+        debouncedCallback();
     }
 }
 
