@@ -61,7 +61,7 @@ function preAuth(req, res, next) {
     const auth = req.header('Authorization');
 
     // If the request already contains an authorization header, pass it through to the client (as a cookie)
-    if (auth) {
+    if (auth && req.method === 'GET' && req.path === '/') {
         const value = auth.replace('Bearer ', '');
         res.cookie('Authorization', value, {maxAge: 60, httpOnly: false});
         console.log('Authorization header found. Passing through to client.');
