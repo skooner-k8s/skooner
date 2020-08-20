@@ -32,7 +32,7 @@
     "yamljs": "^0.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -51,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",
     "eslint": "^6.6.0",
+    "cross-env": "^7.0.2",
     "eslint-config-airbnb": "^17.1.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",

@@ -61,7 +61,7 @@ function preAuth(req, res, next) {
     const auth = req.header('Authorization');
 
     // If the request already contains an authorization header, pass it through to the client (as a cookie)
-    if (auth) {
+    if (auth && req.method === 'GET' && req.path === '/') {
         const value = auth.replace('Bearer ', '');
         res.cookie('Authorization', value, {maxAge: 60, httpOnly: false});
         console.log('Authorization header found. Passing through to client.');
@@ -99,9 +99,23 @@ function onError(err, req, res) {
     console.log('Error in proxied request', err, req.method, req.url);
 }
 
+const SENSITIVE_HEADER_KEYS = ['authorization'];
+
+function scrubHeaders(headers) {
+    const res = Object.assign({}, headers);
+    SENSITIVE_HEADER_KEYS.forEach(function(key) {
+        if (res.hasOwnProperty(key)) {
+            delete res[key];
+        }
+    });
+    return res;
+}
+
 function onProxyRes(proxyRes, req, res) {
-    console.log('VERBOSE REQUEST', req.method, req.protocol, req.hostname, req.url, req.headers);
-    console.log('VERBOSE RESPONSE', proxyRes.statusCode, proxyRes.headers);
+    const reqHeaders = scrubHeaders(req.headers);
+    console.log('VERBOSE REQUEST', req.method, req.protocol, req.hostname, req.url, reqHeaders);
+    const proxyResHeaders = scrubHeaders(proxyRes.headers);
+    console.log('VERBOSE RESPONSE', proxyRes.statusCode, proxyResHeaders);
 }
 
 function handleErrors(err, req, res, next) {

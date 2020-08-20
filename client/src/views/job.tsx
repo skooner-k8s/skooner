@@ -1,30 +1,45 @@
 import React from 'react';
 import Base from '../components/base';
+import ContainersPanel from '../components/containersPanel';
+import PodCpuChart from '../components/podCpuChart';
+import DeleteButton from '../components/deleteButton';
+import EventsPanel from '../components/eventsPanel';
+import Field from '../components/field';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import api from '../services/api';
-import SaveButton from '../components/saveButton';
-import DeleteButton from '../components/deleteButton';
-import EventsPanel from '../components/eventsPanel';
 import PodsPanel from '../components/podsPanel';
-import Chart from '../components/chart';
-import LoadingChart from '../components/loadingChart';
 import PodRamChart from '../components/podRamChart';
-import PodCpuChart from '../components/podCpuChart';
+import SaveButton from '../components/saveButton';
+import api from '../services/api';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
-import ContainersPanel from '../components/containersPanel';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
+import {formatDuration} from '../utils/dates';
+import { Pod, Job, K8sEvent, Metrics } from '../utils/types';
 
-const service = api.daemonSet;
+type Props = {
+    namespace: string;
+    name: string;
+}
 
-export default class DaemonSet extends Base {
-    state = {
+type State = {
+    podsSort: SortInfo;
+    eventsSort: SortInfo;
+    item?: Job;
+    pods?: Pod[];
+    events?: K8sEvent[];
+    metrics?: Metrics[];
+}
+
+const service = api.job;
+
+export default class JobView extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
         eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
-    };
+    }
 
     componentDidMount() {
         const {namespace, name} = this.props;
@@ -47,7 +62,7 @@ export default class DaemonSet extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Daemon Set', namespace, name]} ready={!!item}>
+                <ItemHeader title={['Job', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
@@ -60,19 +75,15 @@ export default class DaemonSet extends Base {
                     </>
                 </ItemHeader>
 
+
                 <ChartsContainer>
                     <div className='charts_item'>
-                        {item ? (
-                            <Chart
-                                used={item.status.numberAvailable}
-                                pending={item.status.numberUnavailable}
-                                available={item.status.desiredNumberScheduled}
-                            />
-                        ) : (
-                            <LoadingChart />
-                        )}
-                        <div className='charts_itemLabel'>Replicas</div>
-                        <div className='charts_itemSubLabel'>Ready vs Requested</div>
+                        <div className='charts_number'>
+                            {item && (item.status.active || 0)}
+                            <span> / </span>
+                            {item && (item.status.succeeded || 0)}
+                        </div>
+                        <div className='charts_itemLabel'>Active / Succeeded</div>
                     </div>
                     <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
                     <PodRamChart items={filteredPods} metrics={filteredMetrics} />
@@ -82,6 +93,9 @@ export default class DaemonSet extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
+                            <Field name='Start Time' value={item.status.startTime} />
+                            <Field name='Completion Time' value={item.status.completionTime} />
+                            <Field name='Duration' value={item.status.completionTime ? formatDuration(Date.parse(item.status.completionTime) - Date.parse(item.status.startTime)) : ''} />
                         </div>
                     )}
                 </div>
@@ -98,8 +112,8 @@ export default class DaemonSet extends Base {
 
                 <div className='contentPanel_header'>Events</div>
                 <EventsPanel
-                    sort={eventsSort}
                     shortList={true}
+                    sort={eventsSort}
                     items={filteredEvents}
                 />
             </div>

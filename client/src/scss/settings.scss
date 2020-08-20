@@ -5,12 +5,22 @@ $color-light: #AAA;
 $color-dark: #888098;
 $color-darkest: #344055;
 
+// $color-white: #333;
+// $color-lightest: #344055; 
+// $color-light: #888098;
+// $color-dark: #AAA;
+// $color-darkest: #F0F0F0;
+
 $color-accent: #326CE5;
 $color-warn: #aaa810;
 $color-error: #B9314F;
-$color-neutral: $color-dark;
 
+$color-neutral: $color-dark;
+$color-background: $color-white;
 $color-font: $color-darkest;
+$color-font-alt: $color-background;
+$color-disabled: $color-lightest;
+$color-border: $color-lightest;
 
 $animation-length: .25s;
 

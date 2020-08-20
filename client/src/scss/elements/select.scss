@@ -6,13 +6,13 @@
 }
 
 div.react-select__control {
-    border: 1px solid $color-lightest;
+    border: 1px solid $color-border;
     border-radius: 0;
     min-height: initial;
+    background-color: transparent;
 }
 
 div.react-select__control:hover {
-    border-color: $color-light;
     box-shadow: none;
 }
 
@@ -29,14 +29,18 @@ div.react-select__option {
 }
 
 div.react-select__option:hover {
-    background-color: $color-lightest;
+    background-color: $color-border;
 }
 
 div.react-select__option--is-selected {
     color: $color-accent;
-    background-color: $color-lightest;
+    background-color: $color-border;
 }
 
 span.react-select__indicator-separator {
     display: none;
+}
+
+div.react-select__single-value {
+    color: $color-font;
 }

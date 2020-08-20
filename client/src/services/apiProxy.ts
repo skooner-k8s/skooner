@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {getToken, logout} from './auth';
 import log from '../utils/log';
 import {ApiItem} from '../utils/types';
@@ -129,16 +130,17 @@ export async function streamResult<T>(url: string, name: string, cb: StreamCallb
     async function run() {
         try {
             const item = await request(`${url}/${name}`);
+            const debouncedCallback = _.debounce(cb, 250, {leading: true});
 
             if (isCancelled) return;
-            cb(item);
+            debouncedCallback(item);
 
             const fieldSelector = encodeURIComponent(`metadata.name=${name}`);
             const watchUrl = `${url}?watch=1&fieldSelector=${fieldSelector}`;
 
             // TODO: fix me
             // @ts-ignore
-            socket = stream<T>(watchUrl, x => cb(x.object), {isJson: true});
+            socket = stream<T>(watchUrl, x => debouncedCallback(x.object), {isJson: true});
         } catch (err) {
             log.error('Error in api request', {err, url});
             if (errCb) errCb(err);
@@ -154,9 +156,15 @@ export async function streamResult<T>(url: string, name: string, cb: StreamCallb
 }
 
 export async function streamResults<T extends ApiItem<any, any>>(url: string, cb: StreamCallback<T[]>, errCb?: ErrorCallback) {
-    const results: {[id: string]: T} = {};
     let isCancelled = false;
     let socket: StreamSocket;
+    const results: {[id: string]: T} = {};
+
+    const debouncedCallback = _.debounce(() => {
+        const values = Object.values(results);
+        cb(values);
+    }, 250, {leading: true});
+
     run();
 
     return cancel;
@@ -190,7 +198,7 @@ export async function streamResults<T extends ApiItem<any, any>>(url: string, cb
             results[item.metadata.uid] = item;
         }
 
-        push();
+        debouncedCallback();
     }
 
     function update({type, object}: {type: string, object: T}) {
@@ -226,12 +234,7 @@ export async function streamResults<T extends ApiItem<any, any>>(url: string, cb
                 log.error('Unknown update type', {type});
         }
 
-        push();
-    }
-
-    function push() {
-        const values = Object.values(results);
-        cb(values);
+        debouncedCallback();
     }
 }
 

@@ -19,7 +19,8 @@ import {defaultSortInfo, SortInfo} from '../components/sorter';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ChartsContainer from '../components/chartsContainer';
-import { ReplicaSet, Pod, K8sEvent, Metrics } from '../utils/types';
+import HpaPanel from '../components/hpaPanel';
+import { ReplicaSet, Pod, K8sEvent, Metrics, Hpa } from '../utils/types';
 
 type Props = {
     namespace: string;
@@ -33,8 +34,8 @@ type State = {
     pods?: Pod[];
     events?: K8sEvent[];
     metrics?: Metrics[];
+    hpa?: Hpa;
 }
-
 const service = api.replicaSet;
 
 export default class ReplicaSetView extends Base<Props, State> {
@@ -51,12 +52,13 @@ export default class ReplicaSetView extends Base<Props, State> {
             pods: api.pod.list(namespace, pods => this.setState({pods})),
             events: api.event.list(namespace, events => this.setState({events})),
             metrics: api.metrics.pods(namespace, metrics => this.setState({metrics})),
+            hpa: api.hpa.get(namespace, name, x => this.setState({hpa: x})),
         });
     }
 
     render() {
         const {namespace, name} = this.props;
-        const {item, pods, metrics, events, podsSort, eventsSort} = this.state;
+        const {item, pods, metrics, events, podsSort, eventsSort, hpa} = this.state;
 
         const filteredPods = filterByOwner(pods, item);
         const filteredEvents = filterByOwner(events, item);
@@ -108,6 +110,8 @@ export default class ReplicaSetView extends Base<Props, State> {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
+
+                <HpaPanel spec={hpa && hpa.spec}/>
 
                 <div className='contentPanel_header'>Pods</div>
                 <PodsPanel

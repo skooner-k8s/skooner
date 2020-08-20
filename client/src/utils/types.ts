@@ -324,3 +324,70 @@ export interface StorageClass extends ApiItem<StorageClassSpec, StorageClassStat
     volumeBindingMode: string;
     provisioner: string;
 }
+
+interface HpaSpec {
+    minReplicas: number;
+    maxReplicas: number;
+    targetCPUUtilizationPercentage: number;
+}
+
+interface HpaStatus {
+}
+
+export interface Hpa extends ApiItem<HpaSpec, HpaStatus> {
+}
+
+export interface Spec {
+
+}
+
+interface CronJobSpec {
+    schedule: string;
+    suspend: string;
+    jobTemplate: {
+        spec: {
+            template: {
+                spec: Spec;
+            }
+        }
+    }
+}
+
+interface CronJobStatus {
+    active?: TODO[];
+    lastScheduleTime: string;
+}
+
+export interface CronJob extends ApiItem<CronJobSpec, CronJobStatus> {
+}
+
+interface DaemonSetSpec {
+    template: {
+        spec: Spec;
+    }
+}
+
+interface DaemonSetStatus {
+    numberAvailable: number;
+    numberUnavailable: number;
+    desiredNumberScheduled: number;
+}
+
+export interface DaemonSet extends ApiItem<DaemonSetSpec, DaemonSetStatus> {
+}
+
+interface JobSpec {
+    template: {
+        spec: Spec;
+    }
+}
+
+interface JobStatus {
+    active?: number;
+    succeeded?: number;
+    startTime: string;
+    completionTime: string;
+}
+
+export interface Job extends ApiItem<JobSpec, JobStatus> {
+}

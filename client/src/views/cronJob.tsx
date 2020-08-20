@@ -14,17 +14,31 @@ import SaveButton from '../components/saveButton';
 import api from '../services/api';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
-import {formatDuration} from '../utils/dates';
+import { Pod, K8sEvent, Metrics, CronJob } from '../utils/types';
 
-const service = api.job;
+type Props = {
+    namespace: string;
+    name: string;
+}
 
-export default class Job extends Base {
-    state = {
+type State = {
+    podsSort: SortInfo;
+    eventsSort: SortInfo;
+    item?: CronJob;
+    pods?: Pod[];
+    events?: K8sEvent[];
+    metrics?: Metrics[];
+}
+
+const service = api.cronJob;
+
+export default class CronJobView extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
         eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
-    }
+    };
 
     componentDidMount() {
         const {namespace, name} = this.props;
@@ -47,7 +61,7 @@ export default class Job extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Job', namespace, name]} ready={!!item}>
+                <ItemHeader title={['Cron Job', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
@@ -60,15 +74,10 @@ export default class Job extends Base {
                     </>
                 </ItemHeader>
 
-
                 <ChartsContainer>
                     <div className='charts_item'>
-                        <div className='charts_number'>
-                            {item && (item.status.active || 0)}
-                            <span> / </span>
-                            {item && (item.status.succeeded || 0)}
-                        </div>
-                        <div className='charts_itemLabel'>Active / Succeeded</div>
+                        <div className='charts_number'>{(item && item.status.active) ? item.status.active.length : 0}</div>
+                        <div className='charts_itemLabel'>Active</div>
                     </div>
                     <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
                     <PodRamChart items={filteredPods} metrics={filteredMetrics} />
@@ -78,14 +87,16 @@ export default class Job extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
-                            <Field name='Start Time' value={item.status.startTime} />
-                            <Field name='Completion Time' value={item.status.completionTime} />
-                            <Field name='Duration' value={item.status.completionTime ? formatDuration(Date.parse(item.status.completionTime) - Date.parse(item.status.startTime)) : ''} />
+                            <Field name='Schedule' value={item.spec.schedule} />
+                            <Field name='Suspend' value={item.spec.suspend} />
+                            <Field name='Last Scheduled' value={item.status.lastScheduleTime} />
                         </div>
                     )}
                 </div>
 
-                <ContainersPanel spec={item && item.spec.template.spec} />
+                <ContainersPanel spec={item && item.spec.jobTemplate.spec.template.spec} />
+
+                {/* TODO: this actually need to be a list of jobs */}
 
                 <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
@@ -97,8 +108,8 @@ export default class Job extends Base {
 
                 <div className='contentPanel_header'>Events</div>
                 <EventsPanel
-                    shortList={true}
                     sort={eventsSort}
+                    shortList={true}
                     items={filteredEvents}
                 />
             </div>

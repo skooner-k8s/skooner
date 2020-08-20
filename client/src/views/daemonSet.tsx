@@ -1,26 +1,42 @@
 import React from 'react';
 import Base from '../components/base';
-import ContainersPanel from '../components/containersPanel';
-import PodCpuChart from '../components/podCpuChart';
-import DeleteButton from '../components/deleteButton';
-import EventsPanel from '../components/eventsPanel';
-import Field from '../components/field';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import PodsPanel from '../components/podsPanel';
-import PodRamChart from '../components/podRamChart';
-import SaveButton from '../components/saveButton';
 import api from '../services/api';
+import SaveButton from '../components/saveButton';
+import DeleteButton from '../components/deleteButton';
+import EventsPanel from '../components/eventsPanel';
+import PodsPanel from '../components/podsPanel';
+import Chart from '../components/chart';
+import LoadingChart from '../components/loadingChart';
+import PodRamChart from '../components/podRamChart';
+import PodCpuChart from '../components/podCpuChart';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
-import {defaultSortInfo} from '../components/sorter';
+import ContainersPanel from '../components/containersPanel';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
+import { DaemonSet, Pod, K8sEvent, Metrics } from '../utils/types';
 
-const service = api.cronJob;
+type Props = {
+    namespace: string;
+    name: string;
+}
 
-export default class CronJob extends Base {
-    state = {
+type State = {
+    podsSort: SortInfo;
+    eventsSort: SortInfo;
+    item?: DaemonSet;
+    pods?: Pod[];
+    events?: K8sEvent[];
+    metrics?: Metrics[];
+}
+
+const service = api.daemonSet;
+
+export default class DaemonSetView extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
         eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
     };
@@ -46,7 +62,7 @@ export default class CronJob extends Base {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Cron Job', namespace, name]} ready={!!item}>
+                <ItemHeader title={['Daemon Set', namespace, name]} ready={!!item}>
                     <>
                         <SaveButton
                             item={item}
@@ -61,8 +77,17 @@ export default class CronJob extends Base {
 
                 <ChartsContainer>
                     <div className='charts_item'>
-                        <div className='charts_number'>{(item && item.status.active) ? item.status.active.length : 0}</div>
-                        <div className='charts_itemLabel'>Active</div>
+                        {item ? (
+                            <Chart
+                                used={item.status.numberAvailable}
+                                pending={item.status.numberUnavailable}
+                                available={item.status.desiredNumberScheduled}
+                            />
+                        ) : (
+                            <LoadingChart />
+                        )}
+                        <div className='charts_itemLabel'>Replicas</div>
+                        <div className='charts_itemSubLabel'>Ready vs Requested</div>
                     </div>
                     <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
                     <PodRamChart items={filteredPods} metrics={filteredMetrics} />
@@ -72,16 +97,11 @@ export default class CronJob extends Base {
                     {!item ? <Loading /> : (
                         <div>
                             <MetadataFields item={item} />
-                            <Field name='Schedule' value={item.spec.schedule} />
-                            <Field name='Suspend' value={item.spec.suspend} />
-                            <Field name='Last Scheduled' value={item.status.lastScheduleTime} />
                         </div>
                     )}
                 </div>
 
-                <ContainersPanel spec={item && item.spec.jobTemplate.spec.template.spec} />
-
-                {/* TODO: this actually need to be a list of jobs */}
+                <ContainersPanel spec={item && item.spec.template.spec} />
 
                 <div className='contentPanel_header'>Pods</div>
                 <PodsPanel
