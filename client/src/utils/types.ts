@@ -109,6 +109,10 @@ export interface K8sEvent extends ApiItem<undefined, undefined> {
     involvedObject: InvolvedObject;
 }
 
+interface ContainerStatus {
+    restartCount: number;
+}
+
 interface PodSpec {
     nodeName: string;
     containers: Container[];
@@ -122,6 +126,7 @@ interface PodStatus {
     qosClass: string;
     message: string;
     conditions?: Condition[];
+    containerStatuses: ContainerStatus[];
 }
 
 export interface Pod extends ApiItem<PodSpec, PodStatus>{

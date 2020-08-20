@@ -65,7 +65,8 @@ export function parseCpu(value?: string) {
     return number * 1000 * 1000 * 1000;
 }
 
-export function unparseCpu(value: string) {
+export function unparseCpu(value: string | number) {
+    // @ts-ignore
     const result = parseFloat(value);
 
     return {

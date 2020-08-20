@@ -65,8 +65,8 @@ export function getNodeUsage(node: Node, metrics: _.Dictionary<Metrics>, resourc
 
 // Pod helpers
 export function getPodResourcePercent(
-    pod: Pod,
-    metrics: _.Dictionary<Metrics>,
+    pod: Pod | undefined,
+    metrics: _.Dictionary<Metrics> | undefined,
     resource: ResourceType,
     type: string,
 ) {
@@ -75,7 +75,11 @@ export function getPodResourcePercent(
     return actual ? actual / request : null;
 }
 
-export function getPodUsage(pod: Pod, metrics: _.Dictionary<Metrics>, resource: ResourceType) {
+export function getPodUsage(
+    pod: Pod | undefined,
+    metrics: _.Dictionary<Metrics> | undefined,
+    resource: ResourceType,
+) {
     if (!pod || !metrics) return undefined;
 
     const metric = metrics[pod.metadata.name] || {};
