@@ -30,8 +30,8 @@ interface Metadata {
     }[];
 }
 
-interface Container {
-    name?: string;
+export interface Container {
+    name: string;
     image?: string;
     args?: string[];
     resources?: {
@@ -395,4 +395,17 @@ interface JobStatus {
 }
 
 export interface Job extends ApiItem<JobSpec, JobStatus> {
+}
+
+
+interface DeploymentSpec {
+    template: {
+        spec: Spec;
+    }
+}
+
+interface DeploymentStatus {
+}
+
+export interface Deployment extends ApiItem<DeploymentSpec, DeploymentStatus> {
 }

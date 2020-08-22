@@ -9,7 +9,7 @@ import {ReplicaSet} from '../utils/types';
 interface ReplicaSetsPanelProps {
     items?: ReplicaSet[];
     sort: SortInfo;
-    filter: {};
+    filter?: string;
     includeNamespace?: boolean;
 }
 
