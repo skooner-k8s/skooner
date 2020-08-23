@@ -10,10 +10,21 @@ import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import {filterByOwner} from '../utils/filterHelper';
+import { Service, K8sEvent } from '../utils/types';
+
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+type State = {
+    item?: Service;
+    events?: K8sEvent[];
+}
 
 const {service} = api;
 
-export default class Service extends Base {
+export default class ServiceView extends Base<Props, State> {
     componentDidMount() {
         const {namespace, name} = this.props;
 

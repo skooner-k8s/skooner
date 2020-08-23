@@ -397,7 +397,6 @@ interface JobStatus {
 export interface Job extends ApiItem<JobSpec, JobStatus> {
 }
 
-
 interface DeploymentSpec {
     template: {
         spec: Spec;
@@ -408,4 +407,27 @@ interface DeploymentStatus {
 }
 
 export interface Deployment extends ApiItem<DeploymentSpec, DeploymentStatus> {
+}
+
+interface Port {
+    name: string;
+    port: number;
+    targetPort: number;
+    protocol: string;
+}
+
+interface ServiceSpec {
+    clusterIP: string;
+    type: string;
+    sessionAffinity: string;
+    selector?: {
+        app: string;
+    }
+    ports: Port[];
+}
+
+interface ServiceStatus {
+}
+
+export interface Service extends ApiItem<ServiceSpec, ServiceStatus> {
 }
