@@ -17,7 +17,7 @@ import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ReplicasChart from '../components/replicasChart';
 import ChartsContainer from '../components/chartsContainer';
-import {ApiItem, K8sEvent, Metrics, Pod} from "../utils/types";
+import {K8sEvent, Metrics, Pod, StatefulSet as StatefulSetInterface} from "../utils/types";
 
 type Props = {
     namespace: string;
@@ -25,7 +25,7 @@ type Props = {
 }
 
 type State = {
-    item?: ApiItem<any, any>;
+    item?: StatefulSetInterface;
     pods?: Pod[];
     events?: K8sEvent[];
     metrics?: Metrics[];
