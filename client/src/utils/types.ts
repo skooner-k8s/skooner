@@ -409,6 +409,18 @@ interface DeploymentStatus {
 export interface Deployment extends ApiItem<DeploymentSpec, DeploymentStatus> {
 }
 
+interface StatefulSetSpec {
+    template: {
+        spec: Spec;
+    }
+}
+
+interface StatefulSetStatus {
+}
+
+export interface StatefulSet extends ApiItem<StatefulSetSpec, StatefulSetStatus> {
+}
+
 interface Port {
     name: string;
     port: number;

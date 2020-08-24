@@ -4,20 +4,37 @@ import Base from '../components/base';
 import Chart from '../components/chart';
 import Filter from '../components/filter';
 import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listViewHelpers';
-import Sorter, {defaultSortInfo} from '../components/sorter';
+import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import Working from '../components/working';
 import LoadingChart from '../components/loadingChart';
 import ChartsContainer from '../components/chartsContainer';
+import {ApiItem, CronJob, DaemonSet, Deployment, Job, StatefulSet, TODO} from "../utils/types";
 
-export default class Workloads extends Base {
-    state = {
+type Props = {
+
+}
+
+type State = {
+    filter: string;
+    sort: SortInfo;
+    cronJobs?: CronJob[] | null;
+    daemonSets?: DaemonSet[] | null;
+    deployments?: Deployment[] | null;
+    jobs?: Job[] | null;
+    statefulSets?: StatefulSet[] | null;
+    sortBy?: string;
+    sortDirection?: string;
+}
+
+export default class Workloads extends Base<Props, State> {
+    state: State = {
         filter: '',
         sort: defaultSortInfo(this),
     };
 
-    setNamespace(namespace) {
+    setNamespace(namespace: string) {
         this.setState({
             cronJobs: null,
             daemonSets: null,
@@ -35,7 +52,7 @@ export default class Workloads extends Base {
         });
     }
 
-    sort(sortBy, sortDirection) {
+    sort(sortBy: string, sortDirection: string) {
         this.setState({sortBy, sortDirection});
     }
 
@@ -68,7 +85,7 @@ export default class Workloads extends Base {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan='5' row={x => (
+                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={5} row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}
@@ -87,7 +104,7 @@ export default class Workloads extends Base {
     }
 }
 
-function ControllerStatusChart({items}) {
+function ControllerStatusChart({items}: {items: ApiItem<any, any>[] | null}) {
     const workingItems = _.filter(items, (item) => {
         const current = getCurrentCount(item);
         const expected = getExpectedCount(item);
@@ -99,7 +116,7 @@ function ControllerStatusChart({items}) {
 
     return (
         <div className='charts_item'>
-            {items ? (
+            {items && count && pending ? (
                 <Chart used={count - pending} pending={pending} available={count} />
             ) : (
                 <LoadingChart />
@@ -110,7 +127,7 @@ function ControllerStatusChart({items}) {
     );
 }
 
-function PodStatusChart({items}) {
+function PodStatusChart({items}: {items: ApiItem<any, any>[] | null}) {
     const current = _.sumBy(items, getCurrentCount);
     const expected = _.sumBy(items, getExpectedCount);
 
@@ -127,7 +144,7 @@ function PodStatusChart({items}) {
     );
 }
 
-function Status({item}) {
+function Status({item}: {item: ApiItem<any, any>}) {
     const current = getCurrentCount(item);
     const expected = getExpectedCount(item);
     const text = `${current} / ${expected}`;
@@ -136,15 +153,15 @@ function Status({item}) {
     return <Working className='contentPanel_warn' text={text} />;
 }
 
-function getCurrentCount({status}) {
+function getCurrentCount({status}: TODO) {
     return status.readyReplicas || status.numberReady || 0;
 }
 
-function getExpectedCount({spec, status}) {
+function getExpectedCount({spec, status}: TODO) {
     return spec.replicas || status.currentNumberScheduled || 0;
 }
 
-function filterControllers(filter, items) {
+function filterControllers(filter: string, items: TODO[]) {
     const results = items
         .flat()
         .filter(x => !!x);
