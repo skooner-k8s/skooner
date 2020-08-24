@@ -14,14 +14,29 @@ import PodCpuChart from '../components/podCpuChart';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
-import {defaultSortInfo} from '../components/sorter';
+import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ReplicasChart from '../components/replicasChart';
 import ChartsContainer from '../components/chartsContainer';
+import {K8sEvent, Metrics, Pod, StatefulSet as StatefulSetInterface} from "../utils/types";
+
+type Props = {
+    namespace: string;
+    name: string;
+}
+
+type State = {
+    item?: StatefulSetInterface;
+    pods?: Pod[];
+    events?: K8sEvent[];
+    metrics?: Metrics[];
+    podsSort?: SortInfo;
+    eventsSort?: SortInfo;
+}
 
 const service = api.statefulSet;
 
-export default class StatefulSet extends Base {
-    state = {
+export default class StatefulSet extends Base<Props, State> {
+    state: State = {
         podsSort: defaultSortInfo(x => this.setState({podsSort: x})),
         eventsSort: defaultSortInfo(x => this.setState({eventsSort: x})),
     };
