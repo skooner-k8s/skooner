@@ -8,7 +8,9 @@ const MetadataFields = ({item}: {[key: string]: any}) => (
         <Field name='Kind' value={item.kind} />
 
         {item.metadata.namespace && (
-            <Field name='Namespace' value={item.metadata.namespace} />
+            <Field name='Namespace'>
+                <a href={"#!namespace/"+item.metadata.namespace}>{item.metadata.namespace}</a>
+            </Field>
         )}
 
         <Field name='Created'>

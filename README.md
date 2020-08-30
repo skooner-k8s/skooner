@@ -1,17 +1,17 @@
-# K8Dash - Kubernetes Dashboard
+# k8dash - Kubernetes Dashboard
 
-K8Dash is the easiest way to manage your Kubernetes cluster. Why?
+k8dash is the easiest way to manage your Kubernetes cluster. Why?
 * Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
 * Blazing fast and Always Live: no need to refresh pages to see the latest
 * Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
 * Easy CRUD and scaling: plus inline API docs to easily understand what each field does
 * 100% responsive (runs on your phone/tablet)
 * Simple OpenID integration: no special proxies required
-* Simple installation: use the provided yaml resources to have K8Dash up and running in under 1 minute (no, seriously)
+* Simple installation: use the provided yaml resources to have k8dash up and running in under 1 minute (no, seriously)
 
 
-## Click the video below to see K8Dash in action
-[![K8Dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "K8Dash - Kubernetes Dashboard")
+## Click the video below to see k8dash in action
+[![k8dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "k8dash - Kubernetes Dashboard")
 
 
 ## Prerequisites
@@ -81,7 +81,7 @@ kubectl describe secret k8dash-sa-token-xxxxx
 Retrieve the `token` value from the secret and enter it into the login screen to access the dashboard.
 
 ## Running k8dash with OpenId Connect (oidc)
-K8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
+k8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
 
 To learn more about configuring a cluster for OIDC, check out these great links
 + [https://kubernetes.io/docs/reference/access-authn-authz/authentication/](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
@@ -109,7 +109,7 @@ kubectl apply -f https://raw.githubusercontent.com/herbrandson/k8dash/master/kub
 
 Additionally, there are a few other OIDC options you can provide via environment variables. First is `OIDC_SCOPES`. The default value for this value is `openid email`, but additional scopes can also be added using something like `OIDC_SCOPES="openid email groups"`.
 
-The other option is `OIDC_METADATA`. K8Dash uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a json string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
+The other option is `OIDC_METADATA`. k8dash uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a json string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
 
 ## Running k8dash with NodePort
 If you do not have an ingress server setup, you can utilize a NodePort service as configured in the [kubernetes-k8dash-nodeport.yaml](https://raw.githubusercontent.com/herbrandson/k8dash/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
@@ -123,7 +123,7 @@ k8dash     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
 ```
 
 ## Metrics
-K8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
+k8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
@@ -136,7 +136,7 @@ Installing and running [minikube](https://kubernetes.io/docs/tasks/tools/install
 Once minikube is installed, you can run it with the command `minikube start --driver=docker`
 + Once the cluster is up and running, create some login credentials as described [above](https://github.com/indeedeng/k8dash#logging-in)
 
-## K8dash is made up of 2 parts. The server and the client.
+## k8dash is made up of 2 parts. The server and the client.
 
 ### Server
 To run the server, run `npm i` from the `/server` directory to install dependencies and then `npm start` to run the server.
