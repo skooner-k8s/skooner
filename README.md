@@ -15,7 +15,7 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
 
 
 ## Prerequisites
-+ A running Kubernetes cluster
++ A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/))
 + [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
 + A Kubernetes cluster configured for [OpenId Connect](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens) authentication (optional)
 
