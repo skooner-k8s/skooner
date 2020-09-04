@@ -76,24 +76,24 @@ function getName({kind, namespace, name} : InvolvedObject) {
 
 function getHref(kind: string, namespace: string, name: string) {
     switch (kind) {
-        case 'ClusterRole': return `/#!clusterrole/${name}`;
-        case 'ClusterRoleBinding': return `/#!clusterrolebinding/${name}`;
-        case 'ConfigMap': return `/#!configmap/${namespace}/${name}`;
-        case 'DaemonSet': return `/#!workload/daemonset/${namespace}/${name}`;
-        case 'Deployment': return `/#!workload/deployment/${namespace}/${name}`;
-        case 'Ingress': return `/#!ingress/${namespace}/${name}`;
-        case 'Node': return `/#!node/${name}`;
-        case 'PersistentVolume': return `/#!persistentvolume/${name}`;
-        case 'PersistentVolumeClaim': return `/#!persistentvolumeclaim/${namespace}/${name}`;
-        case 'Pod': return `/#!pod/${namespace}/${name}`;
-        case 'ReplicaSet': return `/#!replicaset/${namespace}/${name}`;
-        case 'Role': return `/#!role/${namespace}/${name}`;
-        case 'RoleBinding': return `/#!rolebinding/${namespace}/${name}`;
-        case 'Secret': return `/#!secret/${namespace}/${name}`;
-        case 'Service': return `/#!service/${namespace}/${name}`;
-        case 'ServiceAccount': return `/#!serviceaccount/${namespace}/${name}`;
-        case 'StatefulSet': return `/#!workload/statefulset/${namespace}/${name}`;
-        case 'StorageClass': return `/#!storageclass/${name}`;
+        case 'ClusterRole': return `#!clusterrole/${name}`;
+        case 'ClusterRoleBinding': return `#!clusterrolebinding/${name}`;
+        case 'ConfigMap': return `#!configmap/${namespace}/${name}`;
+        case 'DaemonSet': return `#!workload/daemonset/${namespace}/${name}`;
+        case 'Deployment': return `#!workload/deployment/${namespace}/${name}`;
+        case 'Ingress': return `#!ingress/${namespace}/${name}`;
+        case 'Node': return `#!node/${name}`;
+        case 'PersistentVolume': return `#!persistentvolume/${name}`;
+        case 'PersistentVolumeClaim': return `#!persistentvolumeclaim/${namespace}/${name}`;
+        case 'Pod': return `#!pod/${namespace}/${name}`;
+        case 'ReplicaSet': return `#!replicaset/${namespace}/${name}`;
+        case 'Role': return `#!role/${namespace}/${name}`;
+        case 'RoleBinding': return `#!rolebinding/${namespace}/${name}`;
+        case 'Secret': return `#!secret/${namespace}/${name}`;
+        case 'Service': return `#!service/${namespace}/${name}`;
+        case 'ServiceAccount': return `#!serviceaccount/${namespace}/${name}`;
+        case 'StatefulSet': return `#!workload/statefulset/${namespace}/${name}`;
+        case 'StorageClass': return `#!storageclass/${name}`;
         default: return undefined;
     }
 }
