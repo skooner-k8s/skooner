@@ -13,3 +13,5 @@ kramdown:
 # jekyll serve --watch --baseurl=
 # baseurl: "https://indeedeng.github.io/k8dash"
 
+
+theme: jekyll-theme-tactile
