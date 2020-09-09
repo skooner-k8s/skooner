@@ -120,14 +120,20 @@ function oidcFactory() {
     };
 }
 
+let isApiRequestInProgress = false;
+
 function metrics(url: string, cb: DataCallback<Metrics[]>) {
     const handel = setInterval(getMetrics, 10000);
     getMetrics();
 
     async function getMetrics() {
         try {
-            const metric = await request(url);
-            cb(metric.items || metric);
+            if (!isApiRequestInProgress) {
+                isApiRequestInProgress = true;
+                const metric = await request(url);
+                isApiRequestInProgress = false;
+                cb(metric.items || metric);
+            }
         } catch (err) {
             log.error('No metrics', {err, url});
         }
