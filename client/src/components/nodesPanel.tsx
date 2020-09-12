@@ -119,13 +119,8 @@ export default class NodesPanel extends Base<NodesPanelProps, NodesPanelStates> 
 
 
 /** Simple mapping between ready statuses and an UTF-8 symbol character */
-const statusesToUtf8: {[key: string]: string} = {True: '\u2713', False: '\uD83D\uDEC7', Unknown: '\u003F'};
+const statusesToUtf8: {[key: string]: string} = {True: '\u2713', False: 'X', Unknown: '?'};
 
-/**
- *
- * @param statusTxt {*statusTxt a status text (as returned by getReadyStatus for example) }
- * @returns a dedicated span element with an UTF-8 symbol representing the status
- */
 function statusSymbol(statusTxt?: string) {
     const cssClass = `node-ready-status-${statusTxt}`;
     const utf8Symbol = statusTxt && (statusesToUtf8[statusTxt] || statusesToUtf8.Unknown);

@@ -74,6 +74,6 @@ export default class Donut extends Base<Props, State> {
 function getNextStep(target: number, current: number) {
     const diff = current - target;
     const absDiff = Math.abs(diff);
-    const change = Math.min(absDiff, 0.02);
+    const change = Math.min(absDiff, 0.03);
     return diff > 0 ? current - change : current + change;
 }

@@ -40,7 +40,7 @@ html {
 }
 
 #menu {
-    background-color: $color-lightest;
+    background-color: $color-menu;
     padding: 8px;
 }
 
@@ -62,8 +62,10 @@ html {
 }
 
 .titleBar_logo {
-	width: 80px;
-	height: 80px;
+	fill: $color-logo;
+	width: auto;
+	height: 45px;
+	margin-top: 4px
 }
 
 button.titleBar_hamburger {
@@ -71,7 +73,7 @@ button.titleBar_hamburger {
 }
 
 .titleBar_hamburger > svg {
-	fill: $color-white;
+	fill: #fff;
 }
 
 .smallText {
@@ -85,12 +87,12 @@ button.titleBar_hamburger {
 
 .node-ready-status-True {
   @extend %node-ready-status-shared;
-  color: green;
+  color: $color-ok;
 }
 
 .node-ready-status-False {
   @extend %node-ready-status-shared;
-  color: orange;
+  color: $color-warn;
 }
 
 .node-ready-status-Unknown {
@@ -99,7 +101,7 @@ button.titleBar_hamburger {
 }
 
 .node-master {
-	color: $color-accent;
+	color: $color-icon;
 }
 
 .center {
@@ -144,7 +146,7 @@ button.titleBar_hamburger {
 		z-index: 200;
 		width: 72px;
 		overflow-y: scroll;
-		box-shadow: 0 0 5px 0 $color-light;
+		box-shadow: $box-shadow;
 
 		transform: translateX(-80px);
     	transition: transform 0.33s;
@@ -156,5 +158,9 @@ button.titleBar_hamburger {
 
 	button.titleBar_hamburger {
 		display: initial;
+	}
+
+	.titleBar_logo {
+		height: 35px;
 	}
 }

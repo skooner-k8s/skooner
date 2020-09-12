@@ -1,28 +1,29 @@
 
-$color-white: #FFF;
 $color-lightest: #F0F0F0;
 $color-light: #AAA;
 $color-dark: #888098;
 $color-darkest: #344055;
 
-// $color-white: #333;
-// $color-lightest: #344055; 
-// $color-light: #888098;
-// $color-dark: #AAA;
-// $color-darkest: #F0F0F0;
+$color-accent: #551A8B;
+$color-ok: #32936F; //#1F570F;
+$color-warn: #EDAE49; // #A38F34;
+$color-error: #D1495B; //#8A4441;
 
-$color-accent: #326CE5;
-$color-warn: #aaa810;
-$color-error: #B9314F;
-
-$color-neutral: $color-dark;
-$color-background: $color-white;
+$color-logo: #fff;
+$color-background: #fff;
 $color-font: $color-darkest;
-$color-font-alt: $color-background;
 $color-disabled: $color-lightest;
 $color-border: $color-lightest;
+$color-menu: $color-lightest;
+
+$color-link: $color-accent;
+$color-icon: $color-accent;
+$color-icon_active: $color-accent;
+$color-icon_inactive: $color-dark;
+$color-font-alt: $color-background;
 
 $animation-length: .25s;
+$box-shadow: 0 0 4px 0 $color-light;
 
 $font: sans-serif;
 $font-size-small: 7pt;
@@ -34,3 +35,27 @@ $font-size-xlarge: 100px;
 $media-xsmall: 700px;
 $media-small: 812px;
 $media-medium: 1200px;
+
+
+// DARK MODE
+// $color-lightest: #3d3d3d;
+// $color-light: #9c9c9c;
+// $color-dark: #a8a8a8;
+// $color-darkest: #dadada;
+
+// $color-logo: #fff;
+// $color-background: #2e2e2e;
+// $color-font: $color-darkest;
+// $color-disabled: $color-lightest;
+// $color-border: $color-lightest;
+// $color-menu: $color-lightest;
+
+// $color-link: $color-ok;
+// $color-icon: $color-dark;
+// $color-icon_active: $color-accent;
+// $color-icon_inactive: $color-lightest;
+// $color-font-alt: #fff;
+
+// $box-shadow: 0 0 1px 0 $color-dark;
+
+// // TODO: fix "Apply" button

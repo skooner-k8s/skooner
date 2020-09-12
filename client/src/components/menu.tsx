@@ -132,7 +132,7 @@ export default class Menu extends Base<MenuProps, MenuStates> {
                     <Group>
                         <div className='menu_itemApply'>
                             <button className='menu_item button_clear' onClick={() => { this.setState({showAdd: true}); onClick(); }}>
-                                <AddSvg className='menu_icon' />
+                                <AddSvg />
                                 <div className='menu_title'>Apply</div>
                             </button>
                         </div>
@@ -174,7 +174,7 @@ function MenuItem(props: MenuItemProps) {
 
     return (
         <a href={`#!${path}`} title={title} className={className} onClick={onClick}>
-            <ResourceSvg className='menu_icon' resource={resource} />
+            <ResourceSvg resource={resource} />
             <span className='menu_title'>{title}</span>
         </a>
     );

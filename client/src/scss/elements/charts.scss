@@ -20,7 +20,7 @@ $ct-series-colors: (
 
 .charts_item {
     color: $color-dark;
-    box-shadow: 0 0 5px 0 $color-light;
+    box-shadow: $box-shadow;
     background-color: $color-background;
     display: flex;
     justify-content: space-around;

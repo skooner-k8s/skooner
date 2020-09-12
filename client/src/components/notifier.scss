@@ -6,12 +6,11 @@
 	left: 0;
 	right: 0;
 	z-index: 1000;
-	box-shadow: 0 10px 35px 0 $color-dark;
+	box-shadow: 0 10px 35px 0 #000;
 }
 
 .notifier_item {
 	padding: 1.5rem;
-	color: $color-font-alt;
 
 	display: flex;
 	align-items: center;
@@ -24,7 +23,7 @@
 
 .notifier_message {
 	@extend .notifier_item;
-	background: $color-darkest;
+	background: $color-menu;
 }
 
 .notifier_body {

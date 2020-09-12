@@ -1,7 +1,7 @@
 @import '../scss/settings.scss';
 
 .contentPanel {
-    box-shadow: 0 0 5px 0 $color-light;
+    box-shadow: $box-shadow;
     margin-bottom: 35px;
     padding: 0 20px 10px 20px;
     overflow: scroll;
