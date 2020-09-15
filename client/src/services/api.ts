@@ -120,9 +120,8 @@ function oidcFactory() {
     };
 }
 
-let isApiRequestInProgress = false;
-
 function metrics(url: string, cb: DataCallback<Metrics[]>) {
+    let isApiRequestInProgress = false;
     const handel = setInterval(getMetrics, 10000);
     getMetrics();
 
@@ -130,9 +129,13 @@ function metrics(url: string, cb: DataCallback<Metrics[]>) {
         try {
             if (!isApiRequestInProgress) {
                 isApiRequestInProgress = true;
-                const metric = await request(url);
+                try {
+                    const metric = await request(url);
+                    cb(metric.items || metric);
+                } catch (err) {
+                    log.error('Unable to send request', {err});
+                }
                 isApiRequestInProgress = false;
-                cb(metric.items || metric);
             }
         } catch (err) {
             log.error('No metrics', {err, url});
