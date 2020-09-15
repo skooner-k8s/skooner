@@ -134,8 +134,9 @@ function metrics(url: string, cb: DataCallback<Metrics[]>) {
                     cb(metric.items || metric);
                 } catch (err) {
                     log.error('Unable to send request', {err});
+                } finally {
+                    isApiRequestInProgress = false;
                 }
-                isApiRequestInProgress = false;
             }
         } catch (err) {
             log.error('No metrics', {err, url});
