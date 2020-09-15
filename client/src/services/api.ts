@@ -121,13 +121,23 @@ function oidcFactory() {
 }
 
 function metrics(url: string, cb: DataCallback<Metrics[]>) {
+    let isApiRequestInProgress = false;
     const handel = setInterval(getMetrics, 10000);
     getMetrics();
 
     async function getMetrics() {
         try {
-            const metric = await request(url);
-            cb(metric.items || metric);
+            if (!isApiRequestInProgress) {
+                isApiRequestInProgress = true;
+                try {
+                    const metric = await request(url);
+                    cb(metric.items || metric);
+                } catch (err) {
+                    log.error('Unable to send request', {err});
+                } finally {
+                    isApiRequestInProgress = false;
+                }
+            }
         } catch (err) {
             log.error('No metrics', {err, url});
         }
