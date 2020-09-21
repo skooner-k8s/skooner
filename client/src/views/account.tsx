@@ -21,7 +21,7 @@ const Account = () => (
 
         <div className='contentPanel'>
             <h3>Learn More</h3>
-            <div>Follow K8dash on <a href='https://github.com/herbrandson/k8dash'>GitHub</a></div>
+            <div>Follow K8dash on <a href='https://github.com/indeedeng/k8dash'>GitHub</a></div>
             <div>or at <a href='https://hub.docker.com/r/herbrandson/k8dash'>DockerHub</a></div>
         </div>
 
