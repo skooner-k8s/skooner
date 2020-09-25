@@ -1,29 +1,29 @@
 
-$color-lightest: #F0F0F0;
-$color-light: #AAA;
-$color-dark: #888098;
-$color-darkest: #344055;
-
-$color-accent: #551A8B;
+$color-accent: #6822aa;
 $color-ok: #32936F; //#1F570F;
-$color-warn: #EDAE49; // #A38F34;
+$color-warn: #A38F34; // #A38F34;
 $color-error: #D1495B; //#8A4441;
 
-$color-logo: #fff;
-$color-background: #fff;
-$color-font: $color-darkest;
+$color-lightest: var(--color-lightest);
+$color-light: var(--color-light);
+$color-dark: var(--color-dark);
+
+$color-font: var(--color-font);
 $color-disabled: $color-lightest;
 $color-border: $color-lightest;
 $color-menu: $color-lightest;
 
-$color-link: $color-accent;
-$color-icon: $color-accent;
-$color-icon_active: $color-accent;
-$color-icon_inactive: $color-dark;
-$color-font-alt: $color-background;
+$color-background: var(--color-background);
+$color-link: var(--color-link);
+$color-font-alt: var(--color-font-alt);
 
+$color-icon: var(--color-icon);
+$color-icon-active: var(--color-icon-active);
+$color-icon-inactive: var(--color-icon-inactive);
+$color-box-shadow: var(--color-box-shadow);
+
+$box-shadow: 0 0 4px 0 $color-box-shadow;
 $animation-length: .25s;
-$box-shadow: 0 0 4px 0 $color-light;
 
 $font: sans-serif;
 $font-size-small: 7pt;
@@ -36,26 +36,34 @@ $media-xsmall: 700px;
 $media-small: 812px;
 $media-medium: 1200px;
 
+#root {
+    --color-lightest: #F0F0F0;
+    --color-light: #AAA;
+    --color-dark: #888098;
 
-// DARK MODE
-// $color-lightest: #3d3d3d;
-// $color-light: #9c9c9c;
-// $color-dark: #a8a8a8;
-// $color-darkest: #dadada;
+    --color-font: #344055;
+    --color-background: #fff;
+    --color-font-alt: #fff;
+    --color-link: #{$color-accent};
+    --color-box-shadow: #{$color-light};
+    --color-icon: #{$color-accent};
+    --color-icon-active: #{$color-accent};
+    --color-icon-inactive: #{$color-dark};
+}
 
-// $color-logo: #fff;
-// $color-background: #2e2e2e;
-// $color-font: $color-darkest;
-// $color-disabled: $color-lightest;
-// $color-border: $color-lightest;
-// $color-menu: $color-lightest;
+#root.dark-mode {
+    --color-lightest: #3d3d3d;
+    --color-light: #9c9c9c;
+    --color-dark: #a8a8a8;
 
-// $color-link: $color-ok;
-// $color-icon: $color-dark;
-// $color-icon_active: $color-accent;
-// $color-icon_inactive: $color-lightest;
-// $color-font-alt: #fff;
+    --color-font: #dadada;
+    --color-background: #2e2e2e;
+    --color-font-alt: #fff;
+    --color-link: #{$color-warn};
+    --color-box-shadow: #{$color-dark};
+    --color-icon: #{$color-dark};
+    --color-icon-active: #{$color-accent};
+    --color-icon-inactive: #{$color-lightest};
+}
 
-// $box-shadow: 0 0 1px 0 $color-dark;
-
-// // TODO: fix "Apply" button
+// TODO: fix "Apply" button

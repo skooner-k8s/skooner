@@ -17,7 +17,7 @@
 	transition-property: opacity;
 
     svg {
-        fill: $color-light;
+        fill: $color-disabled;
         width: 6px;
         height: 6px;
     }
@@ -32,5 +32,5 @@
 }
 
 svg.sorter_active {
-    fill: $color-darkest;
+    fill: $color-light;
 }

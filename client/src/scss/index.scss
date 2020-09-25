@@ -22,16 +22,16 @@ html, body, #root {
 }
 
 html {
+	min-width: 320px;
+	font-weight: 300;
 	font-family: $font;
 	font-size: $font-size;
-	font-weight: 300;
-	color: $color-font;
-	min-width: 320px;
 }
 
 #root {
 	display: flex;
 	flex-direction: column;
+	color: $color-font;
 }
 
 #shell {
@@ -62,7 +62,7 @@ html {
 }
 
 .titleBar_logo {
-	fill: $color-logo;
+	fill: #fff;
 	width: auto;
 	height: 45px;
 	margin-top: 4px
@@ -79,6 +79,10 @@ button.titleBar_hamburger {
 .smallText {
     color: $color-light;
     font-size: $font-size-small;
+}
+
+.metadata-type {
+	margin-top: 2px;
 }
 
 %node-ready-status-shared {
