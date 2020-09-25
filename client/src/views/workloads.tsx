@@ -116,7 +116,7 @@ function ControllerStatusChart({items}: {items: ApiItem<any, any>[] | null}) {
 
     return (
         <div className='charts_item'>
-            {items && count && pending ? (
+            {items && count != null && pending != null ? (
                 <Chart used={count - pending} pending={pending} available={count} />
             ) : (
                 <LoadingChart />
