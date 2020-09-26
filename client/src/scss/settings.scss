@@ -22,7 +22,8 @@ $color-icon-active: var(--color-icon-active);
 $color-icon-inactive: var(--color-icon-inactive);
 $color-box-shadow: var(--color-box-shadow);
 
-$box-shadow: 0 0 4px 0 $color-box-shadow;
+$box-shadow-size: var(--box-shadow-size);
+$box-shadow: 0 0 $box-shadow-size 0 $color-box-shadow;
 $animation-length: .25s;
 
 $font: sans-serif;
@@ -36,7 +37,7 @@ $media-xsmall: 700px;
 $media-small: 812px;
 $media-medium: 1200px;
 
-#root {
+body {
     --color-lightest: #F0F0F0;
     --color-light: #AAA;
     --color-dark: #888098;
@@ -49,9 +50,11 @@ $media-medium: 1200px;
     --color-icon: #{$color-accent};
     --color-icon-active: #{$color-accent};
     --color-icon-inactive: #{$color-dark};
+
+    --box-shadow-size: 4px;
 }
 
-#root.dark-mode {
+body.dark-mode {
     --color-lightest: #3d3d3d;
     --color-light: #9c9c9c;
     --color-dark: #a8a8a8;
@@ -64,6 +67,6 @@ $media-medium: 1200px;
     --color-icon: #{$color-dark};
     --color-icon-active: #{$color-accent};
     --color-icon-inactive: #{$color-lightest};
-}
 
-// TODO: fix "Apply" button
+    --box-shadow-size: 1px;
+}

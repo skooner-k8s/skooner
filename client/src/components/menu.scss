@@ -62,6 +62,12 @@ a.menu_itemSelected, a.menu_itemSelected:visited {
 .menu_itemApply {
     display: flex;
     justify-content: center;
+
+    button.menu_item {
+        svg {
+            fill: $color-dark;
+        }
+    }
 }
 
 .menu_subMenu a:nth-child(1) {
