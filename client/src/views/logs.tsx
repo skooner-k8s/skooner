@@ -21,6 +21,7 @@ type State = {
     item?: Pod;
     containers?: string[];
     container?: string;
+    initContainers?: string[];
     filter?: string;
 }
 
@@ -52,7 +53,14 @@ export default class Logs extends Base<Props, State> {
 
     onPod(pod: Pod) {
         const containers = pod.spec.containers.map(x => x.name);
-        this.setState({containers});
+        let initContainers: string[] = [];
+
+        if (pod.spec.initContainers) {
+            initContainers = pod.spec.initContainers.map(x => x.name);
+        }
+
+
+        this.setState({containers, initContainers });
         this.setContainer(containers[0]);
     }
 
@@ -79,13 +87,23 @@ export default class Logs extends Base<Props, State> {
 
     render() {
         const {namespace, name} = this.props;
-        const {items, container, containers = [], filter = '', showPrevious = false} = this.state;
+        const {items, container, containers = [], initContainers = [], filter = '', showPrevious = false} = this.state;
 
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
 
-        const options = containers.map(x => ({value: x, label: x}));
-        const selected = options.find(x => x.value === container);
+        const containerOptions = containers.map(x => ({ value: x, label: x }));
+        const initContainerOptions = initContainers.map(x => ({ value: x, label: x }));
+
+        const options = [{
+            label: 'Containers',
+            options: containerOptions
+        }, {
+            label: 'Init Containers',
+            options: initContainerOptions
+        }];
+
+        const selected = [...containerOptions, ...initContainerOptions].find((x) => x.value == container);
 
         return (
             <div id='content'>
