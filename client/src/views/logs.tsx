@@ -9,6 +9,7 @@ import InputFilter from '../components/inputFilter';
 import Loading from '../components/loading';
 import api from '../services/api';
 import { Pod } from '../utils/types';
+import Button from '../components/button';
 
 type Props = {
     namespace: string;
@@ -85,6 +86,21 @@ export default class Logs extends Base<Props, State> {
         });
     }
 
+    startDownloadLog = () => {
+        const {name} = this.props;
+        const {items} = this.state;
+        const blob = new Blob(items, {
+            type: 'text/plain;charset=utf8',
+        });
+        const url = window.URL.createObjectURL(blob);
+
+        const element = document.createElement('a');
+        element.setAttribute('href', url);
+        element.setAttribute('download', `${name}.log`);
+        element.click();
+        window.URL.revokeObjectURL(url);
+    };
+
     render() {
         const {namespace, name} = this.props;
         const {items, container, containers = [], initContainers = [], filter = '', showPrevious = false} = this.state;
@@ -133,10 +149,19 @@ export default class Logs extends Base<Props, State> {
                         <div className='logs_showPreviousLabel'>Previous</div>
                     </label>
 
+
                     <InputFilter
                         filter={filter}
                         onChange={x => this.setState({filter: x})}
                     />
+
+                    <Button
+                        className="log_downloadButton"
+                        disabled={!items}
+                        onClick={this.startDownloadLog}
+                    >
+                        Download
+                    </Button>
                 </div>
 
                 <div className='contentPanel'>
