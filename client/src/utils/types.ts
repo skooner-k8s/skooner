@@ -116,6 +116,7 @@ interface ContainerStatus {
 interface PodSpec {
     nodeName: string;
     containers: Container[];
+    initContainers?: Container[];
     nodeSelector?: {[key: string]: string};
 }
 
