@@ -10,6 +10,7 @@ import Loading from '../components/loading';
 import api from '../services/api';
 import { Pod } from '../utils/types';
 import Button from '../components/button';
+import LogsSvg from '../art/logsSvg';
 
 type Props = {
     namespace: string;
@@ -24,6 +25,7 @@ type State = {
     container?: string;
     initContainers?: string[];
     filter?: string;
+    logDownloading: boolean;
 }
 
 export default class Logs extends Base<Props, State> {
@@ -32,6 +34,7 @@ export default class Logs extends Base<Props, State> {
     state: State = {
         showPrevious: false,
         items: [],
+        logDownloading: false,
     };
 
     constructor(props: Props) {
@@ -87,23 +90,37 @@ export default class Logs extends Base<Props, State> {
     }
 
     startDownloadLog = () => {
-        const {name} = this.props;
-        const {items} = this.state;
-        const blob = new Blob(items, {
-            type: 'text/plain;charset=utf8',
-        });
-        const url = window.URL.createObjectURL(blob);
+        const {namespace, name} = this.props;
+        const {container, showPrevious = false, logDownloading} = this.state;
 
-        const element = document.createElement('a');
-        element.setAttribute('href', url);
-        element.setAttribute('download', `${name}.log`);
-        element.click();
-        window.URL.revokeObjectURL(url);
+        if (!container || logDownloading) {
+            return;
+        }
+
+        this.setState({logDownloading: true}, () => {
+            api.logsAll(namespace, name, container, showPrevious).then((message) => {
+                const blob = new Blob([message], {
+                    type: 'text/plain;charset=utf8',
+                });
+                const url = window.URL.createObjectURL(blob);
+
+                const element = document.createElement('a');
+                element.setAttribute('href', url);
+                element.setAttribute('download', `${name}.log`);
+                element.click();
+                window.URL.revokeObjectURL(url);
+            }).then(() => {
+                this.setState({logDownloading: false});
+            }).catch(() => {
+                this.setState({logDownloading: false});
+            });
+        });
+
     };
 
     render() {
         const {namespace, name} = this.props;
-        const {items, container, containers = [], initContainers = [], filter = '', showPrevious = false} = this.state;
+        const {items, container, containers = [], initContainers = [], filter = '', showPrevious = false, logDownloading} = this.state;
 
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
@@ -156,11 +173,12 @@ export default class Logs extends Base<Props, State> {
                     />
 
                     <Button
-                        className="log_downloadButton"
-                        disabled={!items}
+                        className="button_clear log_downloadButton"
+                        title="Download Log"
+                        disabled={logDownloading}
                         onClick={this.startDownloadLog}
                     >
-                        Download
+                        <LogsSvg />
                     </Button>
                 </div>
 

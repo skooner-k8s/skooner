@@ -25,7 +25,7 @@ const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:4654
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
 
-export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
+async function requestInner(path: string, params?: any, autoLogoutOnAuthError = true) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
@@ -55,7 +55,15 @@ export async function request(path: string, params?: any, autoLogoutOnAuthError 
         throw error;
     }
 
-    return response.json();
+    return response;
+}
+
+export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
+    return (await requestInner(path, params, autoLogoutOnAuthError)).json();
+}
+
+export async function requestText(path: string, params?: any, autoLogoutOnAuthError = true) {
+    return (await requestInner(path, params, autoLogoutOnAuthError)).text();
 }
 
 export function apiFactory<T extends ApiItem<any, any>>(group: string, version: string, resource: string) {
