@@ -12,7 +12,6 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
 
 ## Click the video below to see k8dash in action
 [![k8dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "k8dash - Kubernetes Dashboard")
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash?ref=badge_shield)
 
 
 ## Prerequisites
