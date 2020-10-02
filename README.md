@@ -152,3 +152,6 @@ To run the client, open a new terminal tab and navigate to the `/client` directo
 ## License
 
 [Apache License 2.0](https://raw.githubusercontent.com/herbrandson/k8dash/master/LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash?ref=badge_large)
