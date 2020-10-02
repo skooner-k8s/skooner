@@ -15,6 +15,21 @@ export function parseRam(value?: string) {
     return parseUnitsOfBytes(value);
 }
 
+export function parseUnitsOfRam(bytes?: number) {
+    if (!bytes) return;
+
+    let i = 0;
+    while (bytes >= 1000 && i < UNITS.length - 1) {
+        i++;
+        bytes /= 1000; // eslint-disable-line no-param-reassign
+    }
+
+    return {
+        value: _.round(bytes, 2),
+        unit: i > 0 ? `${UNITS[i]}b` : 'b',
+    };
+}
+
 function parseUnitsOfBytes(value?: string) {
     if (!value) return 0;
 
