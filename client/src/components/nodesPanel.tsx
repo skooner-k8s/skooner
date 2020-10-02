@@ -151,7 +151,7 @@ function percent(node: Node, used: number | string | null, resource: ResourceTyp
     const result = unparser(used);
 
     const available = getNodeResourcesAvailable(node, resource);
-    const displayPercent = available ? _.round(Number(used) / available * 100, 1) : '';
+    const displayPercent = available ? _.round(Number(used) / available * 100, 1) : 0;
     const className = displayPercent >= 85 ? 'contentPanel_warn' : undefined;
 
     return (
