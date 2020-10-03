@@ -2,15 +2,25 @@ import _ from 'lodash';
 import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
-import {parseRam, TO_GB} from '../utils/unitHelpers';
+import {parseRam, parseUnitsOfRam} from '../utils/unitHelpers';
 import {Node, Metrics} from '../utils/types';
 
 export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getNodeRamTotals(items, metrics);
+    const used = parseUnitsOfRam(totals && totals.used);
+    const available = parseUnitsOfRam(totals && totals.available);
+    const decimals = used && used.value > 10 ? 1 : 2;
+
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart used={totals.used} usedSuffix='Gb' available={totals.available} availableSuffix='Gb' />
+                <Chart
+                    decimals={decimals}
+                    used={used && used.value}
+                    usedSuffix={used && used.unit}
+                    available={available && available.value}
+                    availableSuffix={available && available.unit}
+                />
             ) : (
                 <LoadingChart />
             )}
@@ -21,11 +31,11 @@ export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?
 }
 
 function getNodeRamTotals(items?: Node[], metrics?: _.Dictionary<Metrics>) {
-    if (!items || !metrics) return null;
+    if (!items || !metrics) return;
 
     const metricValues = Object.values(metrics);
-    const used = _.sumBy(metricValues, x => parseRam(x.usage.memory)) / TO_GB;
-    const available = _.sumBy(items, x => parseRam(x.status.capacity.memory)) / TO_GB;
+    const used = _.sumBy(metricValues, x => parseRam(x.usage.memory));
+    const available = _.sumBy(items, x => parseRam(x.status.capacity.memory));
 
     return {used, available};
 }
