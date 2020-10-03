@@ -28,7 +28,7 @@
     "swagger-parser": "^7.0.1",
     "typescript": "^3.9.7",
     "xterm": "^3.14.5",
-    "yaml": "next"
+    "yaml": "^2.0.0-0"
   },
   "scripts": {
     "start": "cross-env react-scripts start",
