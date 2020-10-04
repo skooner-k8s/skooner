@@ -103,7 +103,7 @@ export default class Logs extends Base<Props, State> {
             options: initContainerOptions
         }];
 
-        const selected = [...containerOptions, ...initContainerOptions].find((x) => x.value == container);
+        const selected = [...containerOptions, ...initContainerOptions].find((x) => x.value === container);
 
         return (
             <div id='content'>
