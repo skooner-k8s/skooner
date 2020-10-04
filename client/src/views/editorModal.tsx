@@ -1,7 +1,7 @@
 import './editorModal.scss';
 import React from 'react';
 import Modal from 'react-modal';
-import Yaml from 'yaml';
+import yml from 'yaml';
 import Base from '../components/base';
 import Button from '../components/button';
 import Doc from '../components/doc';
@@ -35,7 +35,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         this.setState({yaml});
 
         try {
-            const body = Yaml.parse(yaml,{indent:2,schema:'core'});
+            const body = yml.parse(yaml,{indent:2,schema:'core'});
             this.findDocs(body);
         } catch (err) {
             // Do nothing here. The current yaml can't be parsed
@@ -46,7 +46,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         const {onSave} = this.props;
         const {yaml = ''} = this.state;
 
-        const json = Yaml.parse(yaml,{indent:2,schema:'core'});
+        const json = yml.parse(yaml,{indent:2,schema:'core'});
         const shouldClose = await onSave(json);
 
         if (shouldClose) this.close();
@@ -73,7 +73,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         const {yaml, properties, showDocs} = this.state || {};
         const {body} = this.props;
 
-        const defaultYaml = body && Yaml.stringify(body, {indent:2,schema:'core'});
+        const defaultYaml = body && yml.stringify(body, {indent:2,schema:'core'});
 
         return (
             <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>
