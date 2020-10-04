@@ -12,7 +12,6 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "1.6.8",
     "@types/react-select": "^3.0.16",
-    "@types/yamljs": "^0.2.31",
     "ansi-to-react": "^5.1.1",
     "humanize-duration": "^3.23.1",
     "js-base64": "^2.6.4",
@@ -29,7 +28,7 @@
     "swagger-parser": "^7.0.1",
     "typescript": "^3.9.7",
     "xterm": "^3.14.5",
-    "yamljs": "^0.3.0"
+    "yaml": "^2.0.0-0"
   },
   "scripts": {
     "start": "cross-env react-scripts start",
