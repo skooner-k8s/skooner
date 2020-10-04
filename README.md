@@ -1,3 +1,4 @@
+<a name="top"></a>
 # k8dash - Kubernetes Dashboard
 
 k8dash is the easiest way to manage your Kubernetes cluster. Why?
@@ -208,4 +209,4 @@ back to [Table of Content](#table_of_content)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash?ref=badge_large)
 
-You Have scrolled so far, lets go back to [Top](#table_of_content)
+You Have scrolled so far, lets go back to [Top](#top)
