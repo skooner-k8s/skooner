@@ -11,6 +11,7 @@ import api from '../services/api';
 import { Pod } from '../utils/types';
 import Button from '../components/button';
 import LogsSvg from '../art/logsSvg';
+import LoadingSvg from '../art/loadingSvg';
 
 type Props = {
     namespace: string;
@@ -45,6 +46,7 @@ export default class Logs extends Base<Props, State> {
         // than once during the wait timeout."
         const options = {leading: true, trailing: true, maxWait: 1000};
         this.debouncedSetState = _.debounce(this.setState.bind(this), 100, options);
+        this.startDownloadLog = this.startDownloadLog.bind(this);
     }
 
     componentDidMount() {
@@ -89,7 +91,7 @@ export default class Logs extends Base<Props, State> {
         });
     }
 
-    startDownloadLog = () => {
+    startDownloadLog() {
         const {namespace, name} = this.props;
         const {container, showPrevious = false, logDownloading} = this.state;
 
@@ -97,8 +99,11 @@ export default class Logs extends Base<Props, State> {
             return;
         }
 
-        this.setState({logDownloading: true}, () => {
-            api.logsAll(namespace, name, container, showPrevious).then((message) => {
+        this.setState({logDownloading: true}, async () => {
+            const message = await api.logsAll(namespace, name, container, showPrevious).catch(() => {
+                this.setState({logDownloading: false});
+            });
+            if (message) {
                 const blob = new Blob([message], {
                     type: 'text/plain;charset=utf8',
                 });
@@ -109,14 +114,11 @@ export default class Logs extends Base<Props, State> {
                 element.setAttribute('download', `${name}.log`);
                 element.click();
                 window.URL.revokeObjectURL(url);
-            }).then(() => {
                 this.setState({logDownloading: false});
-            }).catch(() => {
-                this.setState({logDownloading: false});
-            });
+            }
         });
 
-    };
+    }
 
     render() {
         const {namespace, name} = this.props;
@@ -175,10 +177,9 @@ export default class Logs extends Base<Props, State> {
                     <Button
                         className="button_clear log_downloadButton"
                         title="Download Log"
-                        disabled={logDownloading}
                         onClick={this.startDownloadLog}
                     >
-                        <LogsSvg />
+                        {logDownloading ? <LoadingSvg /> : <LogsSvg />}
                     </Button>
                 </div>
 
