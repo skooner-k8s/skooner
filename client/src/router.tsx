@@ -121,6 +121,8 @@ registerRoute('workload/statefulset/:namespace/:name', params => <StatefulSet {.
 
 window.addEventListener('hashchange', onNavigate);
 
+window.onpopstate = onNavigate; // this is used by filter query params to handle back button clicks
+
 export function initRouter(cb: Handler) {
     handler = cb;
     onNavigate();
