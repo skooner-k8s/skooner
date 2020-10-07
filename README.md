@@ -2,9 +2,9 @@
 # k8dash - Kubernetes Dashboard
 
 k8dash is the easiest way to manage your Kubernetes cluster. Why?
-* Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
+* Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and, more
 * Blazing fast and Always Live: no need to refresh pages to see the latest
-* Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
+* Quickly visualize cluster health at a glance: Real-time charts help quickly track down poorly performing resources
 * Easy CRUD and scaling: plus inline API docs to easily understand what each field does
 * 100% responsive (runs on your phone/tablet)
 * Simple OpenID integration: no special proxies required
@@ -161,7 +161,7 @@ back to [Table of Content](#table_of_content)
 
 <a name="Metrics"></a>
 ## Metrics
-k8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
+k8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real-time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
@@ -186,7 +186,7 @@ back to [Table of Content](#table_of_content)
 
 <a name="Server"></a>
 ### Server
-To run the server, run `npm i` from the `/server` directory to install dependencies and then `npm start` to run the server.
+To run the server, run `npm i` from the `/server` directory to install dependencies, and then `npm start` to run the server.
 The server is a simple express.js server that is primarily responsible for proxying requests to the Kubernetes api server.
 
 During development, the server will use whatever is configured in `~/.kube/config` to connect the desired cluster. If you are using minikube, for example, you can run `kubectl config set-context minikube` to get `~/.kube/config` set up correctly.
