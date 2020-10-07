@@ -1,6 +1,5 @@
 @import './settings.scss';
 @import './normalize.scss';
-
 @import './elements/a.scss';
 @import './elements/charts.scss';
 @import './elements/contentPanel.scss';
@@ -132,7 +131,7 @@ button.titleBar_hamburger {
 	}
 }
 
-@media only screen and (max-width: $media-xsmall) {
+@media screen(max-width: $media-xsmall) {
 	#content {
 		padding: 0 15px;
 		width: 100vw;
