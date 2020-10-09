@@ -35,7 +35,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}' --fix"
+    "lint": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
+    "lint:ci": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "eslintConfig": {
     "extends": "react-app"
