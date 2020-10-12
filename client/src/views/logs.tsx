@@ -5,7 +5,7 @@ import Switch from 'react-switch';
 import Select from 'react-select';
 import Ansi from 'ansi-to-react';
 import Base from '../components/base';
-import InputFilter from '../components/inputFilter';
+import Filter from '../components/filter';
 import Loading from '../components/loading';
 import api from '../services/api';
 import { Pod } from '../utils/types';
@@ -133,7 +133,8 @@ export default class Logs extends Base<Props, State> {
                         <div className='logs_showPreviousLabel'>Previous</div>
                     </label>
 
-                    <InputFilter
+                    <Filter
+                        text='Pods'
                         filter={filter}
                         onChange={x => this.setState({filter: x})}
                     />

@@ -5,9 +5,10 @@ import Cancel from '../art/cancelSvg';
 type InputFilterProps = {
     filter: string;
     onChange: (value: string) => void;
+    onBlur: (value: string) => void;
 }
 
-const InputFilter = ({filter, onChange}: InputFilterProps) => (
+const InputFilter = ({filter, onChange, onBlur}: InputFilterProps) => (
     <>
         <input
             className='header_filter header_fill optional_xsmall'
@@ -15,6 +16,7 @@ const InputFilter = ({filter, onChange}: InputFilterProps) => (
             placeholder='type to filter'
             value={filter}
             onChange={x => onChange(x.target.value)}
+            onBlur={x => onBlur(x.target.value)}
             onKeyUp={(x) => {
                 // Clear the textbox on `esc` keypress
                 if (x.keyCode === 27) onChange('');
@@ -24,7 +26,7 @@ const InputFilter = ({filter, onChange}: InputFilterProps) => (
         {filter.length === 0 ? (
             <Search className='optional_xsmall' />
         ) : (
-            <Cancel className='svg_button svg_error optional_xsmall' onClick={() => onChange('')} />
+            <Cancel className='svg_button svg_error optional_xsmall' onClick={() => {onChange(''); onBlur('')}} />
         )}
     </>
 );

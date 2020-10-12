@@ -70,14 +70,15 @@ export default class Sorter extends Base<SorterProps, SorterStates> {
     }
 
     componentDidMount() {
-        const {sort} = this.props;
+        const {sort, field} = this.props;
 
         const urlParams = new URLSearchParams(window.location.search);
         
         const sortKey = urlParams.get('sortKey')
         const sortDir = urlParams.get('sortDir')
 
-        if(sort && getFieldName(sort.field) === sortKey) {
+        if(sort && getFieldName(field) === sortKey) {
+            sort.field = field
             sort.direction = sortDir as Direction
             sort.onSort(sort)
         }

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { Component } from 'react';
 import InputFilter from './inputFilter';
 import NamespaceFilter from './namespaceFilter';
 
@@ -9,42 +9,40 @@ type FilterProps = {
     onNamespaceChange?: (namespace: string) => void;
 }
 
-function handleFilterOnChange(cb: (value: string) => void) {
-    return (val: string) => {
-        if(val) {
-            const url = new URL(window.location.href)
-            url.searchParams.set('filterKey', val)
-            window.history.replaceState({url: url.href}, '', url.search + url.hash)
-        }        
-        return cb(val)
+function handleSaveOnBlur(value: string) {
+    if(value) {
+        const url = new URL(window.location.href)
+        url.searchParams.set('filterKey', value)
+        window.history.replaceState({url: url.href}, '', url.search + url.hash)
+    } else {
+        const url = new URL(window.location.href)
+        url.searchParams.delete('filterKey')
+        window.history.replaceState({url: url.href}, '', url.search + url.hash)
     }
 }
 
-function onInit(cb: (value: string) => void) {    
-    return () => {
+export default class Filter extends Component<FilterProps> {
+    componentDidMount() {
+        const { onChange } = this.props
         const urlParams = new URLSearchParams(window.location.search);    
-        const filterKey = urlParams.get('filterKey')
-        if (filterKey){
-            cb(filterKey)
-        }    
+        const filterKey = urlParams.get('filterKey') || ''
+        onChange(filterKey)
     }
-}
 
-const Filter = ({text, filter, onChange, onNamespaceChange}: FilterProps) => {
-    const memoedOnChange = useCallback(onChange, [])
+    render() {
+        const {text, filter, onChange, onNamespaceChange} = this.props
 
-    useEffect(onInit(memoedOnChange), [memoedOnChange])
+        return (
+            <div id='header'>
+                <span className='header_label'>{text}</span>
     
-    return (
-        <div id='header'>
-            <span className='header_label'>{text}</span>
-
-            {onNamespaceChange && (
-                <NamespaceFilter onChange={handleFilterOnChange(onNamespaceChange)} />
-            )}
-
-            <InputFilter filter={filter} onChange={handleFilterOnChange(onChange)} />
-        </div>
-    )
+                {onNamespaceChange && (
+                    <NamespaceFilter onChange={onNamespaceChange} />
+                )}
+    
+                <InputFilter filter={filter} onBlur={handleSaveOnBlur} onChange={onChange} />
+            </div>
+        )
+    }
+    
 }
-export default Filter;
