@@ -13,7 +13,7 @@
     "@kubernetes/client-node": "^0.8.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "http-proxy-middleware": "^1.0.6",
+    "http-proxy-middleware": "^0.19.1",
     "openid-client": "^2.5.0",
     "request": "^2.88.2",
     "request-promise-native": "^1.0.9",
@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "nodemon": "^2.0.5"
+    "nodemon": "^1.19.4"
   }
 }
