@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
-import {Pod} from "../utils/types";
+import {Pod} from '../utils/types';
 
 export default function PodStatusChart({items}: {items?: Pod[]}) {
     const available = items && items.length;

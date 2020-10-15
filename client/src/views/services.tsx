@@ -5,7 +5,7 @@ import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listVie
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import { Service } from '../utils/types';
+import {Service} from '../utils/types';
 
 type State = {
     filter: string;
@@ -48,15 +48,21 @@ export default class Services extends Base<{}, State> {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={4} row={x => (
-                            <tr key={x.metadata.uid}>
-                                <MetadataColumns
-                                    item={x}
-                                    includeNamespace={true}
-                                    href={`#!service/${x.metadata.namespace}/${x.metadata.name}`}
-                                />
-                            </tr>
-                        )} />
+                        <TableBody
+                            items={filtered}
+                            filter={filter}
+                            sort={sort}
+                            colSpan={4}
+                            row={x => (
+                                <tr key={x.metadata.uid}>
+                                    <MetadataColumns
+                                        item={x}
+                                        includeNamespace={true}
+                                        href={`#!service/${x.metadata.namespace}/${x.metadata.name}`}
+                                    />
+                                </tr>
+                            )}
+                        />
                     </table>
                 </div>
             </div>

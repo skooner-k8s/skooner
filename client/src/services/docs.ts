@@ -1,6 +1,6 @@
 import Swagger from 'swagger-parser';
 import apis from './api';
-import { TODO } from '../utils/types';
+import {TODO} from '../utils/types';
 
 let docsPromise: Promise<TODO>;
 

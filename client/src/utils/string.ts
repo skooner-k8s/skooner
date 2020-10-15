@@ -16,8 +16,7 @@ const URL_REGEXP = new RegExp(
 /**
 * Check whether a string is a valid URL
 */
+// eslint-disable-next-line import/prefer-default-export
 export function isAValidURL(str: string) {
     return URL_REGEXP.test(str.trim());
 }
-
-/** ... Add other String utilities functions here */

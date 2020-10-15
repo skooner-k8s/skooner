@@ -17,7 +17,7 @@ import {filterByOwner} from '../utils/filterHelper';
 import ContainersPanel from '../components/containersPanel';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
-import { DaemonSet, Pod, K8sEvent, Metrics } from '../utils/types';
+import {DaemonSet, Pod, K8sEvent, Metrics} from '../utils/types';
 
 type Props = {
     namespace: string;

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, {ReactNode} from 'react';
 import {hasToken} from './services/auth';
 import Account from './views/account';
 import Auth from './views/auth';

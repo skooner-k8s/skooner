@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React from 'react';
 import Base from './base';
-import Sorter, { SortInfo } from './sorter';
+import Sorter, {SortInfo} from './sorter';
 import LoadingEllipsis from './loadingEllipsis';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {unparseRam, unparseCpu} from '../utils/unitHelpers';

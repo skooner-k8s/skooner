@@ -20,7 +20,7 @@ import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import ChartsContainer from '../components/chartsContainer';
 import HpaPanel from '../components/hpaPanel';
-import { ReplicaSet, Pod, K8sEvent, Metrics, Hpa } from '../utils/types';
+import {ReplicaSet, Pod, K8sEvent, Metrics, Hpa} from '../utils/types';
 
 type Props = {
     namespace: string;

@@ -16,9 +16,9 @@ export default class Donut extends Base<Props, State> {
         currentPercent2: 0,
     };
 
-    private unmounted: boolean = false;
+    private unmounted = false;
 
-    private animationQueued: boolean = false;
+    private animationQueued = false;
 
     constructor(props: Props) {
         super(props);

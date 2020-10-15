@@ -8,7 +8,7 @@ import MetadataFields from '../components/metadataFields';
 import SecretValue from '../components/secretValue';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { Secret } from '../utils/types';
+import {Secret} from '../utils/types';
 
 type Props = {
     namespace: string;

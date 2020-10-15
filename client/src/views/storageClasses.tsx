@@ -5,7 +5,7 @@ import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listVie
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
-import { StorageClass } from '../utils/types';
+import {StorageClass} from '../utils/types';
 
 type State = {
     filter: string;
@@ -47,16 +47,22 @@ export default class StorageClasses extends Base<{}, State> {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={5} row={x => (
-                            <tr key={x.metadata.uid}>
-                                <MetadataColumns
-                                    item={x}
-                                    href={`#!storageclass/${x.metadata.name}`}
-                                />
-                                <td>{x.reclaimPolicy}</td>
-                                <td className='optional_small'>{x.volumeBindingMode}</td>
-                            </tr>
-                        )} />
+                        <TableBody
+                            items={filtered}
+                            filter={filter}
+                            sort={sort}
+                            colSpan={5}
+                            row={x => (
+                                <tr key={x.metadata.uid}>
+                                    <MetadataColumns
+                                        item={x}
+                                        href={`#!storageclass/${x.metadata.name}`}
+                                    />
+                                    <td>{x.reclaimPolicy}</td>
+                                    <td className='optional_small'>{x.volumeBindingMode}</td>
+                                </tr>
+                            )}
+                        />
                     </table>
                 </div>
             </div>

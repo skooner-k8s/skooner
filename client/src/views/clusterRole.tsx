@@ -8,7 +8,7 @@ import MetadataFields from '../components/metadataFields';
 import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { ClusterRole } from '../utils/types';
+import {ClusterRole} from '../utils/types';
 
 type Props = {
     name: string;

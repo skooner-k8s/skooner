@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, {Fragment} from 'react';
 import Field from './field';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 const ContainersPanel = ({spec}: {spec: TODO}) => (
     <>

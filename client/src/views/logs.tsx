@@ -8,7 +8,7 @@ import Base from '../components/base';
 import InputFilter from '../components/inputFilter';
 import Loading from '../components/loading';
 import api from '../services/api';
-import { Pod } from '../utils/types';
+import {Pod} from '../utils/types';
 
 type Props = {
     namespace: string;
@@ -60,7 +60,7 @@ export default class Logs extends Base<Props, State> {
         }
 
 
-        this.setState({containers, initContainers });
+        this.setState({containers, initContainers});
         this.setContainer(containers[0]);
     }
 
@@ -74,7 +74,7 @@ export default class Logs extends Base<Props, State> {
         this.startLogsStream(this.state.container, showPrevious);
     }
 
-    startLogsStream(container?: string, showPrevious: boolean = false) {
+    startLogsStream(container?: string, showPrevious = false) {
         if (!container) return;
 
         this.setState({container, showPrevious, items: []});
@@ -92,18 +92,18 @@ export default class Logs extends Base<Props, State> {
         const lowercaseFilter = filter.toLowerCase();
         const filteredLogs = items.filter(x => x.toLowerCase().includes(lowercaseFilter));
 
-        const containerOptions = containers.map(x => ({ value: x, label: x }));
-        const initContainerOptions = initContainers.map(x => ({ value: x, label: x }));
+        const containerOptions = containers.map(x => ({value: x, label: x}));
+        const initContainerOptions = initContainers.map(x => ({value: x, label: x}));
 
         const options = [{
             label: 'Containers',
-            options: containerOptions
+            options: containerOptions,
         }, {
             label: 'Init Containers',
-            options: initContainerOptions
+            options: initContainerOptions,
         }];
 
-        const selected = [...containerOptions, ...initContainerOptions].find((x) => x.value === container);
+        const selected = [...containerOptions, ...initContainerOptions].find(x => x.value === container);
 
         return (
             <div id='content'>

@@ -1,6 +1,6 @@
 import React from 'react';
 import Field from './field';
-import { TODO } from '../utils/types';
+import {TODO} from '../utils/types';
 
 const HpaPanel = ({spec}: TODO) => (
     <>

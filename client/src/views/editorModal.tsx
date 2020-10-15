@@ -8,7 +8,7 @@ import Doc from '../components/doc';
 import getDocDefinitions from '../services/docs';
 import LightBulbSvg from '../art/lightBulbSvg';
 import EditSvg from '../art/editSvg';
-import { ApiItem, TODO } from '../utils/types';
+import {ApiItem, TODO} from '../utils/types';
 
 interface Props<T extends ApiItem<any, any>> {
     body?: T;
@@ -35,7 +35,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         this.setState({yaml});
 
         try {
-            const body = yml.parse(yaml,{indent:2,schema:'core'});
+            const body = yml.parse(yaml, {indent: 2, schema: 'core'});
             this.findDocs(body);
         } catch (err) {
             // Do nothing here. The current yaml can't be parsed
@@ -46,7 +46,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         const {onSave} = this.props;
         const {yaml = ''} = this.state;
 
-        const json = yml.parse(yaml,{indent:2,schema:'core'});
+        const json = yml.parse(yaml, {indent: 2, schema: 'core'});
         const shouldClose = await onSave(json);
 
         if (shouldClose) this.close();
@@ -73,7 +73,7 @@ export default class EditorModal<T extends ApiItem<any, any>> extends Base<Props
         const {yaml, properties, showDocs} = this.state || {};
         const {body} = this.props;
 
-        const defaultYaml = body && yml.stringify(body, {indent:2,schema:'core'});
+        const defaultYaml = body && yml.stringify(body, {indent: 2, schema: 'core'});
 
         return (
             <Modal isOpen={true} className='modal_modal' overlayClassName='modal_overlay' onRequestClose={() => this.close()}>

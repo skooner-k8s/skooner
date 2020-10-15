@@ -13,7 +13,7 @@ import PodRamChart from '../components/podRamChart';
 import NodeCpuChart from '../components/nodeCpuChart';
 import NodeRamChart from '../components/nodeRamChart';
 import getMetrics from '../utils/metricsHelpers';
-import { K8sEvent, Pod, Metrics, Node } from '../utils/types';
+import {K8sEvent, Pod, Metrics, Node} from '../utils/types';
 
 type State = {
     filter: string;

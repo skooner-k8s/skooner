@@ -5,7 +5,7 @@ import ArrowUpSvg from '../art/arrowUpSvg';
 import ArrowDownSvg from '../art/arrowDownSvg';
 import {TODO} from '../utils/types';
 
-export type Direction = "asc" | "desc";
+export type Direction = 'asc' | 'desc';
 
 export interface SortInfo {
     field: string,
@@ -16,8 +16,8 @@ export interface SortInfo {
 interface SorterProps {
     field: TODO;
     sort?: {
-        field: string, 
-        direction: Direction, 
+        field: string,
+        direction: Direction,
         onSort: Function,
     };
 }
@@ -45,25 +45,24 @@ export function sortByDate(x: {metadata: {creationTimestamp: string}}) {
     return -Date.parse(x.metadata.creationTimestamp);
 }
 
-function getFieldName (field: TODO) {
-    if(typeof field === 'function') {
-        return field.name
+function getFieldName(field: TODO) {
+    if (typeof field === 'function') {
+        return field.name;
     }
-    return field
+    return field;
 }
 
 export default class Sorter extends Base<SorterProps, SorterStates> {
-
     onClickHandler() {
         const {sort} = this.props;
 
-        if(sort) {
-            this.sort()
+        if (sort) {
+            this.sort();
             const url = new URL(window.location.href);
-            const fieldName = getFieldName(sort.field)
+            const fieldName = getFieldName(sort.field);
 
-            url.searchParams.set('sortKey', fieldName)
-            url.searchParams.set('sortDir', sort.direction)
+            url.searchParams.set('sortKey', fieldName);
+            url.searchParams.set('sortDir', sort.direction);
 
             window.history.pushState({}, '', url.search + url.hash);
         }
@@ -73,20 +72,20 @@ export default class Sorter extends Base<SorterProps, SorterStates> {
         const {sort} = this.props;
 
         const urlParams = new URLSearchParams(window.location.search);
-        
-        const sortKey = urlParams.get('sortKey')
-        const sortDir = urlParams.get('sortDir')
 
-        if(sort && getFieldName(sort.field) === sortKey) {
-            sort.direction = sortDir as Direction
-            sort.onSort(sort)
+        const sortKey = urlParams.get('sortKey');
+        const sortDir = urlParams.get('sortDir');
+
+        if (sort && getFieldName(sort.field) === sortKey) {
+            sort.direction = sortDir as Direction;
+            sort.onSort(sort);
         }
     }
-    
+
     render() {
         const {children, sort} = this.props;
         return (
-            <div className={sort ? 'sorter' : undefined} onClick={()=>this.onClickHandler()}>
+            <div className={sort ? 'sorter' : undefined} onClick={() => this.onClickHandler()}>
                 <span>{children}</span>
                 {sort && (
                     <span className={`sorter_arrows ${this.isSelected() && 'sorter_active'}`}>

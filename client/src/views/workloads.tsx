@@ -10,7 +10,7 @@ import test from '../utils/filterHelper';
 import Working from '../components/working';
 import LoadingChart from '../components/loadingChart';
 import ChartsContainer from '../components/chartsContainer';
-import {ApiItem, CronJob, DaemonSet, Deployment, Job, StatefulSet, TODO} from "../utils/types";
+import {ApiItem, CronJob, DaemonSet, Deployment, Job, StatefulSet, TODO} from '../utils/types';
 
 type Props = {
 
@@ -85,18 +85,24 @@ export default class Workloads extends Base<Props, State> {
                             </tr>
                         </thead>
 
-                        <TableBody items={filtered} filter={filter} sort={sort} colSpan={5} row={x => (
-                            <tr key={x.metadata.uid}>
-                                <MetadataColumns
-                                    item={x}
-                                    includeNamespace={true}
-                                    href={`#!workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
-                                />
-                                <td>
-                                    <Status item={x} />
-                                </td>
-                            </tr>
-                        )} />
+                        <TableBody
+                            items={filtered}
+                            filter={filter}
+                            sort={sort}
+                            colSpan={5}
+                            row={x => (
+                                <tr key={x.metadata.uid}>
+                                    <MetadataColumns
+                                        item={x}
+                                        includeNamespace={true}
+                                        href={`#!workload/${x.kind.toLowerCase()}/${x.metadata.namespace}/${x.metadata.name}`}
+                                    />
+                                    <td>
+                                        <Status item={x} />
+                                    </td>
+                                </tr>
+                            )}
+                        />
                     </table>
                 </div>
             </div>

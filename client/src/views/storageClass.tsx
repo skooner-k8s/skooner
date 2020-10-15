@@ -7,7 +7,7 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { StorageClass } from '../utils/types';
+import {StorageClass} from '../utils/types';
 
 type Props = {
     name: string;

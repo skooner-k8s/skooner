@@ -5,7 +5,7 @@ import api from '../services/api';
 import test from '../utils/filterHelper';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import {MetadataColumns, MetadataHeaders, TableBody} from '../components/listViewHelpers';
-import { ConfigMap } from '../utils/types';
+import {ConfigMap} from '../utils/types';
 
 type State = {
     filter: string;

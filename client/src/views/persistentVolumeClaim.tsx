@@ -7,7 +7,7 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { PersistentVolumeClaim } from '../utils/types';
+import {PersistentVolumeClaim} from '../utils/types';
 
 type State = {
     item?: PersistentVolumeClaim;

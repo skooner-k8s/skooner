@@ -8,7 +8,7 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { ConfigMap } from '../utils/types';
+import {ConfigMap} from '../utils/types';
 
 type Props = {
     namespace: string;

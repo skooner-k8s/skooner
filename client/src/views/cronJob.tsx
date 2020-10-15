@@ -16,7 +16,7 @@ import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
-import { Pod, K8sEvent, Metrics, CronJob } from '../utils/types';
+import {Pod, K8sEvent, Metrics, CronJob} from '../utils/types';
 
 type Props = {
     namespace: string;

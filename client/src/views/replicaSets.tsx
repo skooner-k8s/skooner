@@ -5,7 +5,7 @@ import ReplicaSetsPanel from '../components/replicaSetsPanel';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import { ReplicaSet } from '../utils/types';
+import {ReplicaSet} from '../utils/types';
 
 type State = {
     filter: string;

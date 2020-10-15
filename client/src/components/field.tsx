@@ -1,5 +1,5 @@
 import './field.scss';
-import React, { ReactNode } from 'react';
+import React, {ReactNode} from 'react';
 
 type FieldProps = {
     name: string;

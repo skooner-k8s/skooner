@@ -3,7 +3,7 @@ import Base from './base';
 import Button from './button';
 import EditorModal from '../views/editorModal';
 import EditSvg from '../art/editSvg';
-import { ApiItem } from '../utils/types';
+import {ApiItem} from '../utils/types';
 
 interface SaveButtonProps<T extends ApiItem<any, any>> {
     item?: T;

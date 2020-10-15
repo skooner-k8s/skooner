@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React, { ReactNode } from 'react';
+import React, {ReactNode} from 'react';
 import fromNow from '../utils/dates';
 import {isAValidURL} from '../utils/string';
 import Loading from './loading';
@@ -74,7 +74,14 @@ export function MetadataHeaders({includeNamespace, sort}: {includeNamespace?: bo
     );
 }
 
-export function MetadataColumns({item, href, includeNamespace, resourceClass}: {item: TODO, href: string, includeNamespace?: boolean, resourceClass?: string}) {
+type MetadataColumnsProps = {
+    item: TODO,
+    href: string,
+    includeNamespace?: boolean,
+    resourceClass?: string
+};
+
+export function MetadataColumns({item, href, includeNamespace, resourceClass}: MetadataColumnsProps) {
     return (
         <>
             <td className='td_icon optional_small'>

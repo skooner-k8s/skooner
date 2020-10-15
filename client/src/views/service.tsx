@@ -10,7 +10,7 @@ import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import {filterByOwner} from '../utils/filterHelper';
-import { Service, K8sEvent } from '../utils/types';
+import {Service, K8sEvent} from '../utils/types';
 
 type Props = {
     namespace: string;

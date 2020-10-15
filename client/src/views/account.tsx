@@ -65,7 +65,7 @@ export default class Account extends Base<{}, State> {
 
     setDarkMode(useDarkMode: boolean) {
         if (useDarkMode) {
-            localStorage.useDarkMode = "true"
+            localStorage.useDarkMode = 'true';
         } else {
             delete localStorage.useDarkMode;
         }

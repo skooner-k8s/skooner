@@ -4,7 +4,7 @@ import Select from 'react-select';
 import {Terminal} from 'xterm';
 import Base from '../components/base';
 import api from '../services/api';
-import { Pod, TODO } from '../utils/types';
+import {Pod, TODO} from '../utils/types';
 
 type Props = {
     namespace: string;
