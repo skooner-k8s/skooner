@@ -19,7 +19,7 @@ import getMetrics from '../utils/metricsHelpers';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import ChartsContainer from '../components/chartsContainer';
-import { Pod, Metrics, K8sEvent } from '../utils/types';
+import {Pod, Metrics, K8sEvent} from '../utils/types';
 
 type Props = {
     namespace: string;

@@ -6,7 +6,7 @@ import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listVie
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
-import { Ingress } from '../utils/types';
+import {Ingress} from '../utils/types';
 
 type State = {
     filter: string;

@@ -5,7 +5,7 @@ import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listVie
 import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import { Namespace } from '../utils/types';
+import {Namespace} from '../utils/types';
 
 type State = {
     filter: string;

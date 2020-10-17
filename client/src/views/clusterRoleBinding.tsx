@@ -10,7 +10,7 @@ import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 import ResourceSvg from '../art/resourceSvg';
 import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
-import { ClusterRoleBinding, RoleBindingRef, RoleBindingSubject } from '../utils/types';
+import {ClusterRoleBinding, RoleBindingRef, RoleBindingSubject} from '../utils/types';
 
 type Props = {
     name: string;

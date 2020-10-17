@@ -74,8 +74,7 @@ interface NamespaceStatus {
     phase: string;
 }
 
-export interface Namespace extends ApiItem<undefined, NamespaceStatus> {
-}
+export type Namespace = ApiItem<undefined, NamespaceStatus>
 
 interface NodeSpec {
     taints: {[name: string]: string}
@@ -98,9 +97,7 @@ export interface NodeStatus {
     }
 }
 
-export interface Node extends ApiItem<NodeSpec, NodeStatus> {
-
-}
+export type Node = ApiItem<NodeSpec, NodeStatus>
 
 export interface K8sEvent extends ApiItem<undefined, undefined> {
     type: string;
@@ -130,8 +127,7 @@ interface PodStatus {
     containerStatuses: ContainerStatus[];
 }
 
-export interface Pod extends ApiItem<PodSpec, PodStatus>{
-}
+export type Pod = ApiItem<PodSpec, PodStatus>
 
 interface PersistentVolumeSpec {
     storageClassName: string;
@@ -155,9 +151,7 @@ interface PersistentVolumeStatus {
     phase: string;
 }
 
-export interface PersistentVolume extends ApiItem<PersistentVolumeSpec, PersistentVolumeStatus> {
-
-}
+export type PersistentVolume = ApiItem<PersistentVolumeSpec, PersistentVolumeStatus>
 
 interface PersistentVolumeClaimSpec {
     storageClassName: string;
@@ -172,9 +166,7 @@ interface PersistentVolumeClaimStatus {
     }
 }
 
-export interface PersistentVolumeClaim extends ApiItem<PersistentVolumeClaimSpec, PersistentVolumeClaimStatus> {
-
-}
+export type PersistentVolumeClaim = ApiItem<PersistentVolumeClaimSpec, PersistentVolumeClaimStatus>
 
 interface RoleRule {
     apiGroups?: string[];
@@ -184,23 +176,17 @@ interface RoleRule {
     resourceNames?: string[];
 }
 
-interface RoleSpec {
+type RoleSpec = unknown;
 
-}
-
-interface RoleStatus {
-}
+type RoleStatus = unknown;
 
 export interface Role extends ApiItem<RoleSpec, RoleStatus> {
     rules?: RoleRule[];
 }
 
-interface ClusterRoleSpec {
+type ClusterRoleSpec = unknown;
 
-}
-
-interface ClusterRoleStatus {
-}
+type ClusterRoleStatus = unknown;
 
 export interface ClusterRole extends ApiItem<ClusterRoleSpec, ClusterRoleStatus> {
     rules?: RoleRule[];
@@ -219,36 +205,27 @@ export interface RoleBindingRef {
     namespace: string;
 }
 
-interface RoleBindingSpec {
+type RoleBindingSpec = unknown;
 
-}
-
-interface RoleBindingStatus {
-}
+type RoleBindingStatus = unknown;
 
 export interface RoleBinding extends ApiItem<RoleBindingSpec, RoleBindingStatus> {
     subjects: RoleBindingSubject[];
     roleRef: RoleBindingRef;
 }
 
-interface ClusterRoleBindingSpec {
+type ClusterRoleBindingSpec = unknown;
 
-}
-
-interface ClusterRoleBindingStatus {
-}
+type ClusterRoleBindingStatus = unknown;
 
 export interface ClusterRoleBinding extends ApiItem<ClusterRoleBindingSpec, ClusterRoleBindingStatus> {
     subjects: RoleBindingSubject[];
     roleRef: RoleBindingRef;
 }
 
-interface ConfigMapSpec {
+type ConfigMapSpec = unknown;
 
-}
-
-interface ConfigMapStatus {
-}
+type ConfigMapStatus = unknown;
 
 export interface ConfigMap extends ApiItem<ConfigMapSpec, ConfigMapStatus> {
     data: {[name: string]: string}
@@ -273,11 +250,9 @@ interface IngressSpec {
     rules: IngressRule[];
 }
 
-interface IngressStatus {
-}
+type IngressStatus = unknown;
 
-export interface Ingress extends ApiItem<IngressSpec, IngressStatus> {
-}
+export type Ingress = ApiItem<IngressSpec, IngressStatus>
 
 interface ReplicaSetSpec {
     replicas: number;
@@ -293,25 +268,20 @@ interface ReplicaSetStatus {
     replicas: number;
 }
 
-export interface ReplicaSet extends ApiItem<ReplicaSetSpec, ReplicaSetStatus> {
-}
+export type ReplicaSet = ApiItem<ReplicaSetSpec, ReplicaSetStatus>
 
-interface SecretSpec {
-}
+type SecretSpec = unknown;
 
-interface SecretStatus {
-}
+type SecretStatus = unknown;
 
 export interface Secret extends ApiItem<SecretSpec, SecretStatus> {
     type: string;
     data: {[key: string]: string};
 }
 
-interface ServiceAccountSpec {
-}
+type ServiceAccountSpec = unknown;
 
-interface ServiceAccountStatus {
-}
+type ServiceAccountStatus = unknown;
 
 export interface ServiceAccount extends ApiItem<ServiceAccountSpec, ServiceAccountStatus> {
     secrets: {
@@ -319,11 +289,9 @@ export interface ServiceAccount extends ApiItem<ServiceAccountSpec, ServiceAccou
     }[];
 }
 
-interface StorageClassSpec {
-}
+type StorageClassSpec = unknown;
 
-interface StorageClassStatus {
-}
+type StorageClassStatus = unknown;
 
 export interface StorageClass extends ApiItem<StorageClassSpec, StorageClassStatus> {
     reclaimPolicy: string;
@@ -337,15 +305,11 @@ interface HpaSpec {
     targetCPUUtilizationPercentage: number;
 }
 
-interface HpaStatus {
-}
+type HpaStatus = unknown;
 
-export interface Hpa extends ApiItem<HpaSpec, HpaStatus> {
-}
+export type Hpa = ApiItem<HpaSpec, HpaStatus>
 
-export interface Spec {
-
-}
+export type Spec = unknown;
 
 interface CronJobSpec {
     schedule: string;
@@ -364,8 +328,7 @@ interface CronJobStatus {
     lastScheduleTime: string;
 }
 
-export interface CronJob extends ApiItem<CronJobSpec, CronJobStatus> {
-}
+export type CronJob = ApiItem<CronJobSpec, CronJobStatus>
 
 interface DaemonSetSpec {
     template: {
@@ -379,8 +342,7 @@ interface DaemonSetStatus {
     desiredNumberScheduled: number;
 }
 
-export interface DaemonSet extends ApiItem<DaemonSetSpec, DaemonSetStatus> {
-}
+export type DaemonSet = ApiItem<DaemonSetSpec, DaemonSetStatus>
 
 interface JobSpec {
     template: {
@@ -395,8 +357,7 @@ interface JobStatus {
     completionTime: string;
 }
 
-export interface Job extends ApiItem<JobSpec, JobStatus> {
-}
+export type Job = ApiItem<JobSpec, JobStatus>
 
 interface DeploymentSpec {
     template: {
@@ -404,11 +365,9 @@ interface DeploymentSpec {
     }
 }
 
-interface DeploymentStatus {
-}
+type DeploymentStatus = unknown;
 
-export interface Deployment extends ApiItem<DeploymentSpec, DeploymentStatus> {
-}
+export type Deployment = ApiItem<DeploymentSpec, DeploymentStatus>
 
 interface StatefulSetSpec {
     template: {
@@ -416,11 +375,9 @@ interface StatefulSetSpec {
     }
 }
 
-interface StatefulSetStatus {
-}
+type StatefulSetStatus = unknown;
 
-export interface StatefulSet extends ApiItem<StatefulSetSpec, StatefulSetStatus> {
-}
+export type StatefulSet = ApiItem<StatefulSetSpec, StatefulSetStatus>
 
 interface Port {
     name: string;
@@ -439,8 +396,6 @@ interface ServiceSpec {
     ports: Port[];
 }
 
-interface ServiceStatus {
-}
+type ServiceStatus = unknown;
 
-export interface Service extends ApiItem<ServiceSpec, ServiceStatus> {
-}
+export type Service = ApiItem<ServiceSpec, ServiceStatus>

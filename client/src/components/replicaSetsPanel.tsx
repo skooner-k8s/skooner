@@ -2,7 +2,7 @@ import './replicaSetsPanel.scss';
 import React from 'react';
 import Switch from 'react-switch';
 import Base from './base';
-import Sorter, { SortInfo } from './sorter';
+import Sorter, {SortInfo} from './sorter';
 import {MetadataHeaders, MetadataColumns, TableBody} from './listViewHelpers';
 import {ReplicaSet} from '../utils/types';
 
@@ -56,7 +56,7 @@ export default class ReplicaSetsPanel extends Base<ReplicaSetsPanelProps, Replic
                         filter={filter}
                         sort={sort}
                         colSpan={5 + Number(includeNamespace)}
-                        row={(x) => (
+                        row={x => (
                             <tr key={x.metadata.uid}>
                                 <MetadataColumns
                                     item={x}

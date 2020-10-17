@@ -1,7 +1,7 @@
 import React from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 export default function ReplicasChart({item}: {item: TODO}) {
     return (

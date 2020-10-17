@@ -14,7 +14,7 @@ import PodStatusChart from '../components/podStatusChart';
 import PodCpuChart from '../components/podCpuChart';
 import PodRamChart from '../components/podRamChart';
 import getMetrics from '../utils/metricsHelpers';
-import { Namespace, K8sEvent, Pod, Metrics } from '../utils/types';
+import {Namespace, K8sEvent, Pod, Metrics} from '../utils/types';
 
 type Props = {
     namespace: string;
@@ -86,8 +86,8 @@ export default class NamespaceView extends Base<Props, State> {
                 />
 
                 <div className='contentPanel_header'>Events</div>
-                
-                {/* 
+
+                {/*
                 // @ts-ignore */}
                 <EventsPanel items={events} />
             </div>

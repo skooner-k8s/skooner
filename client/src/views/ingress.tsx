@@ -8,7 +8,7 @@ import MetadataFields from '../components/metadataFields';
 import {TableBody} from '../components/listViewHelpers';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { Ingress } from '../utils/types';
+import {Ingress} from '../utils/types';
 
 type Props = {
     namespace: string;

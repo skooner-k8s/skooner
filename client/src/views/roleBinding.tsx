@@ -10,7 +10,7 @@ import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
 import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import ResourceSvg from '../art/resourceSvg';
-import { RoleBinding, RoleBindingSubject } from '../utils/types';
+import {RoleBinding, RoleBindingSubject} from '../utils/types';
 
 type Props = {
     namespace: string;

@@ -14,6 +14,19 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
 ## Click the video below to see k8dash in action
 [![k8dash - Kubernetes Dashboard](https://raw.githubusercontent.com/herbrandson/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "k8dash - Kubernetes Dashboard")
 
+<br>
+
+## Hacktoberfest Open Office Hours
+Join us for open office hours to talk about issues, propose ideas, help review code, and more.
+
+| Date         | Time           | Register  |
+| ------------- |:-------------:| -----:|
+| Friday, October 9 | 10AM-12PM CT | [register](https://organize.mlh.io/participants/events/5003-virtual-k8dash-office-hours) |
+| Friday, October 16 | 10AM-12PM CT | [register](https://organize.mlh.io/participants/events/5006-virtual-k8dash-office-hours) |
+| Friday, October 23 | 10AM-12PM CT |[register](https://organize.mlh.io/participants/events/5008-virtual-k8dash-office-hours) |
+| Friday, October 30 | 10AM-12PM CT |[register](https://organize.mlh.io/participants/events/5009-virtual-k8dash-office-hours) |
+<br>
+
 <a name="table_of_content"></a>
 # Table of Contents
 
@@ -31,16 +44,14 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
     - [Server](#Server)
     - [Client](#Client)
 - [License](#License)    
-  
-
-
 <a name="Prerequisites"></a>
+
 ## Prerequisites
 + A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/))
 + [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
 + A Kubernetes cluster configured for [OpenId Connect](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens) authentication (optional)
 
-back to [Table of Content](#table_of_content)
+back to [Table of Contents](#table_of_content)
 
 <a name="Getting_started"></a>
 ## Getting Started

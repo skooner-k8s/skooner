@@ -5,7 +5,7 @@ import {MetadataHeaders, MetadataColumns, TableBody} from '../components/listVie
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
-import { ClusterRole, ClusterRoleBinding } from '../utils/types';
+import {ClusterRole, ClusterRoleBinding} from '../utils/types';
 
 type State = {
     filter: string;

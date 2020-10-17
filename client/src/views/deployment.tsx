@@ -19,7 +19,7 @@ import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ReplicasChart from '../components/replicasChart';
 import ChartsContainer from '../components/chartsContainer';
 import HpaPanel from '../components/hpaPanel';
-import { Deployment, ReplicaSet, Pod, Metrics, Hpa, K8sEvent } from '../utils/types';
+import {Deployment, ReplicaSet, Pod, Metrics, Hpa, K8sEvent} from '../utils/types';
 
 type Props = {
     namespace: string;
@@ -56,7 +56,7 @@ export default class DeploymentView extends Base<Props, State> {
             events: api.event.list(namespace, x => this.setState({events: x})),
             pods: api.pod.list(namespace, x => this.setState({pods: x})),
             metrics: api.metrics.pods(namespace, x => this.setState({metrics: x})),
-            hpa: api.hpa.get(namespace, name, x => this.setState({hpa: x}))
+            hpa: api.hpa.get(namespace, name, x => this.setState({hpa: x})),
         });
     }
 

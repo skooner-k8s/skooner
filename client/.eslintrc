@@ -1,7 +1,9 @@
 {
     "extends": [
         "airbnb-base",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "browser": true,
@@ -63,10 +65,22 @@
                 "functions": false
             }
         ],
+        "max-len": [
+            "error",
+            {
+                "code": 150,
+                "ignoreStrings": true
+            }
+        ],
         "no-await-in-loop": "off",
         "no-restricted-syntax": "off",
         "no-plusplus": "off",
         "class-methods-use-this": "off",
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/no-non-null-assertion": "off"
     }
 }

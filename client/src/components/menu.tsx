@@ -7,7 +7,7 @@ import api from '../services/api';
 import {addHandler} from '../services/auth';
 import ResourceSvg from '../art/resourceSvg';
 import AddSvg from '../art/addSvg';
-import {TODO} from "../utils/types";
+import {TODO} from '../utils/types';
 
 interface MenuProps {
     onClick: () => void;

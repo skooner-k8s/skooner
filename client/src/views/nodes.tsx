@@ -11,7 +11,7 @@ import getReadyStatus from '../utils/nodeHelpers';
 import NodeCpuChart from '../components/nodeCpuChart';
 import NodeRamChart from '../components/nodeRamChart';
 import getMetrics from '../utils/metricsHelpers';
-import { Node, Metrics, Pod } from '../utils/types';
+import {Node, Metrics, Pod} from '../utils/types';
 
 type State = {
     filter: string;

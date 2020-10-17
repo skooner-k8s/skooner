@@ -17,7 +17,7 @@ import {filterByOwner} from '../utils/filterHelper';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import ChartsContainer from '../components/chartsContainer';
 import {formatDuration} from '../utils/dates';
-import { Pod, Job, K8sEvent, Metrics } from '../utils/types';
+import {Pod, Job, K8sEvent, Metrics} from '../utils/types';
 
 type Props = {
     namespace: string;

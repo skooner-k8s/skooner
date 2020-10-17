@@ -6,7 +6,7 @@ import Sorter, {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
 import {parseDiskSpace} from '../utils/unitHelpers';
-import { PersistentVolumeClaim } from '../utils/types';
+import {PersistentVolumeClaim} from '../utils/types';
 
 type State = {
     filter: string;

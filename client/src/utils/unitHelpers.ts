@@ -16,7 +16,7 @@ export function parseRam(value?: string) {
 }
 
 export function parseUnitsOfRam(bytes?: number) {
-    if (!bytes) return;
+    if (!bytes) return undefined;
 
     let i = 0;
     while (bytes >= 1000 && i < UNITS.length - 1) {

@@ -8,7 +8,7 @@ import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
 import SaveButton from '../components/saveButton';
 import DeleteButton from '../components/deleteButton';
-import { ServiceAccount } from '../utils/types';
+import {ServiceAccount} from '../utils/types';
 
 type Props = {
     namespace: string;

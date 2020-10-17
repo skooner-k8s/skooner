@@ -4,7 +4,7 @@ import {TableBody} from './listViewHelpers';
 import log from '../utils/log';
 import ResourceSvg from '../art/resourceSvg';
 import Sorter, {sortByDate, SortInfo} from './sorter';
-import { K8sEvent, InvolvedObject } from '../utils/types';
+import {K8sEvent, InvolvedObject} from '../utils/types';
 
 type EventsPanelProps = {
     items?: K8sEvent[];
@@ -44,7 +44,7 @@ export default function EventsPanel({items, filter, shortList, sort} : EventsPan
                     filter={filter}
                     colSpan={shortList ? 4 : 5}
                     sort={sort}
-                    row={(event) => (
+                    row={event => (
                         <tr key={event.metadata.name}>
                             <td className='td_icon optional_medium'>
                                 <ResourceSvg
