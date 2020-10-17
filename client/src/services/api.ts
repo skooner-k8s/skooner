@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {Base64} from 'js-base64';
-import {request, post, stream, apiFactory, apiFactoryWithNamespace} from './apiProxy';
+import { request, post, stream, apiFactory, apiFactoryWithNamespace, requestText } from './apiProxy';
 import log from '../utils/log';
 import {K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret, ServiceAccount, StorageClass} from '../utils/types';
 
@@ -41,6 +41,7 @@ const apis = {
     testAuth,
     getRules,
     logs,
+    logsAll,
     swagger,
     exec,
     metrics: metricsFactory(),
@@ -160,6 +161,11 @@ function exec(namespace: string, name: string, container: string, cb: DataCallba
     const url = `/api/v1/namespaces/${namespace}/pods/${name}/exec?container=${container}&command=sh&stdin=1&stderr=1&stdout=1&tty=1`;
     const additionalProtocols = ['v4.channel.k8s.io', 'v3.channel.k8s.io', 'v2.channel.k8s.io', 'channel.k8s.io'];
     return stream(url, cb, {additionalProtocols, isJson: false});
+}
+
+function logsAll(namespace: string, name: string, container: string, showPrevious: boolean) {
+    const url = `/api/v1/namespaces/${namespace}/pods/${name}/log?container=${container}&previous=${showPrevious}`;
+    return requestText(url);
 }
 
 function logs(namespace: string, name: string, container: string, tailLines: number, showPrevious: boolean, cb: DataCallback<string[]>) {
