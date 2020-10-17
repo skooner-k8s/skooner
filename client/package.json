@@ -4,22 +4,22 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@types/humanize-duration": "^3.18.0",
+    "@types/humanize-duration": "^3.18.1",
     "@types/js-base64": "^3.0.0",
     "@types/js-cookie": "^2.2.6",
-    "@types/lodash": "^4.14.158",
-    "@types/react": "^16.9.44",
+    "@types/lodash": "^4.14.162",
+    "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "1.6.8",
-    "@types/react-select": "^3.0.16",
+    "@types/react-select": "^3.0.22",
     "ansi-to-react": "^5.1.1",
-    "humanize-duration": "^3.23.1",
+    "humanize-duration": "^3.24.0",
     "js-base64": "^2.6.4",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.19",
     "node-sass": "^4.14.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-modal": "^3.11.2",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.0",
@@ -48,13 +48,13 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^3.8.0",
-    "@typescript-eslint/parser": "^3.8.0",
-    "eslint": "^6.6.0",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^3.10.1",
     "cross-env": "^7.0.2",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb": "^17.1.1",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.20.5"
+    "eslint-plugin-react": "^7.21.4"
   }
 }
