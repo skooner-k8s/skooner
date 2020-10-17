@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {Base64} from 'js-base64';
-import { request, post, stream, apiFactory, apiFactoryWithNamespace, requestText } from './apiProxy';
+import {request, post, stream, apiFactory, apiFactoryWithNamespace, requestText} from './apiProxy';
 import log from '../utils/log';
 import {K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret, ServiceAccount, StorageClass} from '../utils/types';
 

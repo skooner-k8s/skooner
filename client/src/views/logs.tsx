@@ -117,7 +117,6 @@ export default class Logs extends Base<Props, State> {
                 this.setState({logDownloading: false});
             }
         });
-
     }
 
     render() {
