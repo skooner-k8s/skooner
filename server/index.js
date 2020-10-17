@@ -3,7 +3,7 @@ const express = require('express');
 const http = require('http');
 const https = require('https');
 const k8s = require('@kubernetes/client-node');
-const proxy = require('http-proxy-middleware');
+const {createProxyMiddleware} = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
 
@@ -50,7 +50,7 @@ if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
-app.use('/*', proxy(proxySettings));
+app.use('/*', createProxyMiddleware(proxySettings));
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
