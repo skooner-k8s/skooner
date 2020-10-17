@@ -19,8 +19,8 @@ jobs:
         working-directory: ${{env.working-directory}}
       - run: npm run lint:ci
         working-directory: ${{env.working-directory}}
-      - run: npm test
-        working-directory: ${{env.working-directory}}
+      # - run: npm test
+      #   working-directory: ${{env.working-directory}}
 
 # @TODO: Commented out server section, as existing server doesn't support linting.  leaving as a placeholder for later
   # build-server:
