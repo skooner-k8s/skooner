@@ -96,7 +96,7 @@ export default class Exec extends Base<Props, State> {
         return (
             <div id='content'>
                 <div id='header'>
-                    <span className='header_label'>{['Pod Logs', namespace, name].join(' • ')}</span>
+                    <span className='header_label'>{['Pod Exec', namespace, name].join(' • ')}</span>
 
                     <div className='select_namespace'>
                         <Select
