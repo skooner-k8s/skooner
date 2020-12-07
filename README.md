@@ -29,7 +29,7 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
     - [Metrics](#Metrics)
 - [Development](#Development)
     - [Prerequisites](#Prerequisites)
-- [k8dash is made up of 2 parts. The server and the client](#Parts_of_k8dash)
+- [Parts of k8dash](#Parts_of_k8dash)
     - [Server](#Server)
     - [Client](#Client)
 - [License](#License)    
@@ -182,7 +182,7 @@ Once minikube is installed, you can run it with the command `minikube start --dr
 Back to [Table of Contents](#table_of_contents)
 
 <a name="Parts_of_k8dash"></a>
-## k8dash is made up of 2 parts. The server and the client.
+## Parts of k8dash
 
 <a name="Server"></a>
 ### Server
