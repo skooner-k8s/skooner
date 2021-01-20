@@ -63,7 +63,7 @@ async function requestInner(path: string, params?: any, autoLogoutOnAuthError = 
 
 export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
 
-    if (isProtoEligible(path) && isProtoEnabled) {
+    if (isProtoEligible(path) && isProtoEnabled()) {
         return requestProto(path, params, autoLogoutOnAuthError).then((value => {
             return parser(new Uint8Array(value));
         }));
