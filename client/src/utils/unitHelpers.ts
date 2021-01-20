@@ -30,8 +30,9 @@ export function parseUnitsOfRam(bytes?: number) {
     };
 }
 
-function parseUnitsOfBytes(value?: string) {
+function parseUnitsOfBytes(value?: string | {string: string}) {
     if (!value) return 0;
+    value = typeof value === 'object'? value?.string : value;
 
     const groups = value.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/)!;
     const number = parseInt(groups[1], 10);
@@ -70,8 +71,9 @@ export function unparseRam(value: number) {
     };
 }
 
-export function parseCpu(value?: string) {
+export function parseCpu(value?: string | {string: string}) {
     if (!value) return 0;
+    value = typeof value === 'object'? value?.string : value;
 
     const number = parseInt(value, 10);
     if (value.endsWith('n')) return number;
