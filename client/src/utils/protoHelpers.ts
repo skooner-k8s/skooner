@@ -1,10 +1,10 @@
 import {k8s} from '../proto/proto';
 
-const Unknown = k8s.io.apimachinery.pkg.runtime.Unknown;
-const NodeMetrics = k8s.io.metrics.pkg.apis.metrics.v1beta1.NodeMetrics;
-const NodeMetricsList = k8s.io.metrics.pkg.apis.metrics.v1beta1.NodeMetricsList;
-const PodMetrics = k8s.io.metrics.pkg.apis.metrics.v1beta1.PodMetrics;
-const PodMetricsList = k8s.io.metrics.pkg.apis.metrics.v1beta1.PodMetricsList;
+const {Unknown} = k8s.io.apimachinery.pkg.runtime;
+const {NodeMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
+const {NodeMetricsList} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
+const {PodMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
+const {PodMetricsList} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 
 
 export const kindMap: {
@@ -13,28 +13,27 @@ export const kindMap: {
             path: string
         }
     } = {
-    'NodeMetrics': {
-        'proto': NodeMetrics,
-        'path': '/apis/metrics.k8s.io/v1beta1/node'
-    },
-    'NodeMetricsList': {
-        'proto': NodeMetricsList,
-        'path': '/apis/metrics.k8s.io/v1beta1/nodes'
-    },
-    'PodMetrics': {
-        'proto': PodMetrics,
-        'path': '/apis/metrics.k8s.io/v1beta1/pod'
-    },
-    'PodMetricsList': {
-        'proto': PodMetricsList,
-        'path': '/apis/metrics.k8s.io/v1beta1/pods'
-    }
-};
+        NodeMetrics: {
+            proto: NodeMetrics,
+            path: '/apis/metrics.k8s.io/v1beta1/node',
+        },
+        NodeMetricsList: {
+            proto: NodeMetricsList,
+            path: '/apis/metrics.k8s.io/v1beta1/nodes',
+        },
+        PodMetrics: {
+            proto: PodMetrics,
+            path: '/apis/metrics.k8s.io/v1beta1/pod',
+        },
+        PodMetricsList: {
+            proto: PodMetricsList,
+            path: '/apis/metrics.k8s.io/v1beta1/pods',
+        },
+    };
 
-export function parser(raw: Uint8Array) {
-    // Skip the first 4 bytes magic number in k8s
-    raw = raw.slice(4);
-    const decoded = Unknown.decode(raw);
+export function protoParser(raw: Uint8Array) {
+    // Skip the first 4 bytes magic number in k8s and decode
+    const decoded = Unknown.decode(raw.slice(4));
     const kind = decoded?.typeMeta?.kind;
 
     // Parse the raw byte body from Unknown message
@@ -42,11 +41,10 @@ export function parser(raw: Uint8Array) {
         return {
             kind: decoded?.typeMeta?.kind,
             apiVersion: decoded?.typeMeta?.apiVersion,
-            ...kindMap[kind].proto.decode(decoded.raw).toJSON()
+            ...kindMap[kind].proto.decode(decoded.raw).toJSON(),
         };
-    } else {
-        return {}
     }
+    return {};
 }
 
 export function isProtoEnabled(): boolean {
@@ -54,7 +52,7 @@ export function isProtoEnabled(): boolean {
 }
 
 export function isProtoEligible(url: string) {
-    for (let value of Object.values(kindMap)) {
+    for (const value of Object.values(kindMap)) {
         if (url.includes(value.path)) {
             return true;
         }
@@ -63,9 +61,9 @@ export function isProtoEligible(url: string) {
 }
 
 export function enableProto(): void {
-    window.localStorage.setItem('protoEnabled', 'true')
+    window.localStorage.setItem('protoEnabled', 'true');
 }
 
 export function disableProto(): void {
-    window.localStorage.setItem('protoEnabled', 'false')
+    window.localStorage.setItem('protoEnabled', 'false');
 }

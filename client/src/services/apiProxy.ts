@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {getToken, logout} from './auth';
 import log from '../utils/log';
 import {ApiItem} from '../utils/types';
-import {isProtoEligible, isProtoEnabled, parser} from "../utils/protoHelpers";
+import {isProtoEligible, isProtoEnabled, protoParser} from '../utils/protoHelpers';
 
 type StreamCallback<T> = (data: T) => void;
 type ErrorCallback = (err: Error) => void;
@@ -27,7 +27,7 @@ const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
 const PROTO_HEADERS = {Accept: 'application/vnd.kubernetes.protobuf', 'Content-Type': 'application/json'};
 
-async function requestInner(path: string, params?: any, autoLogoutOnAuthError = true, isProtobuf: boolean = false) {
+async function requestInner(path: string, params?: any, autoLogoutOnAuthError = true, isProtobuf = false) {
     const opts = Object.assign({headers: {}}, params);
 
     const token = getToken();
@@ -62,14 +62,10 @@ async function requestInner(path: string, params?: any, autoLogoutOnAuthError = 
 }
 
 export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
-
     if (isProtoEligible(path) && isProtoEnabled()) {
-        return requestProto(path, params, autoLogoutOnAuthError).then((value => {
-            return parser(new Uint8Array(value));
-        }));
-    } else {
-        return requestJson(path, params, autoLogoutOnAuthError)
+        return requestProto(path, params, autoLogoutOnAuthError);
     }
+    return requestJson(path, params, autoLogoutOnAuthError);
 }
 
 export async function requestJson(path: string, params?: any, autoLogoutOnAuthError = true) {
@@ -77,7 +73,7 @@ export async function requestJson(path: string, params?: any, autoLogoutOnAuthEr
 }
 
 export async function requestProto(path: string, params?: any, autoLogoutOnAuthError = true) {
-    return (await requestInner(path, params, autoLogoutOnAuthError, true)).arrayBuffer();
+    return (await requestInner(path, params, autoLogoutOnAuthError, true)).arrayBuffer().then((value => protoParser(new Uint8Array(value))));
 }
 
 export async function requestText(path: string, params?: any, autoLogoutOnAuthError = true) {
