@@ -54,7 +54,7 @@ export function isProtoEnabled(): boolean {
 }
 
 export function isProtoEligible(url: string) {
-    for (let [key, value] of Object.entries(kindMap)) {
+    for (let value of Object.values(kindMap)) {
         if (url.includes(value.path)) {
             return true;
         }
