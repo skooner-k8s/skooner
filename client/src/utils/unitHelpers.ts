@@ -30,10 +30,11 @@ export function parseUnitsOfRam(bytes?: number) {
     };
 }
 
-function parseUnitsOfBytes(value?: string) {
+function parseUnitsOfBytes(value?: string | {string: string}) {
     if (!value) return 0;
+    const cleanValue = typeof value === 'object' ? value?.string : value;
 
-    const groups = value.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/)!;
+    const groups = cleanValue.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/)!;
     const number = parseInt(groups[1], 10);
 
     // number ex. 1000
@@ -70,13 +71,14 @@ export function unparseRam(value: number) {
     };
 }
 
-export function parseCpu(value?: string) {
+export function parseCpu(value?: string | {string: string}) {
     if (!value) return 0;
+    const cleanValue = typeof value === 'object' ? value?.string : value;
 
-    const number = parseInt(value, 10);
-    if (value.endsWith('n')) return number;
-    if (value.endsWith('u')) return number * 1000;
-    if (value.endsWith('m')) return number * 1000 * 1000;
+    const number = parseInt(cleanValue, 10);
+    if (cleanValue.endsWith('n')) return number;
+    if (cleanValue.endsWith('u')) return number * 1000;
+    if (cleanValue.endsWith('m')) return number * 1000 * 1000;
     return number * 1000 * 1000 * 1000;
 }
 
