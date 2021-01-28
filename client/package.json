@@ -11,7 +11,7 @@
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",
     "@types/react-modal": "1.6.8",
-    "@types/react-select": "^3.0.22",
+    "@types/react-select": "3.0.22",
     "ansi-to-react": "^5.1.1",
     "humanize-duration": "^3.24.0",
     "js-base64": "^2.6.4",
@@ -27,7 +27,7 @@
     "react-swipeable": "^5.5.1",
     "react-switch": "^5.0.1",
     "swagger-parser": "^7.0.1",
-    "typescript": "^4.0.3",
+    "typescript": "4.0.3",
     "xterm": "^3.14.5",
     "yaml": "^1.10.0"
   },
