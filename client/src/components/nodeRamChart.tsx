@@ -7,8 +7,8 @@ import {Node, Metrics} from '../utils/types';
 
 export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getNodeRamTotals(items, metrics);
-    const used = parseUnitsOfRam(totals && totals.used);
     const available = parseUnitsOfRam(totals && totals.available);
+    const used = parseUnitsOfRam(totals && totals.used, available && available.unit);
     const decimals = used && used.value > 10 ? 1 : 2;
 
     return (
