@@ -5,11 +5,11 @@ const {NodeMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 const {NodeMetricsList} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 const {PodMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 const {PodMetricsList} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
-
+const {EventList} = k8s.io.api.core.v1;
 
 export const kindMap: {
         [index: string]: {
-            proto: typeof NodeMetrics | typeof NodeMetricsList | typeof PodMetrics | typeof PodMetricsList,
+            proto: typeof NodeMetrics | typeof NodeMetricsList | typeof PodMetrics | typeof PodMetricsList | typeof EventList,
             path: string
         }
     } = {
@@ -28,6 +28,10 @@ export const kindMap: {
         PodMetricsList: {
             proto: PodMetricsList,
             path: '/apis/metrics.k8s.io/v1beta1/pods',
+        },
+        EventList: {
+            proto: EventList,
+            path: 'api/v1/events',
         },
     };
 
@@ -61,7 +65,7 @@ export function isProtoEligible(url: string) {
 }
 
 export function enableProto(): void {
-    window.localStorage.setItem('protoEnabled', 'true');
+    window.localStorage.setItem('frontend/web/static/js/app.tsx', 'true');
 }
 
 export function disableProto(): void {
