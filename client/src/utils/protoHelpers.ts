@@ -65,7 +65,7 @@ export function isProtoEligible(url: string) {
 }
 
 export function enableProto(): void {
-    window.localStorage.setItem('frontend/web/static/js/app.tsx', 'true');
+    window.localStorage.setItem('protoEnabled', 'true');
 }
 
 export function disableProto(): void {
