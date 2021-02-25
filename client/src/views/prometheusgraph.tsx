@@ -5,7 +5,7 @@ import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
 
 const {hostname} = window.location;
 const isDev = process.env.NODE_ENV !== 'production';
-const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:50642' : '';
+const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:62577' : '';
 const GRAPH_QUERIES = [
     'instance:node_cpu:ratio',
 ];
@@ -32,8 +32,8 @@ export default class PrometheusGraph extends Base<Props, State> {
             const query = GRAPH_QUERIES[i];
             const params = {
                 query,
-                start: (Date.now() / 1000).toString(),
-                end: (Date.now() / 1000 + 60 * 60).toString(), // One hour range
+                start: (Date.now() / 1000 - 60 * 60).toString(),
+                end: (Date.now() / 1000 ).toString(), // One hour range
                 step: '1',
             };
             fetch(`${url}?${new URLSearchParams(params).toString()}`)
@@ -60,13 +60,13 @@ export default class PrometheusGraph extends Base<Props, State> {
                 return this.state.data.get(value) &&
                     <div>
                         <XYPlot
-                            width={300}
-                            height={300}>
+                            width={600}
+                            height={600}>
                             <HorizontalGridLines />
                             <LineSeries
                                 data={this.state.data.get(value)}/>
                             <XAxis />
-                            <YAxis />
+                            <YAxis/>
                         </XYPlot>
                     </div>
             })}
