@@ -16,7 +16,7 @@ type Props = {
 
 type State = {
     metric: string;
-    result: string;
+    result: any;
     values: Array<Array<string>>;
 }
 
@@ -32,20 +32,22 @@ export default class PrometheusGraph extends Base<Props, State> {
                 end: (Date.now() / 1000 + 60 * 60).toString(), // One hour range
                 step: '1',
             };
-            fetch(`${url}?${new URLSearchParams(params).toString()}`).then((result) => {
-                console.log(result);
-                // @ts-ignore
-                this.setState(prevState => ({
-                    ...prevState,
-                    result,
-                }));
-            });
+            fetch(`${url}?${new URLSearchParams(params).toString()}`)
+                .then((result) => result.json())
+                .then((json) => {
+                    // @ts-ignore
+                    this.setState(prevState => ({
+                        ...prevState,
+                        result: json,
+                    }));
+                    console.log(this.state?.result);
+                });
         }
     }
 
     render() {
         return <div>
-            <div>{this.state?.result && (this.state?.result)}</div>
+            <div>{this.state?.result && (this.state?.result.data.toString())}</div>
         </div>;
     }
 }
