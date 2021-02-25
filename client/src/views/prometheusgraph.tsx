@@ -1,5 +1,6 @@
 import React from 'react';
 import Base from '../components/base';
+import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
 
 
 const {hostname} = window.location;
@@ -16,14 +17,17 @@ type Props = {
 
 type State = {
     metric: string;
-    result: any;
-    values: Array<Array<string>>;
+    data: Map<string, Array<Array<any>>>;
 }
 
 export default class PrometheusGraph extends Base<Props, State> {
     componentDidMount() {
         // TODO: use proxy if ready
         const url = `${BASE_HTTP_URL}/api/v1/query_range`;
+        this.setState((prevState => ({
+            ...prevState,
+            data: new Map()
+        })));
         for (let i = 0; i < GRAPH_QUERIES.length; i++) {
             const query = GRAPH_QUERIES[i];
             const params = {
@@ -35,19 +39,38 @@ export default class PrometheusGraph extends Base<Props, State> {
             fetch(`${url}?${new URLSearchParams(params).toString()}`)
                 .then((result) => result.json())
                 .then((json) => {
-                    // @ts-ignore
-                    this.setState(prevState => ({
-                        ...prevState,
-                        result: json,
+                    const json_data = json.data
+                    const graph_data : Array<Array<any>> = json_data.result[0].values.map((value: any) => {
+                        return {x: value[0], y: +value[1]}
+                    })
+                    this.state.data.set(query, graph_data);
+                    this.setState((prevState) => ({
+                        ...prevState
                     }));
-                    console.log(this.state?.result);
                 });
         }
     }
 
     render() {
         return <div>
-            <div>{this.state?.result && (this.state?.result.data.toString())}</div>
+            {this.state?.data && GRAPH_QUERIES.map((value, i) => {
+                if (!this.state.data.get(value)) {
+                    return <div>Pending...</div>
+                }
+                return this.state.data.get(value) &&
+                    <div>
+                        <XYPlot
+                            width={300}
+                            height={300}>
+                            <HorizontalGridLines />
+                            <LineSeries
+                                data={this.state.data.get(value)}/>
+                            <XAxis />
+                            <YAxis />
+                        </XYPlot>
+                    </div>
+            })}
+
         </div>;
     }
 }

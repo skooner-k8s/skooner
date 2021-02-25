@@ -12,6 +12,8 @@
 @import './elements/textarea.scss';
 @import './elements/textbox.scss';
 
+@import "~react-vis/dist/style";
+
 html, body, div, input, select {
 	box-sizing: border-box;
 }
@@ -110,6 +112,11 @@ button.titleBar_hamburger {
 
 .center {
 	text-align: center;
+}
+
+.rv-xy-plot__inner {
+	width: 300px;
+	height: 300px;
 }
 
 @media only screen and (max-width: $media-medium) {
