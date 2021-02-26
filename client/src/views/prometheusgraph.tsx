@@ -1,6 +1,6 @@
 import React from 'react';
-import Base from '../components/base';
 import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
+import Base from '../components/base';
 
 
 const {hostname} = window.location;
@@ -26,26 +26,24 @@ export default class PrometheusGraph extends Base<Props, State> {
         const url = `${BASE_HTTP_URL}/api/v1/query_range`;
         this.setState((prevState => ({
             ...prevState,
-            data: new Map()
+            data: new Map(),
         })));
         for (let i = 0; i < GRAPH_QUERIES.length; i++) {
             const query = GRAPH_QUERIES[i];
             const params = {
                 query,
                 start: (Date.now() / 1000 - 60 * 60).toString(),
-                end: (Date.now() / 1000 ).toString(), // One hour range
+                end: (Date.now() / 1000).toString(), // One hour range
                 step: '1',
             };
             fetch(`${url}?${new URLSearchParams(params).toString()}`)
-                .then((result) => result.json())
+                .then(result => result.json())
                 .then((json) => {
-                    const json_data = json.data
-                    const graph_data : Array<Array<any>> = json_data.result[0].values.map((value: any) => {
-                        return {x: value[0], y: +value[1]}
-                    })
-                    this.state.data.set(query, graph_data);
-                    this.setState((prevState) => ({
-                        ...prevState
+                    const jsonData = json.data;
+                    const graphData : Array<Array<any>> = jsonData.result[0].values.map((value: any) => ({x: value[0], y: +value[1]}));
+                    this.state.data.set(query, graphData);
+                    this.setState(prevState => ({
+                        ...prevState,
                     }));
                 });
         }
@@ -53,13 +51,12 @@ export default class PrometheusGraph extends Base<Props, State> {
 
     render() {
         return <div>
-            {this.state?.data && GRAPH_QUERIES.map((value, i) => {
+            {this.state?.data && GRAPH_QUERIES.map((value) => {
                 if (!this.state.data.get(value)) {
-                    return <div>Pending...</div>
+                    return <div>Pending...</div>;
                 }
-                console.log(this.state.data)
-                return this.state.data.get(value) &&
-                    <div>
+                return this.state.data.get(value)
+                    && <div>
                         <XYPlot
                             width={600}
                             height={600}
@@ -68,19 +65,19 @@ export default class PrometheusGraph extends Base<Props, State> {
                             <LineSeries
                                 data={this.state.data.get(value)}/>
                             <XAxis
-                                tickFormat={function tickFormat(d){
-                                    const date = new Date(d*1000)
-                                    return date.toLocaleTimeString()
+                                tickFormat={function tickFormat(d) {
+                                    const date = new Date(d * 1000);
+                                    return date.toLocaleTimeString();
                                 }}
                                 tickLabelAngle={30}
                             />
                             <YAxis
-                                tickFormat={function tickFormet(d){
-                                    return Math.round(d*100) + "%"
+                                tickFormat={function tickFormet(d) {
+                                    return `${Math.round(d * 100)}%`;
                                 }}
                             />
                         </XYPlot>
-                    </div>
+                    </div>;
             })}
 
         </div>;
