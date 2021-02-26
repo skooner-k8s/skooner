@@ -5,7 +5,7 @@ import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
 
 const {hostname} = window.location;
 const isDev = process.env.NODE_ENV !== 'production';
-const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:62577' : '';
+const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:57008' : '';
 const GRAPH_QUERIES = [
     'instance:node_cpu:ratio',
 ];
@@ -57,16 +57,28 @@ export default class PrometheusGraph extends Base<Props, State> {
                 if (!this.state.data.get(value)) {
                     return <div>Pending...</div>
                 }
+                console.log(this.state.data)
                 return this.state.data.get(value) &&
                     <div>
                         <XYPlot
                             width={600}
-                            height={600}>
+                            height={600}
+                            xType="time">
                             <HorizontalGridLines />
                             <LineSeries
                                 data={this.state.data.get(value)}/>
-                            <XAxis />
-                            <YAxis/>
+                            <XAxis
+                                tickFormat={function tickFormat(d){
+                                    const date = new Date(d*1000)
+                                    return date.toLocaleTimeString()
+                                }}
+                                tickLabelAngle={30}
+                            />
+                            <YAxis
+                                tickFormat={function tickFormet(d){
+                                    return Math.round(d*100) + "%"
+                                }}
+                            />
                         </XYPlot>
                     </div>
             })}
