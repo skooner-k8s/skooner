@@ -15,6 +15,7 @@ const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
+const PROM_URL = process.env.PROM_URL || 'http://127.0.0.1:9090';
 
 console.log('OIDC_URL: ', OIDC_URL || 'None');
 
@@ -38,6 +39,17 @@ const proxySettings = {
     logLevel: 'debug',
     onError,
 };
+const proxySettingsProm = {
+    target: PROM_URL,
+    ws: false,
+    secure: false,
+    changeOrigin: true,
+    logLevel: 'debug',
+    onError,
+    pathRewrite: {
+        '/prom': '/'
+    }
+};
 
 if (DEBUG_VERBOSE) {
     proxySettings.onProxyRes = onProxyRes;
@@ -50,6 +62,7 @@ if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
+app.use('/prom', createProxyMiddleware(proxySettingsProm));
 app.use('/*', createProxyMiddleware(proxySettings));
 app.use(handleErrors);
 

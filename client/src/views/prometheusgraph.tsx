@@ -3,9 +3,7 @@ import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries} from 'react-vis';
 import Base from '../components/base';
 
 
-const {hostname} = window.location;
-const isDev = process.env.NODE_ENV !== 'production';
-const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:57008' : '';
+const BASE_HTTP_URL = 'http://localhost:4654/prom';
 const GRAPH_QUERIES = [
     'instance:node_cpu:ratio',
     'instance:node_memory_utilisation:ratio',
@@ -41,7 +39,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                 .then(result => result.json())
                 .then((json) => {
                     const jsonData = json.data;
-                    const graphData : Array<Array<any>> = jsonData.result[0].values.map((value: any) => ({x: value[0], y: +value[1]}));
+                    const graphData : Array<Array<any>> = jsonData.result[0]?.values.map((value: any) => ({x: value[0], y: +value[1]}));
                     this.state.data.set(query, graphData);
                     this.setState(prevState => ({
                         ...prevState,
@@ -54,11 +52,14 @@ export default class PrometheusGraph extends Base<Props, State> {
         return <div>
             {this.state?.data && GRAPH_QUERIES.map((value) => {
                 if (!this.state.data.get(value)) {
-                    return <div>Pending...</div>;
+                    return <div>
+                        <span style={{fontWeight: 'bold'}}>${value}</span>
+                        <div>Pending...</div>
+                    </div>;
                 }
                 return this.state.data.get(value)
                     && <div>
-                        <span>${value}</span>
+                        <div style={{fontWeight: 'bold'}}>${value}</div>
                         <XYPlot
                             yPadding={60}
                             width={600}
@@ -67,12 +68,6 @@ export default class PrometheusGraph extends Base<Props, State> {
                             <HorizontalGridLines />
                             <LineSeries
                                 data={this.state.data.get(value)}
-                                onNearestXY={datapoint => (
-                                    <div style={{background: 'black'}}>
-                                        {datapoint.x} <br/>
-                                        {datapoint.y}
-                                    </div>
-                                )}
                             />
                             <XAxis
                                 tickFormat={function tickFormat(d) {
@@ -80,6 +75,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                                     return date.toLocaleTimeString();
                                 }}
                                 tickLabelAngle={30}
+                                tickTotal={5}
                             />
                             <YAxis
                                 tickFormat={function tickFormet(d) {
