@@ -8,6 +8,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:57008' : '';
 const GRAPH_QUERIES = [
     'instance:node_cpu:ratio',
+    'instance:node_memory_utilisation:ratio',
 ];
 
 
@@ -56,14 +57,23 @@ export default class PrometheusGraph extends Base<Props, State> {
                     return <div>Pending...</div>;
                 }
                 return this.state.data.get(value)
-                    && <div>
+                    && <div style={{marginLeft: '36px'}}>
+                        <span>${value}</span>
                         <XYPlot
+                            yPadding={60}
                             width={600}
                             height={600}
                             xType="time">
                             <HorizontalGridLines />
                             <LineSeries
-                                data={this.state.data.get(value)}/>
+                                data={this.state.data.get(value)}
+                                onNearestXY={(datapoint) => {
+                                    return <div style={{background: 'black'}}>
+                                        {datapoint.x} <br/>
+                                        {datapoint.y}
+                                    </div>;
+                                }}
+                            />
                             <XAxis
                                 tickFormat={function tickFormat(d) {
                                     const date = new Date(d * 1000);
@@ -73,8 +83,10 @@ export default class PrometheusGraph extends Base<Props, State> {
                             />
                             <YAxis
                                 tickFormat={function tickFormet(d) {
-                                    return `${Math.round(d * 100)}%`;
+                                    return `${(d * 100).toFixed(2)}%`;
                                 }}
+                                tickLabelAngle={30}
+                                marginLeft={50}
                             />
                         </XYPlot>
                     </div>;
