@@ -67,12 +67,12 @@ export default class PrometheusGraph extends Base<Props, State> {
                             <HorizontalGridLines />
                             <LineSeries
                                 data={this.state.data.get(value)}
-                                onNearestXY={(datapoint) => {
-                                    return <div style={{background: 'black'}}>
+                                onNearestXY={datapoint => (
+                                    <div style={{background: 'black'}}>
                                         {datapoint.x} <br/>
                                         {datapoint.y}
-                                    </div>;
-                                }}
+                                    </div>
+                                )}
                             />
                             <XAxis
                                 tickFormat={function tickFormat(d) {
