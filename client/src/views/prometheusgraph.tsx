@@ -57,7 +57,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                     return <div>Pending...</div>;
                 }
                 return this.state.data.get(value)
-                    && <div style={{marginLeft: '36px'}}>
+                    && <div>
                         <span>${value}</span>
                         <XYPlot
                             yPadding={60}
@@ -86,7 +86,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                                     return `${(d * 100).toFixed(2)}%`;
                                 }}
                                 tickLabelAngle={30}
-                                marginLeft={50}
+                                tickPadding={-5}
                             />
                         </XYPlot>
                     </div>;
