@@ -5,8 +5,8 @@ import Base from '../components/base';
 
 const BASE_HTTP_URL = 'http://localhost:4654/prom';
 const GRAPH_QUERIES = [
-    'instance:node_cpu:ratio',
-    'instance:node_memory_utilisation:ratio',
+    ['instance:node_cpu:ratio', 'Node CPU Usage'],
+    ['instance:node_memory_utilisation:ratio', 'Node Memory Usage'],
 ];
 
 
@@ -28,7 +28,7 @@ export default class PrometheusGraph extends Base<Props, State> {
             data: new Map(),
         })));
         for (let i = 0; i < GRAPH_QUERIES.length; i++) {
-            const query = GRAPH_QUERIES[i];
+            const query = GRAPH_QUERIES[i][0];
             const params = {
                 query,
                 start: (Date.now() / 1000 - 60 * 60).toString(),
@@ -51,15 +51,17 @@ export default class PrometheusGraph extends Base<Props, State> {
     render() {
         return <div>
             {this.state?.data && GRAPH_QUERIES.map((value) => {
-                if (!this.state.data.get(value)) {
+                const query = value[0];
+                const title = value[1];
+                if (!this.state.data.get(query)) {
                     return <div>
-                        <span style={{fontWeight: 'bold'}}>${value}</span>
+                        <span style={{fontWeight: 'bold'}}>{title}</span>
                         <div>Pending...</div>
                     </div>;
                 }
-                return this.state.data.get(value)
+                return this.state.data.get(query)
                     && <div>
-                        <div style={{fontWeight: 'bold'}}>${value}</div>
+                        <div style={{fontWeight: 'bold'}}>{title}</div>
                         <XYPlot
                             yPadding={60}
                             width={600}
@@ -67,7 +69,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                             xType="time">
                             <HorizontalGridLines />
                             <LineSeries
-                                data={this.state.data.get(value)}
+                                data={this.state.data.get(query)}
                             />
                             <XAxis
                                 tickFormat={function tickFormat(d) {
