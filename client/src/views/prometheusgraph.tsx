@@ -70,6 +70,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                             <HorizontalGridLines />
                             <LineSeries
                                 data={this.state.data.get(query)}
+                                color={'#6822aa'}
                             />
                             <XAxis
                                 tickFormat={function tickFormat(d) {
