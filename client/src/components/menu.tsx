@@ -64,7 +64,7 @@ export default class Menu extends Base<MenuProps, MenuStates> {
                         )}
 
                         {canView(rules, api.namespace) && (
-                            <MenuItem title='PrometheusGraph' path='prometheusgraph' resource='Node' onClick={onClick} />
+                            <MenuItem title='PrometheusGraphs' path='prometheusgraphs' resource='Node' onClick={onClick} />
                         )}
                     </Group>
 

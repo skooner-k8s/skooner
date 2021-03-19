@@ -26,7 +26,7 @@ import PersistentVolumeClaims from './views/persistentVolumeClaims';
 import PersistentVolumes from './views/persistentVolumes';
 import Pod from './views/pod';
 import Pods from './views/pods';
-import PrometheusGraph from './views/prometheusgraph';
+import PrometheusGraphs from './views/prometheusgraphs';
 import ReplicaSet from './views/replicaSet';
 import ReplicaSets from './views/replicaSets';
 import Role from './views/role';
@@ -110,7 +110,7 @@ registerRoute('storageclass', () => <StorageClasses />);
 registerRoute('storageclass/:name', params => <StorageClass {...params} />);
 registerRoute('workload', () => <Workloads />);
 
-registerRoute('prometheusgraph', () => <PrometheusGraph />);
+registerRoute('prometheusgraphs', () => <PrometheusGraphs />);
 // @ts-ignore
 registerRoute('workload/cronjob/:namespace/:name', params => <CronJob {...params} />);
 // @ts-ignore
