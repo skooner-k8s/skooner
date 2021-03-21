@@ -46,6 +46,7 @@ const apis = {
     exec,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
+    context,
 
     clusterRole,
     namespace: namespaceService,
@@ -185,6 +186,10 @@ function logs(namespace: string, name: string, container: string, tailLines: num
         items.push(message);
         cb(items);
     }
+}
+
+function context() {
+    return request('/context');
 }
 
 export default apis;

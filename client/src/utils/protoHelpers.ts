@@ -1,4 +1,5 @@
 import {k8s} from '../proto/proto';
+import {getContextItem} from './localStorageHelpers';
 
 const {Unknown} = k8s.io.apimachinery.pkg.runtime;
 const {NodeMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
@@ -18,36 +19,36 @@ export const kindMap: {
                 | typeof EventList
                 | typeof NodeList
                 | typeof PodList,
-            path: string
+            paths: string[]
         }
     } = {
         NodeMetrics: {
             proto: NodeMetrics,
-            path: '/apis/metrics.k8s.io/v1beta1/node',
+            paths: ['/apis/metrics.k8s.io/v1beta1/node'],
         },
         NodeMetricsList: {
             proto: NodeMetricsList,
-            path: '/apis/metrics.k8s.io/v1beta1/nodes',
+            paths: ['/apis/metrics.k8s.io/v1beta1/nodes'],
         },
         PodMetrics: {
             proto: PodMetrics,
-            path: '/apis/metrics.k8s.io/v1beta1/pod',
+            paths: ['/apis/metrics.k8s.io/v1beta1/pod'],
         },
         PodMetricsList: {
             proto: PodMetricsList,
-            path: '/apis/metrics.k8s.io/v1beta1/pods',
+            paths: ['/apis/metrics.k8s.io/v1beta1/pods'],
         },
         EventList: {
             proto: EventList,
-            path: 'api/v1/events',
+            paths: ['api/v1/events'],
         },
         NodeList: {
             proto: NodeList,
-            path: 'api/v1/nodes',
+            paths: ['api/v1/nodes'],
         },
         PodList: {
             proto: PodList,
-            path: 'api/v1/pods',
+            paths: ['api/v1/pods', 'v1beta1/namespaces/kube-system/pods', 'v1/namespaces/kube-system/pods'],
         },
     };
 
@@ -68,22 +69,14 @@ export function protoParser(raw: Uint8Array) {
 }
 
 export function isProtoEnabled(): boolean {
-    return window.localStorage.getItem('protoEnabled') === 'true';
+    return getContextItem('protoEnabled');
 }
 
 export function isProtoEligible(url: string) {
     for (const value of Object.values(kindMap)) {
-        if (url.includes(value.path)) {
+        if (value.paths.some(path => url.includes(path))) {
             return true;
         }
     }
     return false;
-}
-
-export function enableProto(): void {
-    window.localStorage.setItem('protoEnabled', 'true');
-}
-
-export function disableProto(): void {
-    window.localStorage.setItem('protoEnabled', 'false');
 }

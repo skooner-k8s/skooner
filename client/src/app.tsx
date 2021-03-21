@@ -4,9 +4,11 @@ import {Notifier} from './components/notifier';
 import Error from './components/error';
 import {initRouter} from './router';
 import log from './utils/log';
+import {setContext, Context} from './utils/localStorageHelpers';
 import Button from './components/button';
 import LogoSvg from './art/k8dashSvg';
 import HamburgerSvg from './art/hamburgerSvg';
+import api from './services/api';
 
 type State = {
     content?: ReactNode;
@@ -27,11 +29,18 @@ class App extends Component<{}, State> {
             this.setState({content, contentDate: Date.now(), hasError: false});
             window.scrollTo(0, 0);
         });
+        this.setContext();
     }
 
     componentDidCatch(err: Error, info: any) { // eslint-disable-line class-methods-use-this
         log.error('Error rendering ', {err, info});
         this.setState({hasError: true});
+    }
+
+    setContext() {
+        api.context().then((context: Context) => {
+            setContext(context);
+        });
     }
 
     render() {
