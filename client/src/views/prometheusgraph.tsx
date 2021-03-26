@@ -87,8 +87,8 @@ export default class PrometheusGraph extends Base<Props, State> {
                         </linearGradient>
                     </GradientDefs>
                     <AreaSeries
-                        color={'url(#CoolGradient)'}
-                        // color={'#6822aa'} this is another option
+                        // color={'url(#CoolGradient)'} this is another option
+                        color={'#6822aa'}
                         opacity={0.5}
                         data={this.state.data}
                     />
