@@ -1,5 +1,5 @@
 import React from 'react';
-import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries, Crosshair} from 'react-vis';
+import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries, Crosshair, GradientDefs, AreaSeries} from 'react-vis';
 import Base from '../components/base';
 
 
@@ -80,6 +80,18 @@ export default class PrometheusGraph extends Base<Props, State> {
                     height={600}
                     xType="time"
                     onMouseLeave={this.onMouseLeave}>
+                    <GradientDefs>
+                        <linearGradient id="CoolGradient" x1="0" x2="1" y1="0" y2="1">
+                            <stop offset="0%" stopColor="#6822aa" stopOpacity={0.5} />
+                            <stop offset="100%" stopColor="blue" stopOpacity={0.5} />
+                        </linearGradient>
+                    </GradientDefs>
+                    <AreaSeries
+                        color={'url(#CoolGradient)'}
+                        // color={'#6822aa'} this is another option
+                        opacity={0.5}
+                        data={this.state.data}
+                    />
                     <HorizontalGridLines />
                     <LineSeries
                         data={this.state.data}
