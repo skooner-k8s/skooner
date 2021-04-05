@@ -92,9 +92,11 @@ export default class PrometheusGraph extends Base<Props, State> {
                     />
                     <Crosshair
                         values={this.state.crosshairValues}
+                        titleFormat={
+                            d => ({title: 'Time', value: new Date(d[0].x * 1000).toLocaleTimeString()})
+                        }
                         itemsFormat={
                             d => [
-                                {title: 'Time', value: new Date(d[0].x * 1000).toLocaleTimeString()},
                                 {title: 'Percent', value: `${(d[0].y * 100).toFixed(2)}%`},
                             ]
                         }
