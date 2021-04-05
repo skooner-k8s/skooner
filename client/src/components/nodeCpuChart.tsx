@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import Chart from './chart';
+// import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 import {Node, Metrics} from '../utils/types';

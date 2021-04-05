@@ -1,5 +1,5 @@
 import React from 'react';
-import {XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries, Crosshair, AreaSeries} from 'react-vis';
+import {XYPlot, XAxis, YAxis, LineSeries, Crosshair, AreaSeries} from 'react-vis';
 import Base from '../components/base';
 
 
