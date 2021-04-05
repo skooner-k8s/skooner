@@ -67,17 +67,17 @@ export default class PrometheusGraph extends Base<Props, State> {
     render() {
         if (!this.state || !this.state.data) {
             return <div>
-                <span style={{fontWeight: 'bold'}}>{this.props.title}</span>
+                {/* <span style={{fontWeight: 'bold'}}>{this.props.title}</span> */}
                 <div>Pending...</div>
             </div>;
         }
         return this.state.data
             && <div>
-                <div style={{fontWeight: 'bold'}}>{this.props.title}</div>
+                {/* <div style={{fontWeight: 'bold'}}>{this.props.title}</div> */}
                 <XYPlot
                     yPadding={60}
-                    width={600}
-                    height={600}
+                    width={150}
+                    height={150}
                     xType="time"
                     onMouseLeave={this.onMouseLeave}>
                     <AreaSeries
@@ -93,21 +93,27 @@ export default class PrometheusGraph extends Base<Props, State> {
                     />
                     <Crosshair
                         values={this.state.crosshairValues}
+                        itemsFormat={
+                            d => [
+                                {title: 'Time', value: new Date(d[0].x * 1000).toLocaleTimeString()},
+                                {title: 'Percent', value: `${(d[0].y * 100).toFixed(2)}%`},
+                            ]
+                        }
                         className={'test-class-name'}
                     />
                     <XAxis
                         tickFormat={function tickFormat(d) {
                             const date = new Date(d * 1000);
-                            return date.toLocaleTimeString();
+                            return date.toLocaleTimeString().slice(0, -6);
                         }}
-                        tickLabelAngle={30}
-                        tickTotal={5}
+                        tickPadding={5}
+                        tickTotal={3}
                     />
                     <YAxis
                         tickFormat={function tickFormet(d) {
                             return `${(d * 100).toFixed(2)}%`;
                         }}
-                        tickLabelAngle={30}
+                        tickLabelAngle={0}
                         tickPadding={-5}
                     />
                 </XYPlot>

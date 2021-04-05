@@ -4,6 +4,7 @@ import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, parseUnitsOfRam} from '../utils/unitHelpers';
 import {Node, Metrics} from '../utils/types';
+import PrometheusGraph from '../views/prometheusgraph';
 
 export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getNodeRamTotals(items, metrics);
@@ -11,16 +12,25 @@ export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?
     const used = parseUnitsOfRam(totals && totals.used, available && available.unit);
     const decimals = used && used.value > 10 ? 1 : 2;
 
+    const query = {
+        queryString: 'instance:node_memory_utilisation:ratio',
+        title: 'Node Memory Usage',
+    };
+
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart
-                    decimals={decimals}
-                    used={used && used.value}
-                    usedSuffix={used && used.unit}
-                    available={available && available.value}
-                    availableSuffix={available && available.unit}
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
                 />
+                // <Chart
+                //     decimals={decimals}
+                //     used={used && used.value}
+                //     usedSuffix={used && used.unit}
+                //     available={available && available.value}
+                //     availableSuffix={available && available.unit}
+                // />
             ) : (
                 <LoadingChart />
             )}
