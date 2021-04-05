@@ -85,7 +85,6 @@ export default class PrometheusGraph extends Base<Props, State> {
                         opacity={0.6}
                         data={this.state.data}
                     />
-                    <HorizontalGridLines />
                     <LineSeries
                         data={this.state.data}
                         color={'#6822aa'}
@@ -111,7 +110,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                     />
                     <YAxis
                         tickFormat={function tickFormet(d) {
-                            return `${(d * 100).toFixed(2)}%`;
+                            return `${(d * 100).toFixed(0)}%`;
                         }}
                         tickLabelAngle={0}
                         tickPadding={-5}
