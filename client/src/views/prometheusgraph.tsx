@@ -79,6 +79,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                     width={150}
                     height={150}
                     xType="time"
+                    yDomain={[0, 1]}
                     onMouseLeave={this.onMouseLeave}>
                     <AreaSeries
                         color={'#6822aa'}
