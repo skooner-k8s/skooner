@@ -2,6 +2,7 @@
 FROM node:12.4.0-alpine as build-deps
 WORKDIR /usr/src/app
 COPY client/package.json client/package-lock.json ./
+RUN apk add --no-cache python build-base
 RUN npm i
 
 COPY client/ ./
