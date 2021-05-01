@@ -5,7 +5,7 @@ import Error from './components/error';
 import {initRouter} from './router';
 import log from './utils/log';
 import Button from './components/button';
-import LogoSvg from './art/k8dashSvg';
+import LogoSvg from './art/skoonerSvg';
 import HamburgerSvg from './art/hamburgerSvg';
 
 type State = {
