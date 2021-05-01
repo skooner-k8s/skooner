@@ -1,6 +1,6 @@
 {
-  "short_name": "K8Dash",
-  "name": "K8Dash - Kubernetes Dashboard",
+  "short_name": "Skooner",
+  "name": "Skooner - Kubernetes Dashboard",
   "icons": [
     {
       "src": "logo.png",
