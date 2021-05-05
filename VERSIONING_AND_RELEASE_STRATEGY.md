@@ -6,7 +6,7 @@
 - **[Breaking Changes Guide](#breaking-changes-guide)**<br>
 
 ## Versioning Strategy
-Once k8dash version v1.0.0 is released, subsequent releases will follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).  
+Once Skooner version v1.0.0 is released, subsequent releases will follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).  
 Until then, breaking changes may occur without an uptick to the Major version.  
 
 Versions will use the `v<semantic version>` tag pattern.
@@ -26,7 +26,7 @@ Versions will use the `v<semantic version>` tag pattern.
 **Method**: Release Stable branch as a Minor/Patch release
 
 ### Strategy Reasoning
-- To support agile feature additions at a monthly pace, users of k8dash can expect 6 months of Stable updates on each Major version before 
+- To support agile feature additions at a monthly pace, users of Skooner can expect 6 months of Stable updates on each Major version before 
 needing to review any breaking changes. Users can simply subscribe to a particular Major version and pull the latest 
 changes for that version without worry.
 - If users want to be on the cutting edge, they have the option of subscribing to the latest changes on the Main branch.
@@ -46,7 +46,7 @@ changes for that version without worry.
 
 ## Breaking Changes Guide
 ### In General, removing/changing any particular interface in a non-additive way
-In general, if logic exists that interfaces with anything outside of k8dash (including user interfaces), removing that logic or changing the contract is likely
+In general, if logic exists that interfaces with anything outside of Skooner (including user interfaces), removing that logic or changing the contract is likely
 considered a breaking change.  Adding content/features to a user interface is additive and not a breaking change, unless it results
 in a major negative performance impact.
 
@@ -82,7 +82,7 @@ Changes in the minimum resource requirements for the deployment, due to a featur
 but ideally is considered in obvious cases.
 
 A new feature might be more CPU intensive or require caching that increases memory requirements.  Without this new
-minimum, k8dash might crash. Consider the following:
+minimum, Skooner might crash. Consider the following:
 
 - How might the requested change impact the performance of pulling or presenting a list of N items on large and active clusters?
    - Pulling a large dataset (even for a few items), depending on the auto-refresh frequency and use frequency, 

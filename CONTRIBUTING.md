@@ -1,4 +1,4 @@
-# Contributing to K8dash
+# Contributing to Skooner
 We welcome any kinds of contribution and want to make contributing to this project as easy and transparent as
 possible.
 
