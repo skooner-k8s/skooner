@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {getToken, logout} from './auth';
 import log from '../utils/log';
 import {ApiItem} from '../utils/types';
-import {isProtoEligible, isProtoEnabled, protoParser} from '../utils/protoHelpers';
+import {isProtoEligible, protoParser} from '../utils/protoHelpers';
 
 type StreamCallback<T> = (data: T) => void;
 type ErrorCallback = (err: Error) => void;
@@ -62,7 +62,7 @@ async function requestInner(path: string, params?: any, autoLogoutOnAuthError = 
 }
 
 export async function request(path: string, params?: any, autoLogoutOnAuthError = true) {
-    if (isProtoEligible(path) && isProtoEnabled()) {
+    if (isProtoEligible(path)) {
         return requestProto(path, params, autoLogoutOnAuthError);
     }
     return requestJson(path, params, autoLogoutOnAuthError);
