@@ -14,7 +14,6 @@ const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
-const USE_PROTO = process.env.USE_PROTO !== 'false' || true;
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
 
 console.log('OIDC_URL: ', OIDC_URL || 'None');
@@ -51,19 +50,12 @@ if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
-app.get('/context', getContext);
 app.use('/*', createProxyMiddleware(proxySettings));
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
 http.createServer(app).listen(port);
 console.log(`Server started. Listening on port ${port}`);
-
-function getContext(req, res) {
-    res.json({
-        "protoEnabled": USE_PROTO,
-    })
-}
 
 function preAuth(req, res, next) {
     const auth = req.header('Authorization');
