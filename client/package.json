@@ -5,7 +5,6 @@
   "homepage": ".",
   "dependencies": {
     "@types/humanize-duration": "^3.18.1",
-    "@types/jest": "^26.0.14",
     "@types/js-base64": "^3.0.0",
     "@types/js-cookie": "^2.2.6",
     "@types/lodash": "^4.14.162",
