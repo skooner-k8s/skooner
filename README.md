@@ -2,24 +2,26 @@
 
 __(FYI: we are changing our name from "k8dash" to "skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
 
-skooner is the easiest way to manage your Kubernetes cluster. 
+skooner is the easiest way to manage your Kubernetes cluster. Why?
 
-* **Full cluster management**: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
-* **Blazing fast and Always Live**: no need to refresh pages to see the latest cluster status
-* **Quickly visualize cluster health at a glance**: Real time charts help quickly track down poorly performing resources
-* **Easy CRUD and scaling**: plus inline API docs to easily understand what each field does
-* **100% responsive** (runs on your phone/tablet)
-* **Simple OpenID integration**: no special proxies required
-* **Simple installation**: use the provided yaml resources to have skooner up and running in under 1 minute (no, seriously)
-* **See skooner in action**:
-    [![skooner - Kubernetes Dashboard](https://raw.githubusercontent.com/indeedeng/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "skooner - Kubernetes Dashboard")
+* Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
+* Blazing fast and Always Live: no need to refresh pages to see the latest
+* Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
+* Easy CRUD and scaling: plus inline API docs to easily understand what each field does
+* 100% responsive (runs on your phone/tablet)
+* Simple OpenID integration: no special proxies required
+* Simple installation: use the provided yaml resources to have k8dash up and running in under 1 minute (no, seriously)
+
+
+## Click the video below to see skooner in action
+[![skooner - Kubernetes Dashboard](https://raw.githubusercontent.com/indeedeng/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "skooner - Kubernetes Dashboard")
 
 <br>
 
 # Table of Contents
 - [Prerequisites](#Prerequisites)
 - [Getting Started](#Getting-started)
-- [Kubectl proxy](#kubectl-proxy)
+- [Kubectl proxy](#kubectl_proxy)
 - [Logging in](#Logging-in)
     - [Service Account Token](#Service-Account-Token)
     - [OIDC](#oidc)
@@ -34,7 +36,7 @@ skooner is the easiest way to manage your Kubernetes cluster.
 
 ## Prerequisites
 + A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/))
-+ A [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
++ [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
 + A Kubernetes cluster configured for [OpenId Connect](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens) authentication (optional)
 
 (Back to [Table of Contents](#table-of-contents))
@@ -73,7 +75,7 @@ spec:
 (Back to [Table of Contents](#table-of-contents))
 
 # kubectl proxy
-Unfortunately, `kubectl proxy` cannot be used to access skooner. According to the information at [https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961](https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961), it seems that `kubectl proxy` strips the Authorization header when it proxies requests. From that link:
+Unfortunately, `kubectl proxy` can not be used to access k8dash. According to the information at [https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961](https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961), it seems that `kubectl proxy` strips the Authorization header when it proxies requests. From that link:
 
 > this is working as expected. "proxying" through the apiserver will not get you standard proxy behavior (preserving Authorization headers end-to-end), because the API is not being used as a standard proxy
 
@@ -108,10 +110,10 @@ Retrieve the `token` value from the secret and enter it into the login screen to
 skooner makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
 
 To learn more about configuring a cluster for OIDC, check out these great links
-+ [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
-+ [Kubernetes Day 2 Operations: AuthN/AuthZ with OIDC and a Little Help From Keycloak | by Bob Killen | Medium](https://medium.com/@mrbobbytables/kubernetes-day-2-operations-authn-authz-with-oidc-and-a-little-help-from-keycloak-de4ea1bdbbe)
-+ [kubectl with OpenID Connect. TL;DR | by Hidetake Iwata | Medium](https://medium.com/@int128/kubectl-with-openid-connect-43120b451672)
-+ [kubernetes configure oidc - Google Search](https://www.google.com/search?q=kubernetes+configure+oidc)
++ [https://kubernetes.io/docs/reference/access-authn-authz/authentication/](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
++ [https://medium.com/@mrbobbytables/kubernetes-day-2-operations-authn-authz-with-oidc-and-a-little-help-from-keycloak-de4ea1bdbbe](https://medium.com/@mrbobbytables/kubernetes-day-2-operations-authn-authz-with-oidc-and-a-little-help-from-keycloak-de4ea1bdbbe)
++ [https://medium.com/@int128/kubectl-with-openid-connect-43120b451672](https://medium.com/@int128/kubectl-with-openid-connect-43120b451672)
++ [https://www.google.com/search?q=kubernetes+configure+oidc&oq=kubernetes+configure+oidc&aqs=chrome..69i57j0.4772j0j7&sourceid=chrome&ie=UTF-8](https://www.google.com/search?q=kubernetes+configure+oidc&oq=kubernetes+configure+oidc&aqs=chrome..69i57j0.4772j0j7&sourceid=chrome&ie=UTF-8)
 
 You can deploy skooner with oidc support using something like the following script...
 
@@ -122,7 +124,7 @@ OIDC_URL=<put your endpoint url here... something like https://accounts.google.c
 OIDC_ID=<put your id here... something like blah-blah-blah.apps.googleusercontent.com>
 OIDC_SECRET=<put your oidc secret here>
 
-kubectl create secret -n kube-system generic skooner \
+kubectl create secret -n kube-system generic k8dash \
 --from-literal=url="$OIDC_URL" \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET"
@@ -133,7 +135,7 @@ kubectl apply -f https://raw.githubusercontent.com/indeedeng/k8dash/master/kuber
 
 Additionally, there are a few other OIDC options you can provide via environment variables. First is `OIDC_SCOPES`. The default value for this value is `openid email`, but additional scopes can also be added using something like `OIDC_SCOPES="openid email groups"`.
 
-The other option is `OIDC_METADATA`. skooner uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a json string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
+The other option is `OIDC_METADATA`. k8dash uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a json string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
 
 (Back to [Table of Contents](#table-of-contents))
 
@@ -151,7 +153,7 @@ skooner     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
 (Back to [Table of Contents](#table-of-contents))
 
 ## Metrics
-skooner relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have `metrics-server` installed to get the best experience from skooner.
+skooner relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
@@ -182,7 +184,7 @@ During development, the server will use whatever is configured in `~/.kube/confi
 ### Client
 The client is a React application (using TypeScript) with minimal other dependencies.
 
-To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local skooner dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
+To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local k8dash dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
 
 (Back to [Table of Contents](#table-of-contents))
 
