@@ -7,6 +7,7 @@ import log from './utils/log';
 import Button from './components/button';
 import LogoSvg from './art/skoonerSvg';
 import HamburgerSvg from './art/hamburgerSvg';
+import api from './services/api';
 
 type State = {
     content?: ReactNode;
