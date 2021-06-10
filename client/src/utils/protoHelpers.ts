@@ -49,7 +49,7 @@ export function parser(raw: Uint8Array) {
     }
 }
 
-export function isProtoEnabled(): boolean {
+export function isProtoEnabled(url: string): boolean {
     return window.localStorage.getItem('protoEnabled') === 'true';
 }
 
