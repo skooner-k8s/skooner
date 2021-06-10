@@ -1,10 +1,7 @@
 <a name="top"></a>
-# skooner - Kubernetes Dashboard
+# k8dash - Kubernetes Dashboard
 
-__(FYI: we are changing our name from "k8dash" to "skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
-
-skooner is the easiest way to manage your Kubernetes cluster. Why?
-
+k8dash is the easiest way to manage your Kubernetes cluster. Why?
 * Full cluster management: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
 * Blazing fast and Always Live: no need to refresh pages to see the latest
 * Quickly visualize cluster health at a glance: Real time charts help quickly track down poorly performing resources
@@ -14,8 +11,8 @@ skooner is the easiest way to manage your Kubernetes cluster. Why?
 * Simple installation: use the provided yaml resources to have k8dash up and running in under 1 minute (no, seriously)
 
 
-## Click the video below to see skooner in action
-[![skooner - Kubernetes Dashboard](https://raw.githubusercontent.com/indeedeng/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "skooner - Kubernetes Dashboard")
+## Click the video below to see k8dash in action
+[![k8dash - Kubernetes Dashboard](https://raw.githubusercontent.com/indeedeng/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "k8dash - Kubernetes Dashboard")
 
 <br>
 
@@ -27,17 +24,17 @@ skooner is the easiest way to manage your Kubernetes cluster. Why?
 - [Kubectl proxy](#kubectl_proxy)  
 - [Logging in](#Logging_in)  
     - [Service Account Token](#Service_Account_Token)
-    - [Running skooner with OpenId Connect (oidc)](#oidc)
-    - [Running skooner with NodePort](#Nodeport)
+    - [Running k8dash with OpenId Connect (oidc)](#oidc)
+    - [Running k8dash with NodePort](#Nodeport)
     - [Metrics](#Metrics)
 - [Development](#Development)
     - [Prerequisites](#Prerequisites)
-- [Parts of skooner](#Parts_of_skooner)
+- [Parts of k8dash](#Parts_of_k8dash)
     - [Server](#Server)
     - [Client](#Client)
 - [License](#License)    
-
 <a name="Prerequisites"></a>
+
 ## Prerequisites
 + A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/))
 + [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
@@ -47,7 +44,7 @@ Back to [Table of Contents](#table_of_contents)
 
 <a name="Getting_started"></a>
 ## Getting Started
-Deploy skooner with something like the following...
+Deploy k8dash with something like the following...
 
 NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash.yaml) before running the script below.
 
@@ -55,25 +52,25 @@ NOTE: never trust a file downloaded from the internet. Make sure to review the c
 kubectl apply -f https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash.yaml
 ```
 
-To access skooner, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following
+To access k8dash, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following
 
 
 ``` yaml
 kind: Ingress
 apiVersion: extensions/v1beta1
 metadata:
-  name: skooner
+  name: k8dash
   namespace: kube-system
 spec:
   rules:
   -
-    host: skooner.example.com
+    host: k8dash.example.com
     http:
       paths:
       -
         path: /
         backend:
-          serviceName: skooner
+          serviceName: k8dash
           servicePort: 80
 ```
 
@@ -97,16 +94,16 @@ The first (and easiest) option is to create a dedicated service account. The can
 
 ``` bash
 # Create the service account in the current namespace (we assume default)
-kubectl create serviceaccount skooner-sa
+kubectl create serviceaccount k8dash-sa
 
 # Give that service account root on the cluster
-kubectl create clusterrolebinding skooner-sa --clusterrole=cluster-admin --serviceaccount=default:skooner-sa
+kubectl create clusterrolebinding k8dash-sa --clusterrole=cluster-admin --serviceaccount=default:k8dash-sa
 
 # Find the secret that was created to hold the token for the SA
 kubectl get secrets
 
 # Show the contents of the secret to extract the token
-kubectl describe secret skooner-sa-token-xxxxx
+kubectl describe secret k8dash-sa-token-xxxxx
 
 ```
 
@@ -115,8 +112,8 @@ Retrieve the `token` value from the secret and enter it into the login screen to
 back to [Table of Contents](#table_of_contents)
 
 <a name="oidc"></a>
-## Running skooner with OpenId Connect (oidc)
-skooner makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
+## Running k8dash with OpenId Connect (oidc)
+k8dash makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and run the [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml) config.
 
 To learn more about configuring a cluster for OIDC, check out these great links
 + [https://kubernetes.io/docs/reference/access-authn-authz/authentication/](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
@@ -124,7 +121,7 @@ To learn more about configuring a cluster for OIDC, check out these great links
 + [https://medium.com/@int128/kubectl-with-openid-connect-43120b451672](https://medium.com/@int128/kubectl-with-openid-connect-43120b451672)
 + [https://www.google.com/search?q=kubernetes+configure+oidc&oq=kubernetes+configure+oidc&aqs=chrome..69i57j0.4772j0j7&sourceid=chrome&ie=UTF-8](https://www.google.com/search?q=kubernetes+configure+oidc&oq=kubernetes+configure+oidc&aqs=chrome..69i57j0.4772j0j7&sourceid=chrome&ie=UTF-8)
 
-You can deploy skooner with oidc support using something like the following script...
+You can deploy k8dash with oidc support using something like the following script...
 
 NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml) before running the script below.
 
@@ -149,22 +146,22 @@ The other option is `OIDC_METADATA`. k8dash uses the excellent [node-openid-clie
 Back to [Table of Contents](#table_of_contents)
 
 <a name="Nodeport"></a>
-## Running skooner with NodePort
+## Running k8dash with NodePort
 If you do not have an ingress server setup, you can utilize a NodePort service as configured in the [kubernetes-k8dash-nodeport.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
 
-This will map the skooner port 4654 to a randomly selected port on the running node. The assigned port can be found using
+This will map the k8dash port 4654 to a randomly selected port on the running node. The assigned port can be found using
 ```
 $ kubectl get svc --namespace=kube-system
 
 NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
-skooner     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
+k8dash     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
 ```
 
 Back to [Table of Contents](#table_of_contents)
 
 <a name="Metrics"></a>
 ## Metrics
-skooner relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
+k8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have metrics-server installed to get the best experiance from k8dash.
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
@@ -184,8 +181,8 @@ Once minikube is installed, you can run it with the command `minikube start --dr
 
 Back to [Table of Contents](#table_of_contents)
 
-<a name="Parts_of_skooner"></a>
-## Parts of skooner
+<a name="Parts_of_k8dash"></a>
+## Parts of k8dash
 
 <a name="Server"></a>
 ### Server
