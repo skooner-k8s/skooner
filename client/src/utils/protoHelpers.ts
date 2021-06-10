@@ -1,4 +1,5 @@
 import {k8s} from '../proto/proto';
+import {getContextItem} from './localStorageHelpers';
 
 const {Unknown} = k8s.io.apimachinery.pkg.runtime;
 const {NodeMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
@@ -65,6 +66,10 @@ export function protoParser(raw: Uint8Array) {
         };
     }
     return {};
+}
+
+export function isProtoEnabled(): boolean {
+    return getContextItem('protoEnabled');
 }
 
 export function isProtoEligible(url: string) {
