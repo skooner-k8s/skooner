@@ -4,7 +4,7 @@ entries:
   - apiVersion: v1
     appVersion: 0.0.1
     created: 2019-04-25T11:53:15.386073-05:00
-    description: A Helm chart for Kubernetes Skooner
+    description: A Helm chart for Kubernetes K8Dash
     digest: 7a84cff8455803b1a5610987e054cebbe52b14878a2db6b22ae7b455a6105e09
     maintainers:
     - email: kiryanov.i@gmail.com
