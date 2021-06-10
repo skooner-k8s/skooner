@@ -16,7 +16,18 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
 
 <br>
 
-<a name="table_of_contents"></a>
+## Hacktoberfest Open Office Hours
+Join us for open office hours to talk about issues, propose ideas, help review code, and more.
+
+| Date         | Time           | Register  |
+| ------------- |:-------------:| -----:|
+| Friday, October 9 | 10AM-12PM CT | [register](https://organize.mlh.io/participants/events/5003-virtual-k8dash-office-hours) |
+| Friday, October 16 | 10AM-12PM CT | [register](https://organize.mlh.io/participants/events/5006-virtual-k8dash-office-hours) |
+| Friday, October 23 | 10AM-12PM CT |[register](https://organize.mlh.io/participants/events/5008-virtual-k8dash-office-hours) |
+| Friday, October 30 | 10AM-12PM CT |[register](https://organize.mlh.io/participants/events/5009-virtual-k8dash-office-hours) |
+<br>
+
+<a name="table_of_content"></a>
 # Table of Contents
 
 - [Prerequisites](#Prerequisites)  
@@ -40,7 +51,7 @@ k8dash is the easiest way to manage your Kubernetes cluster. Why?
 + [metrics server](https://github.com/kubernetes-incubator/metrics-server) installed (optional, but strongly recommended)
 + A Kubernetes cluster configured for [OpenId Connect](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens) authentication (optional)
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Contents](#table_of_content)
 
 <a name="Getting_started"></a>
 ## Getting Started
@@ -74,7 +85,7 @@ spec:
           servicePort: 80
 ```
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="kubectl_proxy"></a>
 # kubectl proxy
@@ -82,7 +93,7 @@ Unfortunately, `kubectl proxy` can not be used to access k8dash. According to th
 
 > this is working as expected. "proxying" through the apiserver will not get you standard proxy behavior (preserving Authorization headers end-to-end), because the API is not being used as a standard proxy
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Logging_in"></a>
 # Logging in
@@ -109,7 +120,7 @@ kubectl describe secret k8dash-sa-token-xxxxx
 
 Retrieve the `token` value from the secret and enter it into the login screen to access the dashboard.
 
-back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="oidc"></a>
 ## Running k8dash with OpenId Connect (oidc)
@@ -143,7 +154,7 @@ Additionally, there are a few other OIDC options you can provide via environment
 
 The other option is `OIDC_METADATA`. k8dash uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a json string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Nodeport"></a>
 ## Running k8dash with NodePort
@@ -157,7 +168,7 @@ NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 k8dash     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
 ```
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Metrics"></a>
 ## Metrics
@@ -167,7 +178,7 @@ k8dash relies heavily on [metrics-server](https://github.com/kubernetes-incubato
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
 
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Development"></a>
 # Development
@@ -179,7 +190,7 @@ Installing and running [minikube](https://kubernetes.io/docs/tasks/tools/install
 Once minikube is installed, you can run it with the command `minikube start --driver=docker`
 + Once the cluster is up and running, create some login credentials as described [above](https://github.com/indeedeng/k8dash#logging-in)
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Parts_of_k8dash"></a>
 ## k8dash is made up of 2 parts. The server and the client.
@@ -191,7 +202,7 @@ The server is a simple express.js server that is primarily responsible for proxy
 
 During development, the server will use whatever is configured in `~/.kube/config` to connect the desired cluster. If you are using minikube, for example, you can run `kubectl config set-context minikube` to get `~/.kube/config` set up correctly.
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="Client"></a>
 ### Client
@@ -199,7 +210,7 @@ The client is a React application (using TypeScript) with minimal other dependen
 
 To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local k8dash dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
 
-Back to [Table of Contents](#table_of_contents)
+back to [Table of Content](#table_of_content)
 
 <a name="License"></a>
 # License
@@ -209,4 +220,4 @@ Back to [Table of Contents](#table_of_contents)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash?ref=badge_large)
 
-Back to [Top](#top)
+You Have scrolled so far, lets go back to [Top](#top)
