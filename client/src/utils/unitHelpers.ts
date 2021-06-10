@@ -15,13 +15,11 @@ export function parseRam(value?: string) {
     return parseUnitsOfBytes(value);
 }
 
-export function parseUnitsOfRam(bytes?: number, targetUnit?: string) {
+export function parseUnitsOfRam(bytes?: number) {
     if (!bytes) return undefined;
 
-    const actualTargetUnit = targetUnit?.replace('b', '');
     let i = 0;
-    while (((actualTargetUnit === undefined && bytes >= 1000)
-        || (actualTargetUnit !== undefined && UNITS[i] !== actualTargetUnit)) && i < UNITS.length - 1) {
+    while (bytes >= 1000 && i < UNITS.length - 1) {
         i++;
         bytes /= 1000; // eslint-disable-line no-param-reassign
     }
