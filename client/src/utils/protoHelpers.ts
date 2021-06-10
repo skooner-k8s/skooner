@@ -7,17 +7,10 @@ const {PodMetrics} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 const {PodMetricsList} = k8s.io.metrics.pkg.apis.metrics.v1beta1;
 const {EventList} = k8s.io.api.core.v1;
 const {NodeList} = k8s.io.api.core.v1;
-const {PodList} = k8s.io.api.core.v1;
 
 export const kindMap: {
         [index: string]: {
-            proto: typeof NodeMetrics
-                | typeof NodeMetricsList
-                | typeof PodMetrics
-                | typeof PodMetricsList
-                | typeof EventList
-                | typeof NodeList
-                | typeof PodList,
+            proto: typeof NodeMetrics | typeof NodeMetricsList | typeof PodMetrics | typeof PodMetricsList | typeof EventList | typeof NodeList,
             path: string
         }
     } = {
@@ -44,10 +37,6 @@ export const kindMap: {
         NodeList: {
             proto: NodeList,
             path: 'api/v1/nodes',
-        },
-        PodList: {
-            proto: PodList,
-            path: 'api/v1/pods',
         },
     };
 
