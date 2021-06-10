@@ -20,7 +20,7 @@ type StreamArgs = {
 }
 
 const {hostname, href, hash, search} = window.location;
-const nonHashedUrl = href.replace(hash, '').replace(search, '').replace('#', '');
+const nonHashedUrl = href.replace(hash, '').replace(search, '');
 const isDev = process.env.NODE_ENV !== 'production';
 const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:4654' : nonHashedUrl;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
