@@ -135,7 +135,7 @@ async function getOidcEndpoint() {
 
 async function oidcAuthenticate(code, redirectUri) {
     const provider = await getOidcProvider();
-    const tokenSet = await provider.authorizationCallback(redirectUri, {code}, {});
+    const tokenSet = await provider.oauthCallback(redirectUri, {code}, {});
     return tokenSet.id_token;
 }
 
