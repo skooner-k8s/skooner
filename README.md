@@ -1,5 +1,7 @@
 # skooner - Kubernetes Dashboard
 
+skooner is a sandbox project of the [Cloud Native Computing Foundation](https://www.cncf.io/sandbox-projects). 
+
 __(FYI: we are changing our name from "k8dash" to "skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
 
 skooner is the easiest way to manage your Kubernetes cluster. 
