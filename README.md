@@ -1,10 +1,10 @@
-# skooner - Kubernetes Dashboard
+# Skooner - Kubernetes Dashboard
 
-skooner is a sandbox project of the [Cloud Native Computing Foundation](https://www.cncf.io/sandbox-projects). 
+Skooner is a sandbox project of the [Cloud Native Computing Foundation](https://www.cncf.io/sandbox-projects). 
 
-__(FYI: we are changing our name from "k8dash" to "skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
+__(FYI: we are changing our name from "k8dash" to "Skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
 
-skooner is the easiest way to manage your Kubernetes cluster. 
+Skooner is the easiest way to manage your Kubernetes cluster. 
 
 * **Full cluster management**: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
 * **Blazing fast and Always Live**: no need to refresh pages to see the latest cluster status
@@ -13,8 +13,8 @@ skooner is the easiest way to manage your Kubernetes cluster.
 * **100% responsive** (runs on your phone/tablet)
 * **Simple OpenID integration**: no special proxies required
 * **Simple installation**: use the provided yaml resources to have skooner up and running in under 1 minute (no, seriously)
-* **See skooner in action**:<br>
-    [![skooner - Kubernetes Dashboard](https://raw.githubusercontent.com/indeedeng/k8dash/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "skooner - Kubernetes Dashboard")
+* **See Skooner in action**:<br>
+    [![Skooner - Kubernetes Dashboard](https://raw.githubusercontent.com/skooner-k8s/skooner/master/docs/videoThumbnail.png)](http://www.youtube.com/watch?v=u-1jGAhAHAM "Skooner - Kubernetes Dashboard")
 
 <br>
 
@@ -28,10 +28,10 @@ skooner is the easiest way to manage your Kubernetes cluster.
     * [NodePort](#Nodeport)
     * [Metrics](#Metrics)
 * [Development](#Development)
-* [skooner Architecture](#skooner-architecture)
+* [Skooner Architecture](#Skooner-architecture)
     * [Server](#Server)
     * [Client](#Client)
-* [License](#License)    
+* [License](#License)
 
 ## Prerequisites
 * A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)), with...
@@ -41,12 +41,12 @@ skooner is the easiest way to manage your Kubernetes cluster.
 (Back to [Table of Contents](#table-of-contents))
 
 ## Getting Started
-Deploy skooner with something like the following...
+Deploy Skooner with something like the following...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-skooner.yaml](https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml) before running the script below.
 
 ``` bash
-kubectl apply -f https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash.yaml
+kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml
 ```
 
 To access skooner, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following:
@@ -74,7 +74,7 @@ spec:
 (Back to [Table of Contents](#table-of-contents))
 
 ## kubectl proxy
-Unfortunately, `kubectl proxy` cannot be used to access skooner. According to [this comment](https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961), it seems that `kubectl proxy` strips the Authorization header when it proxies requests.
+Unfortunately, `kubectl proxy` cannot be used to access Skooner. According to [this comment](https://github.com/kubernetes/kubernetes/issues/38775#issuecomment-277915961), it seems that `kubectl proxy` strips the Authorization header when it proxies requests.
 
 > this is working as expected. "proxying" through the apiserver will not get you standard proxy behavior (preserving Authorization headers end-to-end), because the API is not being used as a standard proxy
 
@@ -104,7 +104,7 @@ kubectl describe secret skooner-sa-token-xxxxx
 Copy the `token` value from the secret, and enter it into the login screen to access the dashboard.
 
 ### OIDC
-skooner makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and apply [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml).
+Skooner makes using OpenId Connect for authentication easy. Assuming your cluster is configured to use OIDC, all you need to do is create a secret containing your credentials and apply [kubernetes-skooner-oidc.yaml](https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml).
 
 To learn more about configuring a cluster for OIDC, check out these great links
 + [Authenticating | Kubernetes](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens)
@@ -112,9 +112,9 @@ To learn more about configuring a cluster for OIDC, check out these great links
 + [kubectl with OpenID Connect. TL;DR | by Hidetake Iwata | Medium](https://medium.com/@int128/kubectl-with-openid-connect-43120b451672)
 + [kubernetes configure oidc - Google Search](https://www.google.com/search?q=kubernetes+configure+oidc)
 
-You can deploy skooner with OIDC support using something like the following script...
+You can deploy Skooner with OIDC support using something like the following script...
 
-NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-k8dash-oidc.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml) before running the script below.
+NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-skooner-oidc.yaml](https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml) before running the script below.
 
 ``` bash
 OIDC_URL=<put your endpoint url here... something like https://accounts.google.com>
@@ -126,18 +126,18 @@ kubectl create secret -n kube-system generic skooner \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET"
 
-kubectl apply -f https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-oidc.yaml
+kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml
 
 ```
 
 Additionally, you can provide other OIDC options via these environment variables: 
 * `OIDC_SCOPES`: The default value for this value is `openid email`, but additional scopes can also be added using something like `OIDC_SCOPES="openid email groups"`
-* `OIDC_METADATA`: skooner uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a JSON string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
+* `OIDC_METADATA`: Skooner uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a JSON string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
 
 ### NodePort
-If you do not have an ingress server setup, you can utilize a NodePort service as configured in [kubernetes-k8dash-nodeport.yaml](https://raw.githubusercontent.com/indeedeng/k8dash/master/kubernetes-k8dash-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
+If you do not have an ingress server setup, you can utilize a NodePort service as configured in [kubernetes-skooner-nodeport.yaml](https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-nodeport.yaml). This is ideal when creating a single node master, or if you want to get up and running as fast as possible.
 
-This will map skooner port 4654 to a randomly selected port on the running node. The assigned port can be found using:
+This will map Skooner port `4654` to a randomly selected port on the running node. The assigned port can be found using:
 
 ```
 $ kubectl get svc --namespace=kube-system
@@ -147,7 +147,7 @@ skooner     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
 ```
 
 ### Metrics
-skooner relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have `metrics-server` installed to get the best experience from skooner.
+Skooner relies heavily on [metrics-server](https://github.com/kubernetes-incubator/metrics-server) to display real time cluster metrics. It is strongly recommended to have `metrics-server` installed to get the best experience from Skooner.
 
 + [Installing metrics-server](https://github.com/kubernetes-incubator/metrics-server)
 + [Running metrics-server with kubeadm](https://medium.com/@waleedkhan91/how-to-configure-metrics-server-on-kubeadm-provisioned-kubernetes-cluster-f755a2ac43a2)
@@ -164,7 +164,7 @@ You will need:
 
 (Back to [Table of Contents](#table-of-contents))
 
-## skooner Architecture
+## Skooner Architecture
 
 ### Server
 To run the server, run `npm i` from the `/server` directory to install dependencies and then `npm start` to run the server.
@@ -175,13 +175,13 @@ During development, the server will use whatever is configured in `~/.kube/confi
 ### Client
 The client is a React application (using TypeScript) with minimal other dependencies.
 
-To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local skooner dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
+To run the client, open a new terminal tab and navigate to the `/client` directory, run `npm i` and then `npm start`. This will open up a browser window to your local Skooner dashboard. If everything compiles correctly, it will load the site and then an error message will pop up `Unhandled Rejection (Error): Api request error: Forbidden...`. The error message has an 'X' in the top righthand corner to close that message. After you close it, you should see the UI where you can enter your token.
 
 (Back to [Table of Contents](#table-of-contents))
 
 ## License
 
-[Apache License 2.0](https://raw.githubusercontent.com/indeedeng/k8dash/master/LICENSE)
+[Apache License 2.0](https://raw.githubusercontent.com/skooner-k8s/skooner/master/LICENSE)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Findeedeng%2Fk8dash?ref=badge_large)
 
