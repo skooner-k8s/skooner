@@ -5,29 +5,63 @@ on:
     types: [created]
 
 jobs:
-  build:
+  build-client:
     runs-on: ubuntu-latest
+    env:
+      working-directory: "./client"
     steps:
       - uses: actions/checkout@v2
+      - name: Setup node 12
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 12.x
       - run: npm ci
-      - run: npm test
+        working-directory: ${{env.working-directory}}
+      - run: npm run build
+        working-directory: ${{env.working-directory}}
+      - run: npm run lint:ci
+        working-directory: ${{env.working-directory}}
 
-  publish-gpr:
+  publish-gpr-client:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      working-directory: "./client"
     permissions:
       packages: write
       contents: read
     steps:
       - uses: actions/checkout@v2
+      - name: Setup node 12
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 12.x
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
+        working-directory: ${{env.working-directory}}
       - run: npm publish
+        working-directory: ${{env.working-directory}}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  publish-gpr-server:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      working-directory: "./server"
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node 12
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+          registry-url: https://npm.pkg.github.com/
+      - run: npm ci
+        working-directory: ${{env.working-directory}}
+      - run: npm publish
+        working-directory: ${{env.working-directory}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
