@@ -1,7 +1,12 @@
 {
-  "name": "client",
+  "name": "@skooner-k8s/skooner-client",
   "version": "0.1.0",
   "homepage": ".",
+  "repository" : {
+    "type" : "git",
+    "url": "ssh://git@github.com/skooner-k8s/skooner.git",
+    "directory": "skooner/client"
+  },
   "dependencies": {
     "@types/humanize-duration": "^3.18.1",
     "@types/jest": "^26.0.14",

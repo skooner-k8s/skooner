@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@skooner-k8s/skooner-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,6 +9,11 @@
   },
   "author": "",
   "license": "ISC",
+  "repository" : {
+    "type" : "git",
+    "url": "ssh://git@github.com/skooner-k8s/skooner.git",
+    "directory": "skooner/server"
+  },
   "dependencies": {
     "@kubernetes/client-node": "^0.12.2",
     "cors": "^2.8.5",
