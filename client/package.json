@@ -1,7 +1,6 @@
 {
   "name": "client",
   "version": "0.1.0",
-  "private": true,
   "homepage": ".",
   "dependencies": {
     "@types/humanize-duration": "^3.18.1",
