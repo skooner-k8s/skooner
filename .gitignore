@@ -2,3 +2,4 @@
 TODO
 **/node_modules
 **/build
+.idea/**

@@ -9,6 +9,8 @@ const BASE_HTTP_URL = 'http://localhost:4654/prom';
 type Props = {
     queryString: string;
     title: string;
+    yAxisMin?: number;
+    yAxisUnit?: string;
 }
 
 type State = {
@@ -64,6 +66,32 @@ export default class PrometheusGraph extends Base<Props, State> {
             });
     }
 
+    getYDomain = () => {
+        if (this.props.yAxisUnit) {
+            // Taken from https://github.com/uber/react-vis/issues/609#issuecomment-330066354
+            const {yMin, yMax} = this.state.data.reduce((acc, row) => ({
+                yMax: Math.max(acc.yMax, row.y),
+                yMin: Math.min(acc.yMin, row.y),
+            }), {yMin: Infinity, yMax: -Infinity});
+            return (typeof (this.props.yAxisMin) === 'number' ? [this.props.yAxisMin, yMax] : [yMin, yMax]);
+        }
+        return [0, 1];
+    };
+
+    getYTickFormat = () => {
+        if (this.props.yAxisUnit) {
+            return (d: number) => `${d} ${this.props.yAxisUnit}`;
+        }
+        return (d: number) => `${(d * 100).toFixed(0)}%`;
+    }
+
+    getItemsFormat = () => {
+        if (this.props.yAxisUnit) {
+            return (d: { y: number; }[]) => [{title: this.props.yAxisUnit, value: d[0].y}];
+        }
+        return (d: { y: number; }[]) => [{title: 'Percent', value: `${(d[0].y * 100).toFixed(2)}%`}];
+    }
+
     render() {
         if (!this.state || !this.state.data) {
             return <div>
@@ -79,7 +107,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                     width={150}
                     height={150}
                     xType="time"
-                    yDomain={[0, 1]}
+                    yDomain={this.getYDomain()}
                     onMouseLeave={this.onMouseLeave}>
                     <AreaSeries
                         color={'#6822aa'}
@@ -96,11 +124,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                         titleFormat={
                             d => ({title: 'Time', value: new Date(d[0].x * 1000).toLocaleTimeString()})
                         }
-                        itemsFormat={
-                            d => [
-                                {title: 'Percent', value: `${(d[0].y * 100).toFixed(2)}%`},
-                            ]
-                        }
+                        itemsFormat={this.getItemsFormat()}
                         className={'test-class-name'}
                     />
                     <XAxis
@@ -112,9 +136,7 @@ export default class PrometheusGraph extends Base<Props, State> {
                         tickTotal={3}
                     />
                     <YAxis
-                        tickFormat={function tickFormet(d) {
-                            return `${(d * 100).toFixed(0)}%`;
-                        }}
+                        tickFormat={this.getYTickFormat()}
                         tickLabelAngle={0}
                         tickPadding={-5}
                     />
