@@ -1,23 +1,29 @@
 import _ from 'lodash';
 import React from 'react';
-import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
 import {Pod, Metrics} from '../utils/types';
+import PrometheusGraph from '../views/prometheusgraph';
 
 export default function RamChart({items, metrics}: {items?: Pod[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getPodRamTotals(items, metrics);
-    const decimals = totals && totals.used > 10 ? 1 : 2;
+
+    const query = {
+        queryString: `sum(kube_pod_container_resource_requests{unit="byte"}/${TO_GB})`,
+        title: 'Pod Memory Usage',
+        yAxisMin: 0,
+        yAxisUnit: 'GiB',
+    };
+
 
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart
-                    decimals={decimals}
-                    used={totals && totals.used}
-                    usedSuffix='Gb'
-                    available={totals && totals.available}
-                    availableSuffix='Gb'
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
+                    yAxisMin={query.yAxisMin}
+                    yAxisUnit={query.yAxisUnit}
                 />
             ) : (
                 <LoadingChart />
