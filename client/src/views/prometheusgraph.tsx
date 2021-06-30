@@ -83,14 +83,14 @@ export default class PrometheusGraph extends Base<Props, State> {
             return (d: number) => `${d} ${this.props.yAxisUnit}`;
         }
         return (d: number) => `${(d * 100).toFixed(0)}%`;
-    }
+    };
 
     getItemsFormat = () => {
         if (this.props.yAxisUnit) {
             return (d: { y: number; }[]) => [{title: this.props.yAxisUnit, value: d[0].y}];
         }
         return (d: { y: number; }[]) => [{title: 'Percent', value: `${(d[0].y * 100).toFixed(2)}%`}];
-    }
+    };
 
     render() {
         if (!this.state || !this.state.data) {
@@ -103,8 +103,9 @@ export default class PrometheusGraph extends Base<Props, State> {
             && <div>
                 {/* <div style={{fontWeight: 'bold'}}>{this.props.title}</div> */}
                 <XYPlot
+                    margin={{left: 50}}
                     yPadding={60}
-                    width={150}
+                    width={200}
                     height={150}
                     xType="time"
                     yDomain={this.getYDomain()}
