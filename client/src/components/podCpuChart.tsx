@@ -1,21 +1,34 @@
 import _ from 'lodash';
 import React from 'react';
-import Chart from './chart';
+// import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 import {Pod, Metrics} from '../utils/types';
+import PrometheusGraph from '../views/prometheusgraph';
 
 export default function PodCpuChart({items, metrics}: {items?: Pod[], metrics?: _.Dictionary<Metrics>}) {
     const totals = getPodCpuTotals(items, metrics);
-    const decimals = totals && totals.used > 10 ? 1 : 2;
+    // const decimals = totals && totals.used > 10 ? 1 : 2;
+    const query = {
+        queryString: 'sum(kube_pod_container_resource_requests{unit="core", resource="cpu"})',
+        title: 'Pod CPU Usage',
+        yAxisMin: 0,
+        yAxisUnit: 'CPU',
+    };
 
     return (
         <div className='charts_item'>
             {totals ? (
-                <Chart
-                    decimals={decimals}
-                    used={totals.used}
-                    available={totals.available}
+                // <Chart
+                // decimals={decimals}
+                // used={totals.used}
+                // available={totals.available}
+                // />
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
+                    yAxisMin={query.yAxisMin}
+                    yAxisUnit={query.yAxisUnit}
                 />
             ) : (
                 <LoadingChart />
