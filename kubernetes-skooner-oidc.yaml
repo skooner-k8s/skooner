@@ -1,21 +1,21 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: k8dash
+  name: skooner
   namespace: kube-system
 spec:
   replicas: 1
   selector:
     matchLabels:
-      k8s-app: k8dash
+      k8s-app: skooner
   template:
     metadata:
       labels:
-        k8s-app: k8dash
+        k8s-app: skooner
     spec:
       containers:
-      - name: k8dash
-        image: herbrandson/k8dash:latest
+      - name: skooner
+        image: ghcr.io/skooner-k8s/skooner:stable
         ports:
         - containerPort: 4654
         livenessProbe:
@@ -29,17 +29,17 @@ spec:
         - name: OIDC_URL
           valueFrom:
             secretKeyRef:
-              name: k8dash
+              name: skooner
               key: url
         - name: OIDC_CLIENT_ID
           valueFrom:
             secretKeyRef:
-              name: k8dash
+              name: skooner
               key: id
         - name: OIDC_SECRET
           valueFrom:
             secretKeyRef:
-              name: k8dash
+              name: skooner
               key: secret
       nodeSelector:
         'beta.kubernetes.io/os': linux
@@ -48,11 +48,11 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: k8dash
+  name: skooner
   namespace: kube-system
 spec:
   ports:
     - port: 80
       targetPort: 4654
   selector:
-    k8s-app: k8dash
+    k8s-app: skooner

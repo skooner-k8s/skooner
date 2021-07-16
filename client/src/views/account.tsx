@@ -49,8 +49,7 @@ export default class Account extends Base<{}, State> {
 
                 <div className='contentPanel'>
                     <h3>Learn More</h3>
-                    <div>Follow K8dash on <a href='https://github.com/indeedeng/k8dash'>GitHub</a></div>
-                    <div>or at <a href='https://hub.docker.com/r/herbrandson/k8dash'>DockerHub</a></div>
+                    <div>Follow Skooner on <a href='https://github.com/skooner-k8s/skooner'>GitHub</a></div>
                 </div>
 
                 <div className='contentPanel'>

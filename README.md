@@ -1,10 +1,9 @@
 # Skooner - Kubernetes Dashboard
 
-Skooner is a sandbox project of the [Cloud Native Computing Foundation](https://www.cncf.io/sandbox-projects). 
+__We are changing our name from k8dash to Skooner! Please bear with us as we update our documentation and codebase to reflect this change. If you previously installed k8dash, you will need to uninstall it from your cluster and install Skooner instead. For most cases this can be done by running the following `kubectl delete deployment,service k8dash`__
 
-__(FYI: we are changing our name from "k8dash" to "Skooner"! Please bear with us as we transition all of our documentation and codebase to reflect this name change.)__
 
-Skooner is the easiest way to manage your Kubernetes cluster. 
+Skooner is the easiest way to manage your Kubernetes cluster. Skooner is now a sandbox project of the [Cloud Native Computing Foundation](https://www.cncf.io/sandbox-projects)!
 
 * **Full cluster management**: Namespaces, Nodes, Pods, Replica Sets, Deployments, Storage, RBAC and more
 * **Blazing fast and Always Live**: no need to refresh pages to see the latest cluster status
@@ -19,19 +18,21 @@ Skooner is the easiest way to manage your Kubernetes cluster.
 <br>
 
 ## Table of Contents
-* [Prerequisites](#Prerequisites)
-* [Getting Started](#Getting-started)
-* [Kubectl proxy](#kubectl-proxy)
-* [Logging in](#Logging-in)
-    * [Service Account Token](#Service-Account-Token)
-    * [OIDC](#oidc)
-    * [NodePort](#Nodeport)
-    * [Metrics](#Metrics)
-* [Development](#Development)
-* [Skooner Architecture](#Skooner-architecture)
-    * [Server](#Server)
-    * [Client](#Client)
-* [License](#License)
+- [Skooner - Kubernetes Dashboard](#skooner---kubernetes-dashboard)
+  - [Table of Contents](#table-of-contents)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+  - [kubectl proxy](#kubectl-proxy)
+  - [Logging in](#logging-in)
+    - [Service Account Token](#service-account-token)
+    - [OIDC](#oidc)
+    - [NodePort](#nodeport)
+    - [Metrics](#metrics)
+  - [Development](#development)
+  - [Skooner Architecture](#skooner-architecture)
+    - [Server](#server)
+    - [Client](#client)
+  - [License](#license)
 
 ## Prerequisites
 * A running Kubernetes cluster (e.g., [minikube](https://kubernetes.io/docs/tasks/tools/install-minikube/)), with...
@@ -130,7 +131,7 @@ kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/ku
 
 ```
 
-Additionally, you can provide other OIDC options via these environment variables: 
+Additionally, you can provide other OIDC options via these environment variables:
 * `OIDC_SCOPES`: The default value for this value is `openid email`, but additional scopes can also be added using something like `OIDC_SCOPES="openid email groups"`
 * `OIDC_METADATA`: Skooner uses the excellent [node-openid-client](https://github.com/panva/node-openid-client) module. `OIDC_METADATA` will take a JSON string and pass it to the `Client` constructor. Docs [here](https://github.com/panva/node-openid-client/blob/master/docs/README.md#client). For example, `OIDC_METADATA='{"token_endpoint_auth_method":"client_secret_post"}`
 
