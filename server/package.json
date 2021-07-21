@@ -9,8 +9,8 @@
   },
   "author": "",
   "license": "ISC",
-  "repository" : {
-    "type" : "git",
+  "repository": {
+    "type": "git",
     "url": "ssh://git@github.com/skooner-k8s/skooner.git",
     "directory": "skooner/server"
   },
