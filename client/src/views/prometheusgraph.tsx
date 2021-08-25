@@ -3,7 +3,7 @@ import {XYPlot, XAxis, YAxis, LineSeries, Crosshair, AreaSeries} from 'react-vis
 import Base from '../components/base';
 
 
-const BASE_HTTP_URL = 'http://localhost:4654/prom';
+export const BASE_HTTP_URL = 'http://localhost:58984';
 
 
 type Props = {
