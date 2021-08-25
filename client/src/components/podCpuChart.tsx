@@ -7,12 +7,14 @@ import {Pod, Metrics} from '../utils/types';
 import PrometheusGraph, {BASE_HTTP_URL} from '../views/prometheusgraph';
 import api from '../services/api';
 
-export default function PodCpuChart({items, metrics}: {items?: Pod[], metrics?: _.Dictionary<Metrics>}) {
+export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, pod?: Pod}) {
     const totals = getPodCpuTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
+    const defaultLabels = "unit='core', resource='cpu'";
+    const labelMatchers = pod ? `${defaultLabels}, pod="${pod.metadata.name}"` : defaultLabels;
 
     const query = {
-        queryString: 'sum(kube_pod_container_resource_requests{unit="core", resource="cpu"})',
+        queryString: `sum(kube_pod_container_resource_requests{${labelMatchers}})`,
         title: 'Pod CPU Usage',
         yAxisMin: 0,
         yAxisUnit: 'CPU',
