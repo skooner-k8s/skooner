@@ -44,6 +44,7 @@ const apis = {
     logsAll,
     swagger,
     exec,
+    isPrometheusConnected,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
 
@@ -185,6 +186,16 @@ function logs(namespace: string, name: string, container: string, tailLines: num
         items.push(message);
         cb(items);
     }
+}
+
+async function isPrometheusConnected(baseUrl: string) {
+    try {
+        const response = await request(baseUrl);
+        return response.status === 302;
+    } catch (err) {
+        log.error('Unable to send request', {err});
+    }
+    return null;
 }
 
 export default apis;
