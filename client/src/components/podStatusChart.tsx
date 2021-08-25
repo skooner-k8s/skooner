@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {Pod} from '../utils/types';
@@ -16,16 +16,25 @@ export default function PodStatusChart({items}: {items?: Pod[]}) {
         yAxisMin: 0,
         yAxisUnit: 'Pods',
     };
-    const prometheusConnected = api.isPrometheusConnected(BASE_HTTP_URL);
+    const [prometheusData, setPrometheusData] = useState([] as any);
+
+    useEffect(() => {
+        const refreshPMData = async function () {
+            const data = await api.getPrometheusData(BASE_HTTP_URL, query.queryString);
+            setPrometheusData(data);
+        };
+        refreshPMData();
+    }, []);
     return (
         <div className='charts_item'>
             {
-                prometheusConnected ? (
+                prometheusData ? (
                     <PrometheusGraph
                         queryString={query.queryString}
                         title={query.title}
                         yAxisMin={query.yAxisMin}
                         yAxisUnit={query.yAxisUnit}
+                        prometheusData={prometheusData}
                     />
                 ) : items && available ? (
                     <Chart used={count} pending={available - count} available={available} />

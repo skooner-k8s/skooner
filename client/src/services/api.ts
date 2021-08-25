@@ -3,6 +3,7 @@ import {Base64} from 'js-base64';
 import {request, post, stream, apiFactory, apiFactoryWithNamespace, requestText} from './apiProxy';
 import log from '../utils/log';
 import {K8sEvent, Namespace, TODO, Metrics, PersistentVolume, Node, Pod, ClusterRole, ClusterRoleBinding, ConfigMap, RoleBinding, Secret, ServiceAccount, StorageClass} from '../utils/types';
+import {BASE_HTTP_URL} from "../views/prometheusgraph";
 
 type DataCallback<T> = (data: T) => void;
 type MetricsCallback = DataCallback<Metrics[]>;
@@ -44,7 +45,7 @@ const apis = {
     logsAll,
     swagger,
     exec,
-    isPrometheusConnected,
+    getPrometheusData,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
 
@@ -188,14 +189,26 @@ function logs(namespace: string, name: string, container: string, tailLines: num
     }
 }
 
-async function isPrometheusConnected(baseUrl: string) {
+async function getPrometheusData(baseUrl: string, queryString: string) {
+    const url = `${baseUrl}/api/v1/query_range`;
     try {
-        const response = await request(baseUrl);
-        return response.status === 302;
+        const params = {
+            query: queryString,
+            start: (Date.now() / 1000 - 60 * 60).toString(),
+            end: (Date.now() / 1000).toString(), // One hour range
+            step: '1',
+        };
+        return fetch(`${url}?${new URLSearchParams(params).toString()}`)
+            .then(result => result.json())
+            .then((json) => {
+                const jsonData = json.data;
+                const graphData : Array<any> = jsonData.result[0]?.values.map((value: any) => ({x: value[0], y: +value[1]}));
+                return graphData;
+            });
     } catch (err) {
         log.error('Unable to send request', {err});
     }
-    return null;
+    return [];
 }
 
 export default apis;
