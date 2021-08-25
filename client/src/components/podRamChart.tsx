@@ -7,12 +7,15 @@ import {Pod, Metrics} from '../utils/types';
 import PrometheusGraph, {BASE_HTTP_URL} from '../views/prometheusgraph';
 import api from '../services/api';
 
-export default function RamChart({items, metrics}: {items?: Pod[], metrics?: _.Dictionary<Metrics>}) {
+export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, pod?: Pod}) {
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
+    const defaultLabels = "unit='byte'";
+    const labelMatchers = pod ? `${defaultLabels}, pod="${pod.metadata.name}"` : defaultLabels;
+
     const query = {
-        queryString: `sum(kube_pod_container_resource_requests{unit="byte"}/${TO_GB})`,
+        queryString: `sum(kube_pod_container_resource_requests{${labelMatchers}}/${TO_GB})`,
         title: 'Pod Memory Usage',
         yAxisMin: 0,
         yAxisUnit: 'GiB',
