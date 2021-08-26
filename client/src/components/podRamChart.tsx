@@ -2,14 +2,14 @@ import _ from 'lodash';
 import React from 'react';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
-import {Pod, Metrics} from '../utils/types';
+import {Pod, Metrics, ReplicaSet} from '../utils/types';
 import PrometheusGraph from '../views/prometheusgraph';
 
-export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, pod?: Pod}) {
+export default function RamChart({items, metrics, item}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, item?: Pod | ReplicaSet}) {
     const totals = getPodRamTotals(items, metrics);
 
     const defaultLabels = "unit='byte'";
-    const labelMatchers = pod ? `${defaultLabels}, pod="${pod.metadata.name}"` : defaultLabels;
+    const labelMatchers = item ? `${defaultLabels}, pod="${item.metadata.name}"` : defaultLabels;
 
     const query = {
         queryString: `sum(kube_pod_container_resource_requests{${labelMatchers}}/${TO_GB})`,
