@@ -3,16 +3,17 @@ import React, {useEffect, useState} from 'react';
 import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseRam, TO_GB} from '../utils/unitHelpers';
-import {Pod, Metrics} from '../utils/types';
+import {Pod, Metrics, ReplicaSet} from '../utils/types';
 import PrometheusGraph, {BASE_HTTP_URL} from '../views/prometheusgraph';
 import api from '../services/api';
 
-export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, pod?: Pod}) {
+export default function RamChart({items, metrics, item}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, item?: Pod | ReplicaSet}) {
+
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
     const defaultLabels = "unit='byte'";
-    const labelMatchers = pod ? `${defaultLabels}, pod="${pod.metadata.name}"` : defaultLabels;
+    const labelMatchers = item ? `${defaultLabels}, pod="${item.metadata.name}"` : defaultLabels;
 
     const query = {
         queryString: `sum(kube_pod_container_resource_requests{${labelMatchers}}/${TO_GB})`,
