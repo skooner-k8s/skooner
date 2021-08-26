@@ -3,7 +3,7 @@ import {XYPlot, XAxis, YAxis, LineSeries, Crosshair, AreaSeries} from 'react-vis
 import Base from '../components/base';
 
 
-const BASE_HTTP_URL = 'http://localhost:4654/prom';
+export const BASE_HTTP_URL = 'http://localhost:4654/prom';
 
 
 type Props = {
@@ -11,11 +11,10 @@ type Props = {
     title: string;
     yAxisMin?: number;
     yAxisUnit?: string;
+    prometheusData: Array<any>;
 }
 
 type State = {
-    metric: string;
-    data: Array<any>;
     crosshairValues: any[];
 }
 
@@ -42,34 +41,17 @@ export default class PrometheusGraph extends Base<Props, State> {
     };
 
     componentDidMount() {
-        const url = `${BASE_HTTP_URL}/api/v1/query_range`;
         this.setState((prevState => ({
             ...prevState,
-            data: new Array<any>(),
+            data: this.props.prometheusData,
             crosshairValues: [],
         })));
-        const params = {
-            query: this.props.queryString,
-            start: (Date.now() / 1000 - 60 * 60).toString(),
-            end: (Date.now() / 1000).toString(), // One hour range
-            step: '1',
-        };
-        fetch(`${url}?${new URLSearchParams(params).toString()}`)
-            .then(result => result.json())
-            .then((json) => {
-                const jsonData = json.data;
-                const graphData : Array<any> = jsonData.result[0]?.values.map((value: any) => ({x: value[0], y: +value[1]}));
-                this.setState(prevState => ({
-                    ...prevState,
-                    data: graphData,
-                }));
-            });
     }
 
     getYDomain = () => {
         if (this.props.yAxisUnit) {
             // Taken from https://github.com/uber/react-vis/issues/609#issuecomment-330066354
-            const {yMin, yMax} = this.state.data.reduce((acc, row) => ({
+            const {yMin, yMax} = this.props.prometheusData.reduce((acc, row) => ({
                 yMax: Math.max(acc.yMax, row.y),
                 yMin: Math.min(acc.yMin, row.y),
             }), {yMin: Infinity, yMax: -Infinity});
@@ -93,13 +75,13 @@ export default class PrometheusGraph extends Base<Props, State> {
     };
 
     render() {
-        if (!this.state || !this.state.data) {
+        if (!this.state || !this.props.prometheusData) {
             return <div>
                 {/* <span style={{fontWeight: 'bold'}}>{this.props.title}</span> */}
                 <div>Pending...</div>
             </div>;
         }
-        return this.state.data
+        return this.state && this.props.prometheusData
             && <div>
                 {/* <div style={{fontWeight: 'bold'}}>{this.props.title}</div> */}
                 <XYPlot
@@ -113,10 +95,10 @@ export default class PrometheusGraph extends Base<Props, State> {
                     <AreaSeries
                         color={'#6822aa'}
                         opacity={0.6}
-                        data={this.state.data}
+                        data={this.props.prometheusData}
                     />
                     <LineSeries
-                        data={this.state.data}
+                        data={this.props.prometheusData}
                         color={'#6822aa'}
                         onNearestX={this.onNearestX}
                     />

@@ -44,6 +44,7 @@ const apis = {
     logsAll,
     swagger,
     exec,
+    getPrometheusData,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
 
@@ -185,6 +186,28 @@ function logs(namespace: string, name: string, container: string, tailLines: num
         items.push(message);
         cb(items);
     }
+}
+
+async function getPrometheusData(baseUrl: string, queryString: string) {
+    const url = `${baseUrl}/api/v1/query_range`;
+    try {
+        const params = {
+            query: queryString,
+            start: (Date.now() / 1000 - 60 * 60).toString(),
+            end: (Date.now() / 1000).toString(), // One hour range
+            step: '1',
+        };
+        return fetch(`${url}?${new URLSearchParams(params).toString()}`)
+            .then(result => result.json())
+            .then((json) => {
+                const jsonData = json.data;
+                const graphData : Array<any> = jsonData.result[0]?.values.map((value: any) => ({x: value[0], y: +value[1]}));
+                return graphData;
+            });
+    } catch (err) {
+        log.error('Unable to send request', {err});
+    }
+    return [];
 }
 
 export default apis;

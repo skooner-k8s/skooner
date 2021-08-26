@@ -1,14 +1,15 @@
 import _ from 'lodash';
-import React from 'react';
-// import Chart from './chart';
+import React, {useEffect, useState} from 'react';
+import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
 import {Pod, Metrics, ReplicaSet} from '../utils/types';
-import PrometheusGraph from '../views/prometheusgraph';
+import PrometheusGraph, {BASE_HTTP_URL} from '../views/prometheusgraph';
+import api from '../services/api';
 
 export default function PodCpuChart({items, metrics, item}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, item?: Pod | ReplicaSet}) {
     const totals = getPodCpuTotals(items, metrics);
-    // const decimals = totals && totals.used > 10 ? 1 : 2;
+    const decimals = totals && totals.used > 10 ? 1 : 2;
     const defaultLabels = "unit='core', resource='cpu'";
     const labelMatchers = item ? `${defaultLabels}, pod="${item.metadata.name}"` : defaultLabels;
 
@@ -18,20 +19,32 @@ export default function PodCpuChart({items, metrics, item}: {items?: Pod[], metr
         yAxisMin: 0,
         yAxisUnit: 'CPU',
     };
+    const [prometheusData, setPrometheusData] = useState([] as any);
+
+    useEffect(() => {
+        const refreshPMData = async function () {
+            const data = await api.getPrometheusData(BASE_HTTP_URL, query.queryString);
+            setPrometheusData(data);
+        };
+        refreshPMData();
+    }, [query.queryString]);
 
     return (
         <div className='charts_item'>
-            {totals ? (
-                // <Chart
-                // decimals={decimals}
-                // used={totals.used}
-                // available={totals.available}
-                // />
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {prometheusData.length ? (
                 <PrometheusGraph
                     queryString={query.queryString}
                     title={query.title}
                     yAxisMin={query.yAxisMin}
                     yAxisUnit={query.yAxisUnit}
+                    prometheusData={prometheusData}
+                />
+            ) : totals ? (
+                <Chart
+                    decimals={decimals}
+                    used={totals.used}
+                    available={totals.available}
                 />
             ) : (
                 <LoadingChart />
