@@ -8,7 +8,6 @@ import PrometheusGraph, {BASE_HTTP_URL} from '../views/prometheusgraph';
 import api from '../services/api';
 
 export default function RamChart({items, metrics, item}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, item?: Pod | ReplicaSet}) {
-
     const totals = getPodRamTotals(items, metrics);
     const decimals = totals && totals.used > 10 ? 1 : 2;
 
