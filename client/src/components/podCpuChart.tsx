@@ -27,7 +27,7 @@ export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metri
             setPrometheusData(data);
         };
         refreshPMData();
-    }, []);
+    }, [query.queryString]);
 
     return (
         <div className='charts_item'>

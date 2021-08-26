@@ -28,7 +28,7 @@ export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?
             setPrometheusData(data);
         };
         refreshPMData();
-    }, []);
+    }, [query.queryString]);
 
     return (
         <div className='charts_item'>

@@ -24,7 +24,7 @@ export default function PodStatusChart({items}: {items?: Pod[]}) {
             setPrometheusData(data);
         };
         refreshPMData();
-    }, []);
+    }, [query.queryString]);
     return (
         <div className='charts_item'>
             {

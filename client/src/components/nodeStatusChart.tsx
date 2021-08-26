@@ -23,7 +23,7 @@ export default function NodeStatusChart({items}: {items?: Node[]}) {
             setPrometheusData(data);
         };
         refreshPMData();
-    }, []);
+    }, [query.queryString]);
 
 
     return (
