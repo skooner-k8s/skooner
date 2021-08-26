@@ -31,7 +31,7 @@ export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metri
 
     return (
         <div className='charts_item'>
-            {prometheusData ? (
+            {prometheusData.length ? (
                 <PrometheusGraph
                     queryString={query.queryString}
                     title={query.title}

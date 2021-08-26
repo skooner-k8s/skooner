@@ -32,7 +32,7 @@ export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?
 
     return (
         <div className='charts_item'>
-            {prometheusData ? (
+            {prometheusData.length ? (
                 <PrometheusGraph
                     queryString={query.queryString}
                     title={query.title}

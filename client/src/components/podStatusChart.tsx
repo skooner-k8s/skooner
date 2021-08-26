@@ -28,7 +28,7 @@ export default function PodStatusChart({items}: {items?: Pod[]}) {
     return (
         <div className='charts_item'>
             {
-                prometheusData ? (
+                prometheusData.length ? (
                     <PrometheusGraph
                         queryString={query.queryString}
                         title={query.title}
