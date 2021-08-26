@@ -32,6 +32,7 @@ export default function RamChart({items, metrics, pod}: {items?: Pod[], metrics?
 
     return (
         <div className='charts_item'>
+            {/* eslint-disable-next-line no-nested-ternary */}
             {prometheusData.length ? (
                 <PrometheusGraph
                     queryString={query.queryString}

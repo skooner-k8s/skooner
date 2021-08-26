@@ -27,21 +27,20 @@ export default function PodStatusChart({items}: {items?: Pod[]}) {
     }, [query.queryString]);
     return (
         <div className='charts_item'>
-            {
-                prometheusData.length ? (
-                    <PrometheusGraph
-                        queryString={query.queryString}
-                        title={query.title}
-                        yAxisMin={query.yAxisMin}
-                        yAxisUnit={query.yAxisUnit}
-                        prometheusData={prometheusData}
-                    />
-                ) : items && available ? (
-                    <Chart used={count} pending={available - count} available={available} />
-                ) : (
-                    <LoadingChart />
-                )
-            }
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {prometheusData.length ? (
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
+                    yAxisMin={query.yAxisMin}
+                    yAxisUnit={query.yAxisUnit}
+                    prometheusData={prometheusData}
+                />
+            ) : items && available ? (
+                <Chart used={count} pending={available - count} available={available} />
+            ) : (
+                <LoadingChart />
+            )}
             <div className='charts_itemLabel'>Pods</div>
             <div className='charts_itemSubLabel'>Ready vs Requested</div>
         </div>

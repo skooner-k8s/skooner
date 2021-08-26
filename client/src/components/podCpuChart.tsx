@@ -31,6 +31,7 @@ export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metri
 
     return (
         <div className='charts_item'>
+            {/* eslint-disable-next-line no-nested-ternary */}
             {prometheusData.length ? (
                 <PrometheusGraph
                     queryString={query.queryString}
