@@ -82,8 +82,8 @@ export default class PodView extends Base<Props, State> {
                 {errors && !!errors.length && <Error messages={errors} />}
 
                 <ChartsContainer>
-                    <PodCpuChart items={item && [item]} metrics={filteredMetrics} pod={item}/>
-                    <PodRamChart items={item && [item]} metrics={filteredMetrics} pod={item}/>
+                    <PodCpuChart items={item && [item]} metrics={filteredMetrics} item={item}/>
+                    <PodRamChart items={item && [item]} metrics={filteredMetrics} item={item}/>
                 </ChartsContainer>
 
                 <div className='contentPanel'>

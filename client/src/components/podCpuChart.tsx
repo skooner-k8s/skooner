@@ -3,15 +3,14 @@ import React from 'react';
 // import Chart from './chart';
 import LoadingChart from './loadingChart';
 import {parseCpu, TO_ONE_CPU} from '../utils/unitHelpers';
-import {Pod, Metrics} from '../utils/types';
+import {Pod, Metrics, ReplicaSet} from '../utils/types';
 import PrometheusGraph from '../views/prometheusgraph';
 
-export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, pod?: Pod}) {
+export default function PodCpuChart({items, metrics, item}: {items?: Pod[], metrics?: _.Dictionary<Metrics>, item?: Pod | ReplicaSet}) {
     const totals = getPodCpuTotals(items, metrics);
     // const decimals = totals && totals.used > 10 ? 1 : 2;
-
     const defaultLabels = "unit='core', resource='cpu'";
-    const labelMatchers = pod ? `${defaultLabels}, pod="${pod.metadata.name}"` : defaultLabels;
+    const labelMatchers = item ? `${defaultLabels}, pod="${item.metadata.name}"` : defaultLabels;
 
     const query = {
         queryString: `sum(kube_pod_container_resource_requests{${labelMatchers}})`,
@@ -45,7 +44,6 @@ export default function PodCpuChart({items, metrics, pod}: {items?: Pod[], metri
 
 function getPodCpuTotals(pods?: Pod[], metrics?: _.Dictionary<Metrics>) {
     if (!pods || !metrics) return null;
-
     const used = _(metrics)
         .flatMap(x => x.containers)
         .sumBy(x => parseCpu(x.usage.cpu));

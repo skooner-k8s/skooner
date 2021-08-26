@@ -87,8 +87,8 @@ export default class ReplicaSetView extends Base<Props, State> {
 
                 <ChartsContainer>
                     <ReplicasChart item={item} />
-                    <PodCpuChart items={filteredPods} metrics={filteredMetrics} />
-                    <PodRamChart items={filteredPods} metrics={filteredMetrics} />
+                    <PodCpuChart items={filteredPods} metrics={filteredMetrics} item={item}/>
+                    <PodRamChart items={filteredPods} metrics={filteredMetrics} item={item}/>
                 </ChartsContainer>
 
                 <div className='contentPanel'>
