@@ -11,7 +11,7 @@ import Working from '../components/working';
 import LoadingChart from '../components/loadingChart';
 import ChartsContainer from '../components/chartsContainer';
 import {ApiItem, CronJob, DaemonSet, Deployment, Job, StatefulSet, TODO} from '../utils/types';
-import PrometheusGraph, {BASE_HTTP_URL} from "./prometheusgraph";
+import PrometheusGraph, {BASE_HTTP_URL} from './prometheusgraph';
 
 type Props = {
 
