@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Base from '../components/base';
 import Chart from '../components/chart';
 import Filter from '../components/filter';
@@ -11,6 +11,7 @@ import Working from '../components/working';
 import LoadingChart from '../components/loadingChart';
 import ChartsContainer from '../components/chartsContainer';
 import {ApiItem, CronJob, DaemonSet, Deployment, Job, StatefulSet, TODO} from '../utils/types';
+import PrometheusGraph, {BASE_HTTP_URL} from "./prometheusgraph";
 
 type Props = {
 
@@ -120,9 +121,34 @@ function ControllerStatusChart({items}: {items: ApiItem<any, any>[] | null}) {
     const count = items && items.length;
     const pending = workingItems.length;
 
+    const query = {
+        queryString: 'sum(namespace_workload_pod:kube_pod_owner:relabel)',
+        title: 'Workload Count',
+        yAxisMin: 0,
+        yAxisUnit: ' ',
+    };
+    const [prometheusData, setPrometheusData] = useState([] as any);
+
+    useEffect(() => {
+        const refreshPMData = async function () {
+            const data = await api.getPrometheusData(BASE_HTTP_URL, query.queryString);
+            setPrometheusData(data);
+        };
+        refreshPMData();
+    }, [query.queryString]);
+
     return (
         <div className='charts_item'>
-            {items && count != null && pending != null ? (
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {prometheusData.length ? (
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
+                    yAxisMin={query.yAxisMin}
+                    yAxisUnit={query.yAxisUnit}
+                    prometheusData={prometheusData}
+                />
+            ) : items && count != null && pending != null ? (
                 <Chart used={count - pending} pending={pending} available={count} />
             ) : (
                 <LoadingChart />
@@ -137,9 +163,34 @@ function PodStatusChart({items}: {items: ApiItem<any, any>[] | null}) {
     const current = _.sumBy(items, getCurrentCount);
     const expected = _.sumBy(items, getExpectedCount);
 
+    const query = {
+        queryString: 'sum(namespace_workload_pod:kube_pod_owner:relabel)',
+        title: 'Workload Count',
+        yAxisMin: 0,
+        yAxisUnit: ' ',
+    };
+    const [prometheusData, setPrometheusData] = useState([] as any);
+
+    useEffect(() => {
+        const refreshPMData = async function () {
+            const data = await api.getPrometheusData(BASE_HTTP_URL, query.queryString);
+            setPrometheusData(data);
+        };
+        refreshPMData();
+    }, [query.queryString]);
+
     return (
         <div className='charts_item'>
-            {items ? (
+            {/* eslint-disable-next-line no-nested-ternary */}
+            {prometheusData.length ? (
+                <PrometheusGraph
+                    queryString={query.queryString}
+                    title={query.title}
+                    yAxisMin={query.yAxisMin}
+                    yAxisUnit={query.yAxisUnit}
+                    prometheusData={prometheusData}
+                />
+            ) : items ? (
                 <Chart used={current} pending={expected - current} available={expected} />
             ) : (
                 <LoadingChart />
