@@ -202,7 +202,10 @@ async function getPrometheusData(baseUrl: string, queryString: string) {
             .then((json) => {
                 const jsonData = json.data;
                 const graphData : Array<any> = jsonData.result[0]?.values.map((value: any) => ({x: value[0], y: +value[1]}));
-                return graphData;
+                if (graphData) {
+                    return graphData;
+                }
+                return [];
             });
     } catch (err) {
         log.error('Unable to send request', {err});
