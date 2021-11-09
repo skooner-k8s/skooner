@@ -1,5 +1,12 @@
 @import '../scss/settings.scss';
 
+@mixin disabled-button {
+    border: none;
+    background: $color-disabled;
+    color: $color-font-alt;
+    pointer-events: none;
+}
+
 .button, .button:visited {
 	border: none;
 	background: $color-accent;
@@ -31,14 +38,11 @@
 }
 
 .button:disabled, .button_negative:disabled {
-	border: none;
-	background: $color-disabled;
-	color: $color-font-alt;
-	pointer-events: none;
+	@include disabled-button;
 }
 
 .button_clear:disabled {
-	@extend .button:disabled;
+	@include disabled-button;
 	background: none;
 	color: $color-disabled;
 
