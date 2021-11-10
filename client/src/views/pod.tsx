@@ -140,8 +140,8 @@ export default class PodView extends Base<Props, State> {
 
 function getErrors(item?: Pod) {
     if (!item) return [];
-    if (item.status.message) return [item.status.message];
-    if (item.status.conditions) return item.status.conditions.map(x => x.message).filter(x => !!x);
+    if (item.status && item.status.message) return [item.status.message];
+    if (item.status && item.status.conditions) return item.status.conditions.map(x => x.message).filter(x => !!x);
 
     return undefined;
 }
