@@ -54,22 +54,23 @@ To access skooner, you must make it publicly visible. If you have an ingress ser
 
 
 ``` yaml
+apiVersion: networking.k8s.io/v1
 kind: Ingress
-apiVersion: extensions/v1beta1
 metadata:
   name: skooner
   namespace: kube-system
 spec:
   rules:
-  -
-    host: skooner.example.com
+  - host: skooner.example.com
     http:
       paths:
-      -
+      - backend:
+          service:
+            name: skooner
+            port:
+              number: 80
         path: /
-        backend:
-          serviceName: skooner
-          servicePort: 80
+        pathType: Prefix
 ```
 
 (Back to [Table of Contents](#table-of-contents))
