@@ -1,4 +1,5 @@
-import HumanizeDuration from 'humanize-duration';
+import HumanizeDuration from "humanize-duration";
+import { k8s } from "../proto/proto";
 
 /**
  * A simple humanizer to merely differentiate between months and minutes.
@@ -21,13 +22,27 @@ const shortEnglishHumanizer = HumanizeDuration.humanizer({
 });
 
 /**
-  * @param epochtimestampMs an epoch timestamp value (in ms)
-  * @returns a "humanized" duration from now
-  *
-  */
-export default function fromNow(epochtimestampMs: number) {
-    const diff = Date.now() - new Date(epochtimestampMs).getTime();
-    return formatDuration(diff);
+ * @param epochtimestampMs an epoch timestamp value (in ms)
+ * @returns a "humanized" duration from now
+ *
+ */
+export default function fromNow(
+  epochtimestampMs: number | string | k8s.io.apimachinery.pkg.apis.meta.v1.ITime
+) {
+  const diff = Date.now() - safeParseTimeToDate(epochtimestampMs).getTime();
+  return formatDuration(diff);
+}
+
+export function safeParseTimeToDate(
+  epochtimestampMs: number | string | k8s.io.apimachinery.pkg.apis.meta.v1.ITime
+) {
+  if (
+    typeof epochtimestampMs !== "number" &&
+    typeof epochtimestampMs !== "string"
+  ) {
+    epochtimestampMs = Number(epochtimestampMs.seconds) * 1000;
+  }
+  return new Date(epochtimestampMs);
 }
 
 

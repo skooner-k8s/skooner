@@ -1,6 +1,7 @@
 import React from 'react';
 import Field from './field';
 import {objectMap} from './listViewHelpers';
+import {safeParseTimeToDate} from '../utils/dates'
 
 const MetadataFields = ({item}: {[key: string]: any}) => (
     <>
@@ -14,7 +15,7 @@ const MetadataFields = ({item}: {[key: string]: any}) => (
         )}
 
         <Field name='Created'>
-            {new Date(item.metadata.creationTimestamp).toLocaleString()}
+            {safeParseTimeToDate(item.metadata.creationTimestamp).toLocaleString()}
         </Field>
 
         {item.metadata.labels && (
