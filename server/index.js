@@ -75,7 +75,7 @@ function logging(req, res, next) {
     next();
 }
 
-async function getOidc(req, res) {
+async function getOidc(req, res, next) {
     try {
         const authEndpoint = await getOidcEndpoint();
         res.json({authEndpoint});
