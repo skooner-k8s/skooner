@@ -180,6 +180,33 @@ To run the client, open a new terminal tab and navigate to the `/client` directo
 
 (Back to [Table of Contents](#table-of-contents))
 
+
+## Troubleshooting
+### Recommendation for keycloak configuration:
+1.  Set OIDC_URL to keycloak OpenId endpoint configuration page.
+    e.g. `OIDC_URL=https://{keycloak_domain}/realms/foo/.well-known/openid-configuration`
+    Also set `OIDC_CLIENT_ID` locally with `OIDC_CLIENT_ID={client_id}` (this is the same as `OIDC_ID`)
+2. While creating secret, use correct var name and use skooner namespace (by default it's `kube-system`):
+```
+kubectl create secret generic skooner \
+--from-literal=url="$OIDC_URL" \
+--from-literal=id="$OIDC_ID" \
+--from-literal=secret="$OIDC_SECRET" \
+--namespace=kube-system
+```
+3. following that, redeploy skooner server with
+   `kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml`
+
+4. Make sure skooner is running by checking `kubectl rollout status deploy/skooner --namespace=kube-system`
+   If not, report error with logging in `kubectl describe pod skooner --namespace=kube-system`
+
+5. visit skooner, check if login succeeded
+6. If not, please report both client and server error.
+   Client error: check browser console and send a screenshot
+   Server error: check logs by `kubectl logs deploy/skooner --namespace=kube-system`
+   Note that `RequestError: connect ECONNREFUSED` may indicate a configuration issue rather than Skooner's issue.
+
+
 ## License
 
 [Apache License 2.0](https://raw.githubusercontent.com/skooner-k8s/skooner/master/LICENSE)
