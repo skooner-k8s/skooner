@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - 'stable'
+      - 'debug'
     tags:
       - 'v*.*.*'
 
