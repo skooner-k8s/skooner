@@ -1,7 +1,7 @@
 import React from 'react';
 import Field from './field';
 import {objectMap} from './listViewHelpers';
-import {safeParseTimeToDate} from '../utils/dates'
+import {safeParseTimeToDate} from '../utils/dates';
 
 const MetadataFields = ({item}: {[key: string]: any}) => (
     <>
