@@ -60,7 +60,7 @@ export default class NodeView extends Base<Props, State> {
 
                 <ChartsContainer>
                     <div className='charts_item'>
-                        {item ? (
+                        {item && item.status ? (
                             <span className='charts_number'>{getUptime(item)}</span>
                         ) : (
                             <LoadingChart />
@@ -84,7 +84,8 @@ export default class NodeView extends Base<Props, State> {
                 </ChartsContainer>
 
                 <div className='contentPanel'>
-                    {!item ? <Loading /> : (
+                    {!item && <Loading />}
+                    {item && item.status ? (
                         <div>
                             <MetadataFields item={item} />
                             <Field name='Kernel Version' value={item.status.nodeInfo.kernelVersion} />
@@ -96,12 +97,13 @@ export default class NodeView extends Base<Props, State> {
                             <Field name='Kube Proxy' value={item.status.nodeInfo.kubeProxyVersion} />
                             <Field name='Taints'>{getTaints(item)}</Field>
                         </div>
-                    )}
+                    ) : null}
                 </div>
 
                 <div className='contentPanel_header'>Conditions</div>
                 <div className='contentPanel'>
-                    {!item ? <Loading /> : (
+                    {!item && <Loading />}
+                    {item && item.status ? (
                         <table>
                             <thead>
                                 <tr>
@@ -124,7 +126,7 @@ export default class NodeView extends Base<Props, State> {
                                 ))}
                             </tbody>
                         </table>
-                    )}
+                    ) : null}
                 </div>
 
                 <div className='contentPanel_header'>Pods</div>

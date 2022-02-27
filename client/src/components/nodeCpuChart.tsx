@@ -24,9 +24,9 @@ export default function NodeCpuChart({items, metrics}: {items?: Node[], metrics?
 function getNodeCpuTotals(items?: Node[], metrics?: _.Dictionary<Metrics>) {
     if (!items || !metrics) return null;
 
-    const metricValues = Object.values(metrics);
-    const used = _.sumBy(metricValues, x => parseCpu(x.usage.cpu)) / TO_ONE_CPU;
-    const available = _.sumBy(items, x => parseCpu(x.status.capacity.cpu)) / TO_ONE_CPU;
+    const metricValues = Object.values(metrics) || [];
 
+    const used = _.sumBy(metricValues, x => parseCpu(_.get(x, 'usage.cpu'))) / TO_ONE_CPU;
+    const available = _.sumBy(items, x => parseCpu(_.get(x, 'status.capacity.cpu'))) / TO_ONE_CPU;
     return {used, available};
 }
