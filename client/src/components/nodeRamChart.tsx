@@ -33,9 +33,9 @@ export default function NodeRamChart({items, metrics}: {items?: Node[], metrics?
 function getNodeRamTotals(items?: Node[], metrics?: _.Dictionary<Metrics>) {
     if (!items || !metrics) return undefined;
 
-    const metricValues = Object.values(metrics);
-    const used = _.sumBy(metricValues, x => parseRam(x.usage.memory));
-    const available = _.sumBy(items, x => parseRam(x.status.capacity.memory));
+    const metricValues = Object.values(metrics) || [];
 
+    const used = _.sumBy(metricValues, x => parseRam(_.get(x, 'usage.memory')));
+    const available = _.sumBy(items, x => parseRam(_.get(x, 'status.capacity.memory')));
     return {used, available};
 }

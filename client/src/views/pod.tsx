@@ -50,9 +50,14 @@ export default class PodView extends Base<Props, State> {
         const {item, metrics, events} = this.state || {};
 
         const errors = getErrors(item);
-        const filteredEvents = filterByOwner(events, item);
-        // @ts-ignore
-        const filteredMetrics = getMetrics(item && [item], metrics && [metrics]);
+        let filteredEvents;
+        let filteredMetrics;
+
+        if (item?.metadata) {
+            filteredEvents = filterByOwner(events, item);
+            // @ts-ignore
+            filteredMetrics = getMetrics(item && [item], metrics && [metrics]);
+        }
 
         return (
             <div id='content'>
@@ -87,7 +92,8 @@ export default class PodView extends Base<Props, State> {
                 </ChartsContainer>
 
                 <div className='contentPanel'>
-                    {!item ? <Loading /> : (
+                    {!item && <Loading />}
+                    {item && item.status ? (
                         <div>
                             <MetadataFields item={item} />
                             <Field name='Owned By'>
@@ -123,7 +129,7 @@ export default class PodView extends Base<Props, State> {
                             </Field>
                             <Field name='Selector'>{objectMap(item.spec.nodeSelector)}</Field>
                         </div>
-                    )}
+                    ) : null}
                 </div>
 
                 <ContainersPanel spec={item && item.spec} />
