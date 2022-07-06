@@ -67,8 +67,10 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: skooner
-              servicePort: 80
+              sevice:
+                name: skooner
+                port:
+                  number: 80
             pathType: ImplementationSpecific
 ```
 
