@@ -26,7 +26,7 @@ spec:
           initialDelaySeconds: 30
           timeoutSeconds: 30
       nodeSelector:
-        'beta.kubernetes.io/os': linux
+        'kubernetes.io/os': linux
 
 ---
 kind: Service
