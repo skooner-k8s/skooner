@@ -1,6 +1,5 @@
 import React, {ReactNode} from 'react';
 import {hasToken} from './services/auth';
-import Account from './views/account';
 import Auth from './views/auth';
 import CronJob from './views/cronJob';
 import DaemonSet from './views/daemonSet';
@@ -17,7 +16,6 @@ import NotFound from './views/notFound';
 import Pod from './views/pod';
 import Pods from './views/pods';
 import Service from './views/service';
-import ServiceAccount from './views/serviceAccount';
 import ServiceAccounts from './views/serviceAccounts';
 import Services from './views/services';
 import StatefulSet from './views/statefulSet';
@@ -36,7 +34,6 @@ const routes: Route[] = [];
 let handler: Handler;
 
 registerRoute('', () => <Dashboard />);
-registerRoute('account', () => <Account />);
 // @ts-ignore
 registerRoute('ingress', () => <Ingresses />);
 // @ts-ignore
@@ -56,8 +53,6 @@ registerRoute('service', () => <Services />);
 // @ts-ignore
 registerRoute('service/:namespace/:name', params => <Service {...params} />);
 registerRoute('serviceaccount', () => <ServiceAccounts />);
-// @ts-ignore
-registerRoute('serviceaccount/:namespace/:name', params => <ServiceAccount {...params} />);
 registerRoute('workload', () => <Workloads />);
 // @ts-ignore
 registerRoute('workload/cronjob/:namespace/:name', params => <CronJob {...params} />);
