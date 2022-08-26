@@ -46,6 +46,7 @@ const apis = {
     exec,
     metrics: metricsFactory(),
     oidc: oidcFactory(),
+    config: configFactory(),
 
     clusterRole,
     namespace: namespaceService,
@@ -114,6 +115,12 @@ function metricsFactory() {
     function url(namespace?: string) {
         return namespace ? `/apis/metrics.k8s.io/v1beta1/namespaces/${namespace}/pods` : '/apis/metrics.k8s.io/v1beta1/pods';
     }
+}
+
+function configFactory() {
+    return {
+        getConfig: () => request('/config'),
+    };
 }
 
 function oidcFactory() {
