@@ -6,15 +6,12 @@ import ContainersPanel from '../components/containersPanel';
 import PodCpuChart from '../components/podCpuChart';
 import ReplicasChart from '../components/replicasChart';
 import PodRamChart from '../components/podRamChart';
-import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import Field from '../components/field';
 import PodsPanel from '../components/podsPanel';
-import SaveButton from '../components/saveButton';
-import ScaleButton from '../components/scaleButton';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import getMetrics from '../utils/metricsHelpers';
 import {filterByOwner} from '../utils/filterHelper';
@@ -68,20 +65,6 @@ export default class ReplicaSetView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Replica Set', namespace, name]} ready={!!item}>
                     <>
-                        <ScaleButton
-                            namespace={namespace}
-                            name={name}
-                            scaleApi={service.scale}
-                        />
-
-                        <SaveButton
-                            item={item}
-                            onSave={x => service.put(x)}
-                        />
-
-                        <DeleteButton
-                            onDelete={() => service.delete(namespace, name)}
-                        />
                     </>
                 </ItemHeader>
 

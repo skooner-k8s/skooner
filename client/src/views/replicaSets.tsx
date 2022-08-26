@@ -1,7 +1,6 @@
 import React from 'react';
 import Base from '../components/base';
 import Filter from '../components/filter';
-import ReplicaSetsPanel from '../components/replicaSetsPanel';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
 import api from '../services/api';
 import test from '../utils/filterHelper';
@@ -41,8 +40,6 @@ export default class ReplicaSets extends Base<{}, State> {
                 />
 
                 {/* TODO: put charts here */}
-
-                <ReplicaSetsPanel items={filtered} sort={sort} filter={filter} />
             </div>
         );
     }
