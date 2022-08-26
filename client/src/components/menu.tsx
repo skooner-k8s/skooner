@@ -51,20 +51,14 @@ export default class Menu extends Base<MenuProps, MenuStates> {
 
                 <div id='menu' className={toggled ? 'menu_toggled' : undefined}>
 
-                    {/* Workloads */}
-                    <Group>
-                        <MenuItem title='Deployment' path='workload' resource='Deployment' onClick={onClick} />
+                <MenuItem title='Deployment' path='workload' resource='Deployment' onClick={onClick} />
 
-                        <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
+                <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
 
-                        <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
+                <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
 
-                        <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
-                    </Group>
+                <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
 
-                    <Group>
-                        <MenuItem title='Profile' path='account' resource='User' onClick={onClick} />
-                    </Group>
                 </div>
             </>
         );
