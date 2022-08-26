@@ -6,6 +6,7 @@ const k8s = require('@kubernetes/client-node');
 const {createProxyMiddleware} = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
+const fs = require('fs');
 
 const APP_MODE = process.env.APP_MODE;
 const NAMESPACE_FILTERS = process.env.NAMESPACE_FILTERS;
@@ -28,6 +29,11 @@ kc.loadFromDefault();
 const opts = {};
 kc.applyToRequest(opts);
 
+let k8sToken;
+try {
+    k8sToken = fs.readFileSync('/run/secrets/kubernetes.io/serviceaccount/token').toString();
+} catch { console.log('No service account token mounted') }
+
 const target = kc.getCurrentCluster().server;
 console.log('API URL: ', target);
 const agent = new https.Agent({ca: opts.ca});
@@ -45,6 +51,7 @@ if (DEBUG_VERBOSE) {
     proxySettings.onProxyRes = onProxyRes;
 }
 
+const k8sProxy = createProxyMiddleware(proxySettings);
 const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
 app.use(logging);
@@ -53,11 +60,28 @@ app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
 app.get('/config', getConfig);
+app.use('/*', [setServiceAccountAuth, k8sProxy]);
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
-http.createServer(app).listen(port);
+const server = http.createServer(app).listen(port);
 console.log(`Server started. Listening on port ${port}`);
+
+server.on('upgrade', (req, socket, head) => {
+    if (k8sToken && APP_MODE == 'ReadOnly') {
+        req.headers['sec-websocket-protocol'] = 'base64url.bearer.authorization.k8s.io.' + (new Buffer.from(k8sToken)).toString('base64') + ', base64.binary.k8s.io';
+        req.rawHeaders = req.rawHeaders.filter(h => !h.includes('bearer.authorization'));
+        req.rawHeaders.push('base64url.bearer.authorization.k8s.io.' + (new Buffer.from(k8sToken)).toString('base64') + ', base64.binary.k8s.io');
+    }
+    k8sProxy.upgrade(req, socket, head);
+});
+
+function setServiceAccountAuth(req, res, next) {
+    if (k8sToken && APP_MODE == 'ReadOnly') {
+        req.headers.authorization = 'Bearer ' + k8sToken;
+    }
+    next();
+}
 
 function preAuth(req, res, next) {
     const auth = req.header('Authorization');
