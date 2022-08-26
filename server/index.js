@@ -7,6 +7,8 @@ const {createProxyMiddleware} = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
 
+const APP_MODE = process.env.APP_MODE;
+const NAMESPACE_FILTERS = process.env.NAMESPACE_FILTERS;
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
@@ -50,7 +52,7 @@ if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', preAuth, express.static('public'));
 app.get('/oidc', getOidc);
 app.post('/oidc', postOidc);
-app.use('/*', createProxyMiddleware(proxySettings));
+app.get('/config', getConfig);
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
@@ -79,6 +81,14 @@ async function getOidc(req, res, next) {
     try {
         const authEndpoint = await getOidcEndpoint();
         res.json({authEndpoint});
+    } catch (err) {
+        next(err);
+    }
+}
+
+async function getConfig(req, res, next) {
+    try {
+        res.json({mode: APP_MODE, namespaces: NAMESPACE_FILTERS});
     } catch (err) {
         next(err);
     }
