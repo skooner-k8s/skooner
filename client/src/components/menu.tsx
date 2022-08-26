@@ -51,100 +51,20 @@ export default class Menu extends Base<MenuProps, MenuStates> {
 
                 <div id='menu' className={toggled ? 'menu_toggled' : undefined}>
 
-                    {/* Cluster */}
-                    <Group>
-                        <MenuItem title='Cluster' path='' resource='Logo' onClick={onClick} />
-
-                        {canView(rules, api.node) && (
-                            <MenuItem title='Nodes' path='node' resource='Node' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.namespace) && (
-                            <MenuItem title='Namespaces' path='namespace' resource='Namespace' onClick={onClick} />
-                        )}
-                    </Group>
-
                     {/* Workloads */}
                     <Group>
-                        {canView(rules, api.deployment) && (
-                            <MenuItem title='Workloads' path='workload' resource='Deployment' onClick={onClick} />
-                        )}
+                        <MenuItem title='Deployment' path='workload' resource='Deployment' onClick={onClick} />
 
-                        {canView(rules, api.service) && (
-                            <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
-                        )}
+                        <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
 
-                        {canView(rules, api.replicaSet) && (
-                            <MenuItem title='Replicas' path='replicaset' resource='ReplicaSet' onClick={onClick} />
-                        )}
+                        <MenuItem title='Services' path='service' resource='Service' onClick={onClick} />
 
-                        {canView(rules, api.pod) && (
-                            <MenuItem title='Pods' path='pod' resource='Pod' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.ingress) && (
-                            <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.configMap) && (
-                            <MenuItem title='Config' path='configmap' resource='ConfigMap' onClick={onClick} />
-                        )}
-                    </Group>
-
-                    {/* Storage */}
-                    <Group>
-                        {canView(rules, api.storageClass) && (
-                            <MenuItem title='Storage' path='storageclass' resource='StorageClass' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.persistentVolume) && (
-                            <MenuItem title='Volumes' path='persistentvolume' resource='PersistentVolume' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.persistentVolumeClaim) && (
-                            <MenuItem title='Claims' path='persistentvolumeclaim' resource='PersistentVolumeClaim' onClick={onClick} />
-                        )}
-                    </Group>
-
-                    {/* Security */}
-                    <Group>
-                        {canView(rules, api.serviceAccount) && (
-                            <MenuItem title='Accounts' path='serviceaccount' resource='ServiceAccount' onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.role, api.clusterRole) && (
-                            <MenuItem title='Roles' path='role' resource='Role' additionalPaths={['clusterrole']} onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.roleBinding, api.clusterRoleBinding) && (
-                            <MenuItem title='Bindings' path='rolebinding' resource='Role' additionalPaths={['clusterrolebinding']} onClick={onClick} />
-                        )}
-
-                        {canView(rules, api.secret) && (
-                            <MenuItem title='Secrets' path='secret' resource='Secret' onClick={onClick} />
-                        )}
+                        <MenuItem title='Ingresses' path='ingress' resource='Ingress' onClick={onClick} />
                     </Group>
 
                     <Group>
                         <MenuItem title='Profile' path='account' resource='User' onClick={onClick} />
                     </Group>
-
-                    <Group>
-                        <div className='menu_itemApply'>
-                            <button className='menu_item button_clear' onClick={() => { this.setState({showAdd: true}); onClick(); }}>
-                                <AddSvg />
-                                <div className='menu_title'>Apply</div>
-                            </button>
-                        </div>
-                    </Group>
-
-                    {showAdd && (
-                        <EditorModal
-                            onSave={x => api.apply(x)}
-                            onRequestClose={() => this.setState({showAdd: false})}
-                        />
-                    )}
-
                 </div>
             </>
         );
