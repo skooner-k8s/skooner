@@ -3,12 +3,10 @@ import React from 'react';
 import api from '../services/api';
 import EventsPanel from '../components/eventsPanel';
 import Base from '../components/base';
-import DeleteButton from '../components/deleteButton';
 import Field from '../components/field';
 import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
-import SaveButton from '../components/saveButton';
 import {filterByOwner} from '../utils/filterHelper';
 import {Service, K8sEvent} from '../utils/types';
 
@@ -44,14 +42,6 @@ export default class ServiceView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Service', namespace, name]} ready={!!item}>
                     <>
-                        <SaveButton
-                            item={item}
-                            onSave={x => service.put(x)}
-                        />
-
-                        <DeleteButton
-                            onDelete={() => service.delete(namespace, name)}
-                        />
                     </>
                 </ItemHeader>
 
