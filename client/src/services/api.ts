@@ -32,7 +32,7 @@ const hpa = apiFactoryWithNamespace('autoscaling', 'v1', 'horizontalpodautoscale
 const cronJob = apiFactoryWithNamespace('batch', 'v1beta1', 'cronjobs');
 const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
 
-const ingress = apiFactoryWithNamespace('extensions', 'v1beta1', 'ingresses');
+const ingress = apiFactoryWithNamespace('networking.k8s.io', 'v1', 'ingresses');
 
 const storageClass = apiFactory<StorageClass>('storage.k8s.io', 'v1', 'storageclasses');
 
