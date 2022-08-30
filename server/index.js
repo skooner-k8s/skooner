@@ -4,22 +4,12 @@ const http = require('http');
 const https = require('https');
 const k8s = require('@kubernetes/client-node');
 const {createProxyMiddleware} = require('http-proxy-middleware');
-const toString = require('stream-to-string');
-const {Issuer} = require('openid-client');
 const fs = require('fs');
 
 const APP_MODE = process.env.APP_MODE;
 const NAMESPACE_FILTERS = process.env.NAMESPACE_FILTERS;
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
-const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
-const OIDC_SECRET = process.env.OIDC_SECRET;
-const OIDC_URL = process.env.OIDC_URL;
-const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
-const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
-const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
-
-console.log('OIDC_URL: ', OIDC_URL || 'None');
 
 process.on('uncaughtException', err => console.error('Uncaught exception', err));
 
@@ -57,8 +47,6 @@ app.disable('x-powered-by'); // for security reasons, best not to tell attackers
 app.use(logging);
 if (NODE_ENV !== 'production') app.use(cors());
 app.use('/', preAuth, express.static('public'));
-app.get('/oidc', getOidc);
-app.post('/oidc', postOidc);
 app.get('/config', getConfig);
 app.use('/*', [setServiceAccountAuth, k8sProxy]);
 app.use(handleErrors);
@@ -101,29 +89,9 @@ function logging(req, res, next) {
     next();
 }
 
-async function getOidc(req, res, next) {
-    try {
-        const authEndpoint = await getOidcEndpoint();
-        res.json({authEndpoint});
-    } catch (err) {
-        next(err);
-    }
-}
-
 async function getConfig(req, res, next) {
     try {
         res.json({mode: APP_MODE, namespaces: NAMESPACE_FILTERS});
-    } catch (err) {
-        next(err);
-    }
-}
-
-async function postOidc(req, res, next) {
-    try {
-        const body = await toString(req);
-        const {code, redirectUri} = JSON.parse(body);
-        const token = await oidcAuthenticate(code, redirectUri);
-        res.json({token});
     } catch (err) {
         next(err);
     }
@@ -158,24 +126,6 @@ function handleErrors(err, req, res, next) {
     res.status(err.httpStatusCode || 500);
     res.send('Server error');
     next();
-}
-
-async function getOidcEndpoint() {
-    if (!OIDC_URL) return;
-
-    const provider = await getOidcProvider();
-    return provider.authorizationUrl({scope: OIDC_SCOPES});
-}
-
-async function oidcAuthenticate(code, redirectUri) {
-    const provider = await getOidcProvider();
-    const tokenSet = await provider.callback(redirectUri, {code}, {});
-    return tokenSet.id_token;
-}
-
-async function getOidcProvider() {
-    const issuer = await Issuer.discover(OIDC_URL);
-    return new issuer.Client(clientMetadata);
 }
 
 logClusterInfo();
