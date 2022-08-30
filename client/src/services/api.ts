@@ -38,14 +38,11 @@ const storageClass = apiFactory<StorageClass>('storage.k8s.io', 'v1', 'storagecl
 
 const apis = {
     apply,
-    testAuth,
-    getRules,
     logs,
     logsAll,
     swagger,
     exec,
     metrics: metricsFactory(),
-    oidc: oidcFactory(),
     config: configFactory(),
 
     clusterRole,
@@ -72,15 +69,6 @@ const apis = {
     roleBinding,
     hpa,
 };
-
-async function testAuth() {
-    const spec = {namespace: 'default'};
-    await post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
-}
-
-function getRules(namespace: string) {
-    return post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec: {namespace}});
-}
 
 async function apply(body: TODO): Promise<TODO> {
     const serviceName = _.camelCase(body.kind);
@@ -120,13 +108,6 @@ function metricsFactory() {
 function configFactory() {
     return {
         getConfig: () => request('/config'),
-    };
-}
-
-function oidcFactory() {
-    return {
-        get: () => request('/oidc'),
-        post: (code: string, redirectUri: string) => post('/oidc', {code, redirectUri}),
     };
 }
 

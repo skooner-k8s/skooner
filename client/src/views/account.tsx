@@ -21,12 +21,7 @@ export default class Account extends Base<{}, State> {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Account', 'Token']} ready={true}>
-                    <Button title='Logout' className='button_headerAction' onClick={logout}>
-                        <LogoutSvg />
-                        <span className='button_label'>Logout</span>
-                    </Button>
-                </ItemHeader>
+                <ItemHeader title={['Account', 'Token']} ready={true}></ItemHeader>
 
                 <div className='contentPanel'>
                     <h3>Current User</h3>
