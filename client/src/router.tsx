@@ -1,6 +1,4 @@
 import React, {ReactNode} from 'react';
-import {hasToken} from './services/auth';
-import Auth from './views/auth';
 import CronJob from './views/cronJob';
 import DaemonSet from './views/daemonSet';
 import Dashboard from './views/dashboard';
@@ -91,8 +89,6 @@ function onNavigate() {
 }
 
 function getContent() {
-    if (!hasToken()) return <Auth />;
-
     const pathParts = getPathParts();
     for (const {routeParts, factory} of routes) {
         const {isMatch, params} = testRoute(pathParts, routeParts);
