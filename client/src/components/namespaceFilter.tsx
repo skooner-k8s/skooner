@@ -44,7 +44,7 @@ export default class NamespaceFilter extends Base<NamespaceFilterProps, Namespac
 
         if (config && config.namespaces){
             var filters = config.namespaces.split(',')
-            options = options.filter(ns => filters.filter(f => f.endsWith(ns.label)).length > 0)
+            options = options.filter(ns => filters.filter(f => ns.label.endsWith(f)).length > 0)
         }
         
         const value = options.find(x => x.value === namespace);
