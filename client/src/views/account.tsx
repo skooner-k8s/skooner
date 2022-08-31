@@ -1,11 +1,8 @@
 import React from 'react';
 import Switch from 'react-switch';
 import Base from '../components/base';
-import Button from '../components/button';
 import Field from '../components/field';
 import ItemHeader from '../components/itemHeader';
-import {getUserInfo, logout} from '../services/auth';
-import LogoutSvg from '../art/logoutSvg';
 
 type State = {
     useDarkMode: boolean;
@@ -21,18 +18,13 @@ export default class Account extends Base<{}, State> {
 
         return (
             <div id='content'>
-                <ItemHeader title={['Account', 'Token']} ready={true}>
-                    <Button title='Logout' className='button_headerAction' onClick={logout}>
-                        <LogoutSvg />
-                        <span className='button_label'>Logout</span>
-                    </Button>
-                </ItemHeader>
+                <ItemHeader title={['Account', 'Token']} ready={true}></ItemHeader>
 
                 <div className='contentPanel'>
                     <h3>Current User</h3>
 
                     <Field name='Token'>
-                        <pre>{getJson()}</pre>
+                        <pre></pre>
                     </Field>
 
                     <Field name='Use Dark Mode'>
@@ -72,11 +64,6 @@ export default class Account extends Base<{}, State> {
         setDarkModeClass();
         this.setState({useDarkMode});
     }
-}
-
-function getJson() {
-    const user = getUserInfo();
-    return JSON.stringify(user, null, 4);
 }
 
 function setDarkModeClass() {

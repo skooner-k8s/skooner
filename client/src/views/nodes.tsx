@@ -1,4 +1,5 @@
-import React from 'react';
+export {}
+/*import React from 'react';
 import Base from '../components/base';
 import ChartsContainer from '../components/chartsContainer';
 import Filter from '../components/filter';
@@ -75,3 +76,4 @@ function filterNodes(items?: Node[], filter?: string) {
         return test(filter, x.metadata.name, ...searchableLabels);
     });
 }
+*/

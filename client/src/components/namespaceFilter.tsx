@@ -11,6 +11,7 @@ interface NamespaceFilterProps {
 interface NamespaceFilterStates {
     namespace: {};
     namespaces?: TODO[];
+    config?: { namespaces: string};
 }
 
 export default class NamespaceFilter extends Base<NamespaceFilterProps, NamespaceFilterStates> {
@@ -25,6 +26,7 @@ export default class NamespaceFilter extends Base<NamespaceFilterProps, Namespac
 
         this.registerApi({
             namespaces: api.namespace.list((namespaces: TODO[]) => this.setState({namespaces})),
+            config: api.config.getConfig().then(config => this.setState({config}))
         });
     }
 
@@ -35,11 +37,16 @@ export default class NamespaceFilter extends Base<NamespaceFilterProps, Namespac
     }
 
     render() {
-        const {namespace = '', namespaces = []} = this.state;
+        const {namespace = '', namespaces = [], config = { namespaces: '' }} = this.state;
 
-        const options = namespaces.map(x => ({value: x.metadata.name, label: x.metadata.name}));
+        let options = namespaces.map(x => ({value: x.metadata.name, label: x.metadata.name}));
         options.unshift({value: '', label: 'All Namespaces'});
 
+        if (config && config.namespaces){
+            var filters = config.namespaces.split(',')
+            options = options.filter(ns => filters.filter(f => ns.label.endsWith(f)).length > 0)
+        }
+        
         const value = options.find(x => x.value === namespace);
 
         return (

@@ -4,8 +4,6 @@ import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import api from '../services/api';
-import SaveButton from '../components/saveButton';
-import DeleteButton from '../components/deleteButton';
 import EventsPanel from '../components/eventsPanel';
 import PodsPanel from '../components/podsPanel';
 import Chart from '../components/chart';
@@ -64,14 +62,6 @@ export default class DaemonSetView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Daemon Set', namespace, name]} ready={!!item}>
                     <>
-                        <SaveButton
-                            item={item}
-                            onSave={x => service.put(x)}
-                        />
-
-                        <DeleteButton
-                            onDelete={() => service.delete(namespace, name)}
-                        />
                     </>
                 </ItemHeader>
 
@@ -93,6 +83,14 @@ export default class DaemonSetView extends Base<Props, State> {
                     <PodRamChart items={filteredPods} metrics={filteredMetrics} />
                 </ChartsContainer>
 
+                <div className='contentPanel_header'>Pods</div>
+                <PodsPanel
+                    items={filteredPods}
+                    sort={podsSort}
+                    metrics={filteredMetrics}
+                    skipNamespace={true}
+                />
+
                 <div className='contentPanel'>
                     {!item ? <Loading /> : (
                         <div>
@@ -102,14 +100,6 @@ export default class DaemonSetView extends Base<Props, State> {
                 </div>
 
                 <ContainersPanel spec={item && item.spec.template.spec} />
-
-                <div className='contentPanel_header'>Pods</div>
-                <PodsPanel
-                    items={filteredPods}
-                    sort={podsSort}
-                    metrics={filteredMetrics}
-                    skipNamespace={true}
-                />
 
                 <div className='contentPanel_header'>Events</div>
                 <EventsPanel

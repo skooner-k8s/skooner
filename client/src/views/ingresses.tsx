@@ -58,7 +58,13 @@ export default class Ingresses extends Base<{}, State> {
                                     includeNamespace={true}
                                     href={`#!ingress/${x.metadata.namespace}/${x.metadata.name}`}
                                 />
-                                <td>{getHosts(x, ' • ')}</td>
+                                <td>
+                                {x.spec.rules.map(y => {
+                                    return (
+                                    <a href={'https://' + y.host}>{'https://' + y.host}</a>
+                                    );
+                                })}
+                                </td>
                                 <td className='optional_xsmall'>{getPaths(x, ' • ')}</td>
                             </tr>
                         )} />
@@ -67,6 +73,11 @@ export default class Ingresses extends Base<{}, State> {
             </div>
         );
     }
+}
+
+function getHostUrls({spec}: Ingress, join: string) {
+    return _.map(spec.rules, y => y.host)
+        .join(join);
 }
 
 function getHosts({spec}: Ingress, join: string) {

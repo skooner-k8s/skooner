@@ -5,7 +5,6 @@ import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
-import DeleteButton from '../components/deleteButton';
 import PodsPanel from '../components/podsPanel';
 import EventsPanel from '../components/eventsPanel';
 import {defaultSortInfo, SortInfo} from '../components/sorter';
@@ -56,9 +55,6 @@ export default class NamespaceView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Namespace', namespace]} ready={!!item}>
                     <>
-                        <DeleteButton
-                            onDelete={() => service.delete(namespace)}
-                        />
                     </>
                 </ItemHeader>
 
@@ -87,8 +83,7 @@ export default class NamespaceView extends Base<Props, State> {
 
                 <div className='contentPanel_header'>Events</div>
 
-                {/*
-                // @ts-ignore */}
+                {/* @ts-ignore */}
                 <EventsPanel items={events} />
             </div>
         );

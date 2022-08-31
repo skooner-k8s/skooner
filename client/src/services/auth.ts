@@ -11,19 +11,6 @@ if (authorizationCookie) {
     cookie.remove('Authorization');
 }
 
-export function getToken() {
-    return localStorage.authToken as string;
-}
-
-export function getUserInfo() {
-    const user = getToken().split('.')[1];
-    return JSON.parse(atob(user));
-}
-
-export function hasToken() {
-    return !!getToken();
-}
-
 export function setToken(token: string) {
     localStorage.authToken = token;
     onTokenChange();

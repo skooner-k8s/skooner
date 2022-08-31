@@ -5,8 +5,6 @@ import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import Field from '../components/field';
 import MetadataFields from '../components/metadataFields';
-import SaveButton from '../components/saveButton';
-import DeleteButton from '../components/deleteButton';
 import {StorageClass} from '../utils/types';
 
 type Props = {
@@ -36,14 +34,6 @@ export default class StorageClassView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Storage Class', name]} ready={!!item}>
                     <>
-                        <SaveButton
-                            item={item}
-                            onSave={x => service.put(x)}
-                        />
-
-                        <DeleteButton
-                            onDelete={() => service.delete(name)}
-                        />
                     </>
                 </ItemHeader>
 

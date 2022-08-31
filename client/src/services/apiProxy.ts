@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import {getToken, logout} from './auth';
 import log from '../utils/log';
 import {ApiItem} from '../utils/types';
 import {isProtoEligible, protoParser} from '../utils/protoHelpers';
@@ -30,7 +29,7 @@ const PROTO_HEADERS = {Accept: 'application/vnd.kubernetes.protobuf', 'Content-T
 async function requestInner(path: string, params?: any, autoLogoutOnAuthError = true, isProtobuf = false) {
     const opts = Object.assign({headers: {}}, params);
 
-    const token = getToken();
+    const token = 'token';
     if (token) opts.headers.Authorization = `Bearer ${token}`;
     if (isProtobuf) Object.assign(opts.headers, PROTO_HEADERS);
 
@@ -39,11 +38,6 @@ async function requestInner(path: string, params?: any, autoLogoutOnAuthError = 
 
     if (!response.ok) {
         const {status, statusText} = response;
-        if (autoLogoutOnAuthError && status === 401 && token) {
-            log.error('Logging out due to auth error', {status, statusText, path});
-            logout();
-        }
-
         let message = `Api request error: ${statusText}`;
         try {
             const json = await response.json();
@@ -297,7 +291,7 @@ export function stream<T>(url: string, cb: StreamCallback<T>, args: StreamArgs) 
 function connectStream<T>(path: string, cb: StreamCallback<T>, onFail: FailCallback, isJson: boolean, additionalProtocols: string[] = []) {
     let isClosing = false;
 
-    const token = getToken();
+    const token = 'token';
     const encodedToken = btoa(token).replace(/=/g, '');
 
     const protocols = [

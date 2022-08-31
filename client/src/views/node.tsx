@@ -1,4 +1,5 @@
-import _ from 'lodash';
+export {}
+/*import _ from 'lodash';
 import React from 'react';
 import fromNow from '../utils/dates';
 import api from '../services/api';
@@ -69,11 +70,11 @@ export default class NodeView extends Base<Props, State> {
                     </div>
 
                     {/*
-                    // @ts-ignore */}
+                    // @ts-ignore *//*}
                     <NodeCpuChart items={item && [item]} metrics={metrics && [metrics]} />
 
                     {/*
-                    // @ts-ignore */}
+                    // @ts-ignore *//*}
                     <NodeRamChart items={item && [item]} metrics={metrics && [metrics]} />
                 </ChartsContainer>
 
@@ -153,3 +154,4 @@ function getUptime({status}: Node) {
 
     return fromNow(ready.lastTransitionTime);
 }
+*/

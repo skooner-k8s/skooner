@@ -6,8 +6,6 @@ import ItemHeader from '../components/itemHeader';
 import Loading from '../components/loading';
 import MetadataFields from '../components/metadataFields';
 import {TableBody} from '../components/listViewHelpers';
-import SaveButton from '../components/saveButton';
-import DeleteButton from '../components/deleteButton';
 import {Ingress} from '../utils/types';
 
 type Props = {
@@ -39,14 +37,6 @@ export default class IngressView extends Base<Props, State> {
             <div id='content'>
                 <ItemHeader title={['Ingress', namespace, name]} ready={!!item}>
                     <>
-                        <SaveButton
-                            item={item}
-                            onSave={x => service.put(x)}
-                        />
-
-                        <DeleteButton
-                            onDelete={() => service.delete(namespace, name)}
-                        />
                     </>
                 </ItemHeader>
 

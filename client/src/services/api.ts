@@ -32,20 +32,18 @@ const hpa = apiFactoryWithNamespace('autoscaling', 'v1', 'horizontalpodautoscale
 const cronJob = apiFactoryWithNamespace('batch', 'v1beta1', 'cronjobs');
 const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
 
-const ingress = apiFactoryWithNamespace('extensions', 'v1beta1', 'ingresses');
+const ingress = apiFactoryWithNamespace('networking.k8s.io', 'v1', 'ingresses');
 
 const storageClass = apiFactory<StorageClass>('storage.k8s.io', 'v1', 'storageclasses');
 
 const apis = {
     apply,
-    testAuth,
-    getRules,
     logs,
     logsAll,
     swagger,
     exec,
     metrics: metricsFactory(),
-    oidc: oidcFactory(),
+    config: configFactory(),
 
     clusterRole,
     namespace: namespaceService,
@@ -71,15 +69,6 @@ const apis = {
     roleBinding,
     hpa,
 };
-
-async function testAuth() {
-    const spec = {namespace: 'default'};
-    await post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec}, false);
-}
-
-function getRules(namespace: string) {
-    return post('/apis/authorization.k8s.io/v1/selfsubjectrulesreviews', {spec: {namespace}});
-}
 
 async function apply(body: TODO): Promise<TODO> {
     const serviceName = _.camelCase(body.kind);
@@ -116,10 +105,9 @@ function metricsFactory() {
     }
 }
 
-function oidcFactory() {
+function configFactory() {
     return {
-        get: () => request('/oidc'),
-        post: (code: string, redirectUri: string) => post('/oidc', {code, redirectUri}),
+        getConfig: () => request('/config'),
     };
 }
 
