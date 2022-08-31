@@ -1,0 +1,26 @@
+name: Docker Publish
+
+on:
+  push:
+    # Publish `main` as Docker `latest` image.
+    branches:
+      - main
+jobs:
+  build1:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Build image
+        run: docker build . --file Dockerfile --tag skooner-lite
+
+      - name: Log into registry
+        run: echo "${{ secrets.DOCKER_TOKEN }}" | docker login -u ${{ secrets.DOCKER_USER }} --password-stdin
+
+      - name: Push image
+        run: |
+          build_id=$(date +'%Y%m%d')
+          build_id+="-"
+          build_id+=$(git rev-parse --short "$GITHUB_SHA")
+          docker tag skooner-lite ${{ secrets.DOCKER_USER }}/skooner-lite:$build_id
+          docker push ${{ secrets.DOCKER_USER }}/skooner-lite:$build_id
