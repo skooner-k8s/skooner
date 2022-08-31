@@ -83,8 +83,7 @@ export default class NamespaceView extends Base<Props, State> {
 
                 <div className='contentPanel_header'>Events</div>
 
-                {/*
-                // @ts-ignore */}
+                {/* @ts-ignore */}
                 <EventsPanel items={events} />
             </div>
         );
