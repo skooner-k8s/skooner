@@ -5,6 +5,7 @@ on:
     # Publish `main` as Docker `latest` image.
     branches:
       - main
+      - master
 jobs:
   build1:
     runs-on: ubuntu-latest
