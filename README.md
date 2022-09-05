@@ -1,6 +1,6 @@
 # Skooner "Lite" - Read Only Kubernetes Dashboard
 
-This repository is a simplified & cut down version of [Skooner](https://github.com/skooner-k8s/skooner) that can be deployed as a read only dashboard to provides application developers with limited insight into Kubernetes, without exposing the clusters administrative aspects.
+This repository is a simplified & cut down version of [Skooner](https://github.com/skooner-k8s/skooner) that can be deployed as a read only dashboard to provide application developers with insight into Kubernetes, without exposing the clusters administrative aspects.
 
 # Changes: 
 - Removed Login code
