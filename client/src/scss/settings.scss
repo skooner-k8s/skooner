@@ -37,6 +37,8 @@ $media-xsmall: 700px;
 $media-small: 812px;
 $media-medium: 1200px;
 
+$footer-height: var(--footer-height);
+
 body {
     --color-lightest: #F0F0F0;
     --color-light: #AAA;
@@ -52,6 +54,8 @@ body {
     --color-icon-inactive: #{$color-dark};
 
     --box-shadow-size: 4px;
+    
+    --footer-height: 0px;
 }
 
 body.dark-mode {

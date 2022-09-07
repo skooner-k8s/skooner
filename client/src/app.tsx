@@ -2,6 +2,7 @@ import React, {Component, Fragment, ReactNode} from 'react';
 import Menu from './components/menu';
 import {Notifier} from './components/notifier';
 import Error from './components/error';
+import Footer from './components/footer';
 import {initRouter} from './router';
 import log from './utils/log';
 import Button from './components/button';
@@ -61,6 +62,8 @@ class App extends Component<{}, State> {
                 </div>
 
                 <Notifier />
+
+                <Footer />
             </>
         );
     }
