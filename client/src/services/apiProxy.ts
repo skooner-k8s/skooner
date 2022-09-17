@@ -260,7 +260,7 @@ export function stream<T>(url: string, cb: StreamCallback<T>, args: StreamArgs) 
         socket: WebSocket;
     };
     let isCancelled: boolean;
-    const {isJson, additionalProtocols, connectCb} = args;
+    const {isJson, connectCb} = args;
 
     connect();
 
@@ -277,7 +277,7 @@ export function stream<T>(url: string, cb: StreamCallback<T>, args: StreamArgs) 
 
     function connect() {
         if (connectCb) connectCb();
-        connection = connectStream<T>(url, cb, onFail, isJson, additionalProtocols);
+        connection = connectStream<T>(url, cb, onFail, isJson);
     }
 
     function onFail() {
@@ -288,20 +288,11 @@ export function stream<T>(url: string, cb: StreamCallback<T>, args: StreamArgs) 
     }
 }
 
-function connectStream<T>(path: string, cb: StreamCallback<T>, onFail: FailCallback, isJson: boolean, additionalProtocols: string[] = []) {
+function connectStream<T>(path: string, cb: StreamCallback<T>, onFail: FailCallback, isJson: boolean) {
     let isClosing = false;
 
-    const token = 'token';
-    const encodedToken = btoa(token).replace(/=/g, '');
-
-    const protocols = [
-        `base64url.bearer.authorization.k8s.io.${encodedToken}`,
-        'base64.binary.k8s.io',
-        ...additionalProtocols,
-    ];
-
     const url = combinePath(BASE_WS_URL, path);
-    const socket = new WebSocket(url, protocols);
+    const socket = new WebSocket(url);
     socket.binaryType = 'arraybuffer';
     socket.addEventListener('message', onMessage);
     socket.addEventListener('close', onClose);
