@@ -49,17 +49,30 @@ Deploy Skooner with something like the following...
 NOTE: never trust a file downloaded from the internet. Make sure to review the contents of [kubernetes-skooner.yaml](https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml) before running the script below.
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml
+kubectl apply --filename https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner.yaml
 ```
 
-To access skooner, you must make it publicly visible. If you have an ingress server setup, you can accomplish by adding a route like the following:
+## Access Skooner Web UI with Port Forwarding
+
+You can access the Skooner web user interface by using the `kubectl port-forward` command, to create a network tunnel into the Kubernetes cluster.
+
+```bash
+kubectl --namespace skooner port-forward service/skooner 9050:80
+```
+
+Open your web browser, and navigate to http://localhost:9050
+
+## Expose Skooner with Ingress Resource
+
+To access the Skooner web interface, you must make it publicly visible.
+If you have an [ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress-controllers/) setup, you can accomplish by adding a route like the following:
 
 ```yaml
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: skooner
-  namespace: kube-system
+  namespace: skooner
 spec:
   rules:
     - host: skooner.example.com
@@ -95,17 +108,17 @@ There are multiple options for logging into the dashboard: [Service Account Toke
 The first (and easiest) option is to create a dedicated service account. In the command line:
 
 ```bash
-# Create the service account in the current namespace (we assume default)
-kubectl create serviceaccount skooner-sa
+# Create the service account
+kubectl create serviceaccount skooner-sa --namespace skooner
 
 # Give that service account root on the cluster
-kubectl create clusterrolebinding skooner-sa --clusterrole=cluster-admin --serviceaccount=default:skooner-sa
+kubectl create clusterrolebinding skooner-sa --clusterrole=cluster-admin --serviceaccount=skooner:skooner-sa
 
 # Find the secret that was created to hold the token for the SA
-kubectl get secrets
+kubectl get secrets --namespace skooner
 
 # Show the contents of the secret to extract the token
-kubectl describe secret skooner-sa-token-xxxxx
+kubectl describe secret skooner-sa-token-xxxxx --namespace skooner
 
 ```
 
@@ -131,7 +144,7 @@ OIDC_URL=<put your endpoint url here... something like https://accounts.google.c
 OIDC_ID=<put your id here... something like blah-blah-blah.apps.googleusercontent.com>
 OIDC_SECRET=<put your oidc secret here>
 
-kubectl create secret -n kube-system generic skooner \
+kubectl create secret --namespace skooner generic skooner \
 --from-literal=url="$OIDC_URL" \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET"
@@ -152,7 +165,7 @@ If you do not have an ingress server setup, you can utilize a NodePort service a
 This will map Skooner port `4654` to a randomly selected port on the running node. The assigned port can be found using:
 
 ```
-$ kubectl get svc --namespace=kube-system
+$ kubectl get service --namespace=skooner
 
 NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
 skooner     NodePort    10.107.107.62   <none>        4654:32565/TCP   1m
@@ -202,26 +215,26 @@ To run the client, open a new terminal tab and navigate to the `/client` directo
 1.  Set OIDC_URL to keycloak OpenId endpoint configuration page.
     e.g. `OIDC_URL=https://{keycloak_domain}/realms/foo/.well-known/openid-configuration`
     Also set `OIDC_CLIENT_ID` locally with `OIDC_CLIENT_ID={client_id}` (this is the same as `OIDC_ID`)
-2.  While creating secret, use correct var name and use skooner namespace (by default it's `kube-system`):
+2.  While creating secret, use correct var name and use skooner namespace (by default it's `skooner`):
 
 ```
 kubectl create secret generic skooner \
 --from-literal=url="$OIDC_URL" \
 --from-literal=id="$OIDC_ID" \
 --from-literal=secret="$OIDC_SECRET" \
---namespace=kube-system
+--namespace=skooner
 ```
 
 3. following that, redeploy skooner server with
    `kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml`
 
-4. Make sure skooner is running by checking `kubectl rollout status deploy/skooner --namespace=kube-system`
-   If not, report error with logging in `kubectl describe pod skooner --namespace=kube-system`
+4. Make sure skooner is running by checking `kubectl rollout status deploy/skooner --namespace=skooner`
+   If not, report error with logging in `kubectl describe pod --namespace=skooner`
 
 5. visit skooner, check if login succeeded
 6. If not, please report both client and server error.
    Client error: check browser console and send a screenshot
-   Server error: check logs by `kubectl logs deploy/skooner --namespace=kube-system`
+   Server error: check logs by `kubectl logs deploy/skooner --namespace=skooner`
    Note that `RequestError: connect ECONNREFUSED` may indicate a configuration issue rather than Skooner's issue.
 
 ## License
