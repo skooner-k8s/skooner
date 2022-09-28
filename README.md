@@ -67,7 +67,7 @@ spec:
         paths:
           - path: /
             backend:
-              sevice:
+              service:
                 name: skooner
                 port:
                   number: 80
