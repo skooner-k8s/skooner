@@ -204,7 +204,7 @@ To run the client, open a new terminal tab and navigate to the `/client` directo
 - Also set `$OIDC_ID` locally with `OIDC_ID={client_id}`
 - You can get `$OIDC_SECRET` from keycloak 
   - (You need to set the Client authentication toggle to be on, for older version of keycloaks you should switch access type to confidential )
-     ![img.png](imgs/OIDC_keycloak_settings/img.png)
+     ![img.png](imgs/OIDC_keycloak_settings.png)
   - ![img.png](imgs/OIDC_SECTET_img.png)
 
 2. While creating secret, use correct var name and use skooner namespace (by default it's `kube-system`):
