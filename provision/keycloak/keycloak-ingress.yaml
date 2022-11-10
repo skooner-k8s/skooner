@@ -1,0 +1,29 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: keycloak
+  namespace: default
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: keycloak
+      port:
+        number: 8080
+  rules:
+    -
+      host: keycloak.192.168.64.11.nip.io
+      http:
+        paths:
+          -
+            path: /
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080
+            pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+      - ip: 192.168.64.11

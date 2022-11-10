@@ -1,0 +1,29 @@
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: skooner
+  namespace: kube-system
+spec:
+  ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: skooner
+      port:
+        number: 4654
+  rules:
+    -
+      host: skooner.192.168.64.11.nip.io
+      http:
+        paths:
+          -
+            path: /
+            backend:
+              service:
+                name: skooner
+                port:
+                  number: 4654
+            pathType: ImplementationSpecific
+status:
+  loadBalancer:
+    ingress:
+      - ip: 192.168.64.11

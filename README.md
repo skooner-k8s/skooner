@@ -132,9 +132,9 @@ OIDC_ID=<put your id here... something like blah-blah-blah.apps.googleuserconten
 OIDC_SECRET=<put your oidc secret here>
 
 kubectl create secret -n kube-system generic skooner \
---from-literal=url="$OIDC_URL" \
---from-literal=id="$OIDC_ID" \
---from-literal=secret="$OIDC_SECRET"
+--from-literal=url=$OIDC_URL \
+--from-literal=id=$OIDC_ID \
+--from-literal=secret=$OIDC_SECRET
 
 kubectl apply -f https://raw.githubusercontent.com/skooner-k8s/skooner/master/kubernetes-skooner-oidc.yaml
 
@@ -199,16 +199,21 @@ To run the client, open a new terminal tab and navigate to the `/client` directo
 
 ### Recommendation for keycloak configuration:
 
-1.  Set OIDC_URL to keycloak OpenId endpoint configuration page.
-    e.g. `OIDC_URL=https://{keycloak_domain}/realms/foo/.well-known/openid-configuration`
-    Also set `OIDC_CLIENT_ID` locally with `OIDC_CLIENT_ID={client_id}` (this is the same as `OIDC_ID`)
-2.  While creating secret, use correct var name and use skooner namespace (by default it's `kube-system`):
+1. Set OIDC_URL to keycloak OpenId endpoint configuration page.
+- `OIDC_URL=https://{keycloak_domain}/realms/foo/.well-known/openid-configuration`
+- Also set `$OIDC_ID` locally with `OIDC_ID={client_id}`
+- You can get `$OIDC_SECRET` from keycloak 
+  - (You need to set the Client authentication toggle to be on, for older version of keycloaks you should switch access type to confidential )
+     ![img.png](imgs/OIDC_keycloak_settings.png)
+  - ![img.png](imgs/OIDC_SECTET_img.png)
+
+2. While creating secret, use correct var name and use skooner namespace (by default it's `kube-system`):
 
 ```
 kubectl create secret generic skooner \
---from-literal=url="$OIDC_URL" \
---from-literal=id="$OIDC_ID" \
---from-literal=secret="$OIDC_SECRET" \
+--from-literal=url=$OIDC_URL \
+--from-literal=id=$OIDC_ID \
+--from-literal=secret=$OIDC_SECRET \
 --namespace=kube-system
 ```
 
@@ -218,8 +223,15 @@ kubectl create secret generic skooner \
 4. Make sure skooner is running by checking `kubectl rollout status deploy/skooner --namespace=kube-system`
    If not, report error with logging in `kubectl describe pod skooner --namespace=kube-system`
 
-5. visit skooner, check if login succeeded
-6. If not, please report both client and server error.
+5. [Optional] create an ingress for skooner, you can take `provision/keycloak/skooner-ingress.yaml` as an example
+
+6. visit skooner, check if login succeeded
+
+7. [Trouble Shooting] If the api call returns 403 with a message containing some error like: `User \"system:anonymous\" cannot list resource \"selfsubjectrulesreviews\" in API group \"authorization.k8s.io\" at the cluster scope"` 
+   - it means you'll need a cluster role bond. You can take `provision/keycloak/skooner-oidc-patch.yaml` as an example
+   - @elieassi suggests create a serviceaccount separately, I feel like it's more secure but I hadn't test it out. See [this issue](https://github.com/skooner-k8s/skooner/issues/361) for more details
+
+8. If failed, please report both client and server error.
    Client error: check browser console and send a screenshot
    Server error: check logs by `kubectl logs deploy/skooner --namespace=kube-system`
    Note that `RequestError: connect ECONNREFUSED` may indicate a configuration issue rather than Skooner's issue.
