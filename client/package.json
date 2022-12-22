@@ -22,7 +22,7 @@
     "js-base64": "^2.6.4",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
-    "protobufjs": "^6.10.2",
+    "protobufjs": "^6.10.3",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-modal": "^3.11.2",
