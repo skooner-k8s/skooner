@@ -109,6 +109,22 @@ kubectl describe secret skooner-sa-token-xxxxx
 
 ```
 
+For Kubernetes 1.24+ you need to create the secret.  This yaml will do that if you apply it.
+
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: skooner-sa-token
+  annotations:
+    kubernetes.io/service-account.name: skooner-sa
+type: kubernetes.io/service-account-token
+```
+Alternatively you can create a time based token.
+```
+kubectl create token skooner-sa
+```
+
 Copy the `token` value from the secret, and enter it into the login screen to access the dashboard.
 
 ### OIDC
