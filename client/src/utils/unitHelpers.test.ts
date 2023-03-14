@@ -72,7 +72,7 @@ describe('parseRam', () => {
     it('fixes specific issue #395 - RAM Request/Limits calculation is incorrect', () => {
         const bytes = parseRam('1503238553600m');
         const unitValue = unparseRam(bytes);
-        expect(unitValue).toEqual({"unit": "Gi", "value": 1.4});
+        expect(unitValue).toEqual({ unit: 'Gi', value: 1.4 });
     });
 
     it('ignores additional chars when parsing units', () => {
@@ -89,46 +89,46 @@ describe('parseUnitsOfRam', () => {
 
     it('should return the correct value and unit for bytes input', () => {
         const bytes = 1500;
-        expect(parseUnitsOfRam(bytes)).toEqual({ value: 1.5, unit: 'Kb' });
+        expect(parseUnitsOfRam(bytes)).toEqual({ value: 1.5, unit: 'Kb'});
     });
 
     it('parseUnitsOfRam basic usage', () => {
-        expect(parseUnitsOfRam(1_000)).toEqual({ value: 1, unit: 'Kb' });
-        expect(parseUnitsOfRam(1_000_000)).toEqual({ value: 1, unit: 'Mb' });
-        expect(parseUnitsOfRam(1_000_000_000)).toEqual({ value: 1, unit: 'Gb' });
-        expect(parseUnitsOfRam(1_000_000_000_000)).toEqual({ value: 1, unit: 'Tb' });
+        expect(parseUnitsOfRam(1_000)).toEqual({ value: 1, unit: 'Kb'});
+        expect(parseUnitsOfRam(1_000_000)).toEqual({ value: 1, unit: 'Mb'});
+        expect(parseUnitsOfRam(1_000_000_000)).toEqual({ value: 1, unit: 'Gb'});
+        expect(parseUnitsOfRam(1_000_000_000_000)).toEqual({ value: 1, unit: 'Tb'});
     });
 
     it('parseUnitsOfRam #188 use case', () => {
-        expect(parseUnitsOfRam(473_300_000_000)).toEqual({ value: 473.3, unit: 'Gb' });
-        expect(parseUnitsOfRam(3_000_000_000_000)).toEqual({ value: 3, unit: 'Tb' });
+        expect(parseUnitsOfRam(473_300_000_000)).toEqual({ value: 473.3, unit: 'Gb'});
+        expect(parseUnitsOfRam(3_000_000_000_000)).toEqual({ value: 3, unit: 'Tb'});
     });
 
     it('parseUnitsOfRam with explicit targetUnit', () => {
-        expect(parseUnitsOfRam(473_300_000_000, 'T')).toEqual({ value: 0.47, unit: 'Tb' });
-        expect(parseUnitsOfRam(473_300_000_000, 'Tb')).toEqual({ value: 0.47, unit: 'Tb' });
-        expect(parseUnitsOfRam(3_500_000_000_000)).toEqual({ value: 3.5, unit: 'Tb' });
+        expect(parseUnitsOfRam(473_300_000_000, 'T')).toEqual({ value: 0.47, unit: 'Tb'});
+        expect(parseUnitsOfRam(473_300_000_000, 'Tb')).toEqual({ value: 0.47, unit: 'Tb'});
+        expect(parseUnitsOfRam(3_500_000_000_000)).toEqual({ value: 3.5, unit: 'Tb'});
     });
 
     it('parseUnitsOfRam #188 fixed use case', () => {
         const available = parseUnitsOfRam(3_500_000_000_000);
         const used = parseUnitsOfRam(473_300_000_000, available?.unit);
-        expect(used).toEqual({ value: 0.47, unit: 'Tb' });
+        expect(used).toEqual({ value: 0.47, unit: 'Tb'});
     });
 });
 
 describe('unparseRam', () => {
     it('should correctly unparse RAM values', () => {
-        expect(unparseRam(1)).toEqual({ value: 1, unit: 'Bi' });
-        expect(unparseRam(1000)).toEqual({ value: 1000, unit: 'Bi' });
-        expect(unparseRam(1024)).toEqual({ value: 1, unit: 'Ki' });
-        expect(unparseRam(1024 * 1024)).toEqual({ value: 1, unit: 'Mi' });
-        expect(unparseRam(1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Gi' });
-        expect(unparseRam(1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Ti' });
-        expect(unparseRam(1024 * 1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Pi' });
-        expect(unparseRam(1024 * 1024 * 1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Ei' });
-        expect(unparseRam(1536)).toEqual({ value: 1.5, unit: 'Ki' });
-        expect(unparseRam(12345678)).toEqual({ value: 11.8, unit: 'Mi' });
+        expect(unparseRam(1)).toEqual({ value: 1, unit: 'Bi'});
+        expect(unparseRam(1000)).toEqual({ value: 1000, unit: 'Bi'});
+        expect(unparseRam(1024)).toEqual({ value: 1, unit: 'Ki'});
+        expect(unparseRam(1024 * 1024)).toEqual({ value: 1, unit: 'Mi'});
+        expect(unparseRam(1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Gi'});
+        expect(unparseRam(1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Ti'});
+        expect(unparseRam(1024 * 1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Pi'});
+        expect(unparseRam(1024 * 1024 * 1024 * 1024 * 1024 * 1024)).toEqual({ value: 1, unit: 'Ei'});
+        expect(unparseRam(1536)).toEqual({ value: 1.5, unit: 'Ki'});
+        expect(unparseRam(12345678)).toEqual({ value: 11.8, unit: 'Mi'});
     });
 });
 
@@ -144,10 +144,10 @@ describe('parseCpu', () => {
 
 describe('unparseCpu', () => {
     it('should correctly unparse CPU values', () => {
-        expect(unparseCpu(0)).toEqual({ value: 0, unit: 'm' });
-        expect(unparseCpu(1000 * 10)).toEqual({ value: 0.01, unit: 'm' });
-        expect(unparseCpu(1000000000 / 10)).toEqual({ value: 100, unit: 'm' });
-        expect(unparseCpu(1000000000)).toEqual({ value: 1000, unit: 'm' });
-        expect(unparseCpu(1000000000 * 10)).toEqual({ value: 10000, unit: 'm' });
+        expect(unparseCpu(0)).toEqual({ value: 0, unit: 'm'});
+        expect(unparseCpu(1000 * 10)).toEqual({ value: 0.01, unit: 'm'});
+        expect(unparseCpu(1000000000 / 10)).toEqual({ value: 100, unit: 'm'});
+        expect(unparseCpu(1000000000)).toEqual({ value: 1000, unit: 'm'});
+        expect(unparseCpu(1000000000 * 10)).toEqual({ value: 10000, unit: 'm'});
     });
 });
