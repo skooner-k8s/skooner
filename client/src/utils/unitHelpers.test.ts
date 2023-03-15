@@ -72,7 +72,7 @@ describe('parseRam', () => {
     it('fixes specific issue #395 - RAM Request/Limits calculation is incorrect', () => {
         const bytes = parseRam('1503238553600m');
         const unitValue = unparseRam(bytes);
-        expect(unitValue).toEqual({unit: 'Gi', value: 1.4 });
+        expect(unitValue).toEqual({unit: 'Gi', value: 1.4});
     });
 
     it('ignores additional chars when parsing units', () => {
