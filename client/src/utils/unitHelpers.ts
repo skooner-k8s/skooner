@@ -33,31 +33,24 @@ export function parseUnitsOfRam(bytes?: number, targetUnit?: string) {
 }
 
 function parseUnitsOfBytes(value?: string | {string: string}) {
-    if (!value) return 0;
-    const cleanValue = typeof value === 'object' ? value?.string : value;
+    const stringValue = typeof value === 'object' ? value.string.trim() : value?.trim();
+    if (!stringValue) return 0;
 
-    const groups = cleanValue.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?/)!;
-    const number = parseInt(groups[1], 10);
+    const regexMatch = stringValue.match(/(\d+)([BKMGTPEe])?(i)?(\d+)?(m)?/);
+    if (!regexMatch) return 0;
 
-    // number ex. 1000
-    if (groups[2] === undefined) {
-        return number;
-    }
+    const [, numberStr, unit, isI, exponentStr, isMiliBytes] = regexMatch;
+    const number = parseInt(numberStr, 10);
+    const exponent = exponentStr ? parseInt(exponentStr, 10) : 0;
+    const unitIndex = unit ? UNITS.indexOf(unit.toUpperCase()) : 0;
+    const isMili = isMiliBytes !== undefined;
 
-    // number with exponent ex. 1e3
-    if (groups[4] !== undefined) {
-        return number * (10 ** parseInt(groups[4], 10));
-    }
+    const unitFactor = isI ? 1024 : 1000;
+    let factor = unitFactor ** unitIndex;
+    if (isMili) factor /= 1000;
+    if (exponent) factor *= 10 ** exponent;
 
-    const unitIndex = _.indexOf(UNITS, groups[2]);
-
-    // Unit + i ex. 1Ki
-    if (groups[3] !== undefined) {
-        return number * (1024 ** unitIndex);
-    }
-
-    // Unit ex. 1K
-    return number * (1000 ** unitIndex);
+    return number * factor;
 }
 
 export function unparseRam(value: number) {
