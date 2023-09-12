@@ -13,6 +13,7 @@ const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
+const OIDC_CODE_CHALLENGE_METHOD = process.env.OIDC_CODE_CHALLENGE_METHOD || 'plain';
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
 
@@ -130,7 +131,7 @@ async function getOidcEndpoint() {
     if (!OIDC_URL) return;
 
     const provider = await getOidcProvider();
-    return provider.authorizationUrl({scope: OIDC_SCOPES});
+    return provider.authorizationUrl({scope: OIDC_SCOPES, code_challenge_method: OIDC_CODE_CHALLENGE_METHOD});
 }
 
 async function oidcAuthenticate(code, redirectUri) {
