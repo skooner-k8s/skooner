@@ -13,10 +13,13 @@ const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
-const OIDC_CODE_CHALLENGE = process.env.OIDC_CODE_CHALLENGE || '';
-const OIDC_CODE_CHALLENGE_METHOD = process.env.OIDC_CODE_CHALLENGE_METHOD || 'plain';
+const OIDC_USE_PKCE = process.env.OIDC_USE_PKCE === "true" || false;
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
+
+const codeVerifier = generateCodeVerifier()
+const codeChallenge = generateCodeChallengeFromVerifier(codeVerifier)
+
 
 console.log('OIDC_URL: ', OIDC_URL || 'None');
 
@@ -132,15 +135,14 @@ async function getOidcEndpoint() {
     if (!OIDC_URL) return;
 
     const provider = await getOidcProvider();
-    const isUsePKCE = OIDC_CODE_CHALLENGE !== "" && OIDC_CODE_CHALLENGE_METHOD === "S256"
     let authParams = {
         scope: OIDC_SCOPES,
     }
-    if (isUsePKCE) {
+    if (OIDC_USE_PKCE) {
         authParams = {
             ...authParams,
-            code_challenge: OIDC_CODE_CHALLENGE,
-            code_challenge_method: OIDC_CODE_CHALLENGE_METHOD
+            code_challenge: codeChallenge,
+            code_challenge_method: "S256"
         }
     }
     return provider.authorizationUrl(authParams);
@@ -148,7 +150,14 @@ async function getOidcEndpoint() {
 
 async function oidcAuthenticate(code, redirectUri) {
     const provider = await getOidcProvider();
-    const tokenSet = await provider.callback(redirectUri, {code}, {});
+    let authCheckParams = {}
+    if (OIDC_USE_PKCE) {
+        authCheckParams = {
+            ...authCheckParams,
+            code_verifier: codeVerifier
+        }
+    }
+    const tokenSet = await provider.callback(redirectUri, {code}, authCheckParams);
     return tokenSet.id_token;
 }
 
