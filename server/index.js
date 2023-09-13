@@ -73,10 +73,6 @@ async function generateCodeChallengeFromVerifier(v) {
 
 const codeVerifier = generateCodeVerifier()
 
-
-console.log('OIDC_URL: ', OIDC_URL || 'None');
-console.log('codeVerifier: ', codeVerifier || 'None');
-
 process.on('uncaughtException', err => console.error('Uncaught exception', err));
 
 const kc = new k8s.KubeConfig();
