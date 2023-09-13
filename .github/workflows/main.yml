@@ -9,10 +9,10 @@ jobs:
       working-directory: "./client"
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 20
+      - name: Setup node 16
         uses: actions/setup-node@v1
         with:
-          node-version: 20.x
+          node-version: 16.x
       - run: npm ci
         working-directory: ${{env.working-directory}}
       - run: npm run build
@@ -29,10 +29,10 @@ jobs:
   #     working-directory: "./server"
   #   steps:
   #     - uses: actions/checkout@v2
-  #     - name: Setup node 20
+  #     - name: Setup node 16
   #       uses: actions/setup-node@v1
   #       with:
-  #         node-version: 20.x
+  #         node-version: 16.x
   #     - run: npm ci
   #       working-directory: ${{env.working-directory}}
   #     - run: npm run build
