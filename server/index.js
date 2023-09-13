@@ -190,7 +190,6 @@ async function getOidcEndpoint() {
     }
     if (OIDC_USE_PKCE) {
         const codeChallenge = await generateCodeChallengeFromVerifier(codeVerifier)
-        console.log(codeChallenge)
         authParams = {
             ...authParams,
             code_challenge: codeChallenge,
