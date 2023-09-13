@@ -11,10 +11,10 @@ jobs:
       working-directory: "./client"
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 12
+      - name: Setup node 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
       - run: npm ci
         working-directory: ${{env.working-directory}}
       - run: npm run build
@@ -32,10 +32,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 12
+      - name: Setup node 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
         working-directory: ${{env.working-directory}}
@@ -54,10 +54,10 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
-      - name: Setup node 12
+      - name: Setup node 16
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
         working-directory: ${{env.working-directory}}
