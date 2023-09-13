@@ -6,7 +6,13 @@ const k8s = require('@kubernetes/client-node');
 const {createProxyMiddleware} = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
-const crypto = require('crypto').webcrypto;
+const getCrypto = () =>
+    typeof globalThis.crypto?.getRandomValues === 'function'
+        ? globalThis.crypto
+        : // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('crypto').webcrypto;
+
+const crypto = getCrypto();
 
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
@@ -69,6 +75,7 @@ const codeVerifier = generateCodeVerifier()
 
 
 console.log('OIDC_URL: ', OIDC_URL || 'None');
+console.log('codeVerifier: ', codeVerifier || 'None');
 
 process.on('uncaughtException', err => console.error('Uncaught exception', err));
 
@@ -187,6 +194,7 @@ async function getOidcEndpoint() {
     }
     if (OIDC_USE_PKCE) {
         const codeChallenge = await generateCodeChallengeFromVerifier(codeVerifier)
+        console.log(codeChallenge)
         authParams = {
             ...authParams,
             code_challenge: codeChallenge,
