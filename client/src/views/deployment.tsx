@@ -118,14 +118,14 @@ export default class DeploymentView extends Base<Props, State> {
 
                 <HpaPanel spec={hpa && hpa.spec}/>
 
-                <div className='contentPanel_header'>Replica Sets</div>
+                <div className='contentPanel_header' style={{ fontWeight: 'bold' }}>REPLICA SETS</div>
                 <ReplicaSetsPanel
                     items={filteredReplicaSets}
                     sort={replicaSetsSort}
                     includeNamespace={false}
                 />
 
-                <div className='contentPanel_header'>Pods</div>
+                <div className='contentPanel_header' style={{ fontWeight: 'bold' }}>BOLD</div>
                 <PodsPanel
                     items={filteredPods}
                     sort={podsSort}
@@ -133,7 +133,7 @@ export default class DeploymentView extends Base<Props, State> {
                     skipNamespace={true}
                 />
 
-                <div className='contentPanel_header'>Events</div>
+                <div className='contentPanel_header' style={{ fontWeight: 'bold' }}>EVENTS</div>
                 <EventsPanel
                     shortList={true}
                     sort={eventsSort}
