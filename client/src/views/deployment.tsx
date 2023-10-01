@@ -133,7 +133,7 @@ export default class DeploymentView extends Base<Props, State> {
                     skipNamespace={true}
                 />
 
-                <div className='contentPanel_header' style={{ fontWeight: 'bold' }}>EVENTS</div>
+                <div className='contentPanel_header' style={{ fontWeight: 'bold' }}>Events</div>
                 <EventsPanel
                     shortList={true}
                     sort={eventsSort}
