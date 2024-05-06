@@ -21,6 +21,7 @@ const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 const OIDC_USE_PKCE = process.env.OIDC_USE_PKCE === "true" || false;
+const OIDC_USE_ACCESS_TOKEN = process.env.OIDC_USE_ACCESS_TOKEN === "true" || false;
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
 
@@ -209,6 +210,10 @@ async function oidcAuthenticate(code, redirectUri) {
         }
     }
     const tokenSet = await provider.callback(redirectUri, {code}, authCheckParams);
+ 
+    if ( OIDC_USE_ACCESS_TOKEN ) {
+        return tokenSet.access_token;
+    }
     return tokenSet.id_token;
 }
 
