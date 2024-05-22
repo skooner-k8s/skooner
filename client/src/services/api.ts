@@ -29,7 +29,7 @@ const replicaSet = apiFactoryWithNamespace('apps', 'v1', 'replicasets', true);
 const statefulSet = apiFactoryWithNamespace('apps', 'v1', 'statefulsets', true);
 const hpa = apiFactoryWithNamespace('autoscaling', 'v1', 'horizontalpodautoscalers', true);
 
-const cronJob = apiFactoryWithNamespace('batch', 'v1beta1', 'cronjobs');
+const cronJob = apiFactoryWithNamespace('batch', 'v1', 'cronjobs');
 const job = apiFactoryWithNamespace('batch', 'v1', 'jobs');
 
 const ingress = apiFactoryWithNamespace('networking.k8s.io', 'v1', 'ingresses');
