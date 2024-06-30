@@ -1,11 +1,11 @@
 # Stage 1 - the build react app
 FROM node:16.20.2-alpine as build-deps
 WORKDIR /usr/src/app
-COPY client/package.json client/package-lock.json ./
+COPY client/package.json ./
 RUN npm i -timeout=600000
 
 COPY client/ ./
-RUN npm run build -timeout=600000
+RUN npm config set package-lock true; npm run build -timeout=600000
 
 # Stage 2 - the production environment
 FROM node:16.20.2-alpine
@@ -16,8 +16,8 @@ WORKDIR /usr/src/app
 RUN chown -R node:node /usr/src/app/
 EXPOSE 4654
 
-COPY server/package.json server/package-lock.json ./
-RUN npm i --production -timeout=600000
+COPY server/package.json ./
+RUN npm config set package-lock true; npm i --production -timeout=600000
 
 COPY --from=build-deps /usr/src/app/build /usr/src/app/public
 COPY /server ./
