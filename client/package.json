@@ -22,11 +22,11 @@
     "js-base64": "^2.6.4",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
-    "protobufjs": "^6.10.2",
+    "protobufjs": "^6.11.4",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-modal": "^3.11.2",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^5.0.1",
     "react-select": "^3.1.0",
     "react-swipeable": "^5.5.1",
     "react-switch": "^5.0.1",
@@ -37,9 +37,9 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "start": "cross-env react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "cross-env react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
     "lint:ci": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}'"
@@ -57,10 +57,12 @@
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
     "cross-env": "^7.0.2",
-    "eslint": "^6.6.0",
+    "eslint": "latest",
     "eslint-config-airbnb": "^17.1.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.21.4"
+    "eslint-plugin-react": "^7.21.4",
+    "util": "^0.12.4",
+    "url": "^0.11.0"
   }
 }

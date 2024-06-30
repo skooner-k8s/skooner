@@ -27,7 +27,7 @@
     "chownr": "^2.0.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
-    "express": "^4.17.1",
+    "express": "^4.19.2",
     "form-data": "^2.5.1",
     "fs-minipass": "^2.1.0",
     "fs.realpath": "^1.0.0",
@@ -36,7 +36,7 @@
     "inflight": "^1.0.6",
     "inherits": "^2.0.4",
     "isomorphic-ws": "^5.0.0",
-    "jose": "^4.11.0",
+    "jose": "^4.15.5",
     "js-yaml": "^4.1.0",
     "jsonpath-plus": "^7.2.0",
     "minipass": "^3.3.4",
@@ -50,12 +50,12 @@
     "rimraf": "^3.0.2",
     "stream-buffers": "^3.0.2",
     "stream-to-string": "^1.2.0",
-    "tar": "^6.1.12",
+    "tar": "^6.2.1",
     "tmp": "^0.2.1",
     "tmp-promise": "^3.0.3",
     "tslib": "^2.6.2",
     "underscore": "^1.13.6",
-    "ws": "^8.14.1"
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
