@@ -16,6 +16,7 @@ const crypto = getCrypto();
 
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
+const ROOT_PATH = process.env.ROOT_PATH || '';
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
@@ -91,6 +92,13 @@ const proxySettings = {
     ws: true,
     secure: false,
     changeOrigin: true,
+    // remove the root_path for the calls which are being proxied to k8s api server
+    pathRewrite: function (path, req) {
+        if (ROOT_PATH) {
+            return path.replace(`${ROOT_PATH}`, '');
+        }
+        return path;
+    },
     logLevel: 'debug',
     onError,
 };
@@ -103,10 +111,10 @@ const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
 app.use(logging);
 if (NODE_ENV !== 'production') app.use(cors());
-app.use('/', preAuth, express.static('public'));
-app.get('/oidc', getOidc);
-app.post('/oidc', postOidc);
-app.use('/*', createProxyMiddleware(proxySettings));
+app.use(ROOT_PATH, preAuth, express.static('public'));
+app.get(ROOT_PATH + '/oidc', getOidc);
+app.post(ROOT_PATH + '/oidc', postOidc);
+app.use(ROOT_PATH, createProxyMiddleware(proxySettings));
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
