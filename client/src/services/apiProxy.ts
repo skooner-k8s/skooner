@@ -19,10 +19,11 @@ type StreamArgs = {
     connectCb?: () => void;
 }
 
+const ROOT_PATH = process.env.REACT_APP_ROOT_PATH || '';
 const {hostname, href, hash, search} = window.location;
 const nonHashedUrl = href.replace(hash, '').replace(search, '').replace('#', '');
 const isDev = process.env.NODE_ENV !== 'production';
-const BASE_HTTP_URL = isDev && hostname === 'localhost' ? 'http://localhost:4654' : nonHashedUrl;
+const BASE_HTTP_URL = isDev && hostname === 'localhost' ? `http://localhost:4654${ROOT_PATH}` : `${nonHashedUrl}${ROOT_PATH}`;
 const BASE_WS_URL = BASE_HTTP_URL.replace('http', 'ws');
 const JSON_HEADERS = {Accept: 'application/json', 'Content-Type': 'application/json'};
 const PROTO_HEADERS = {Accept: 'application/vnd.kubernetes.protobuf', 'Content-Type': 'application/json'};

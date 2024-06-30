@@ -16,11 +16,13 @@ const crypto = getCrypto();
 
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
+const ROOT_PATH = process.env.ROOT_PATH || '';
 const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
 const OIDC_USE_PKCE = process.env.OIDC_USE_PKCE === "true" || false;
+const OIDC_USE_ACCESS_TOKEN = process.env.OIDC_USE_ACCESS_TOKEN === "true" || false;
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
 
@@ -90,6 +92,13 @@ const proxySettings = {
     ws: true,
     secure: false,
     changeOrigin: true,
+    // remove the root_path for the calls which are being proxied to k8s api server
+    pathRewrite: function (path, req) {
+        if (ROOT_PATH) {
+            return path.replace(`${ROOT_PATH}`, '');
+        }
+        return path;
+    },
     logLevel: 'debug',
     onError,
 };
@@ -102,10 +111,10 @@ const app = express();
 app.disable('x-powered-by'); // for security reasons, best not to tell attackers too much about our backend
 app.use(logging);
 if (NODE_ENV !== 'production') app.use(cors());
-app.use('/', preAuth, express.static('public'));
-app.get('/oidc', getOidc);
-app.post('/oidc', postOidc);
-app.use('/*', createProxyMiddleware(proxySettings));
+app.use(ROOT_PATH, preAuth, express.static('public'));
+app.get(ROOT_PATH + '/oidc', getOidc);
+app.post(ROOT_PATH + '/oidc', postOidc);
+app.use(ROOT_PATH, createProxyMiddleware(proxySettings));
 app.use(handleErrors);
 
 const port = process.env.SERVER_PORT || 4654;
@@ -209,6 +218,10 @@ async function oidcAuthenticate(code, redirectUri) {
         }
     }
     const tokenSet = await provider.callback(redirectUri, {code}, authCheckParams);
+ 
+    if ( OIDC_USE_ACCESS_TOKEN ) {
+        return tokenSet.access_token;
+    }
     return tokenSet.id_token;
 }
 
