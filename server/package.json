@@ -59,6 +59,9 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
-    "nodemon": "^2.0.5"
+    "nodemon": "^2.0.5",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0",
+    "util": "^0.12.4"
   }
 }
