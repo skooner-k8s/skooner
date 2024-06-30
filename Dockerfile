@@ -2,10 +2,10 @@
 FROM node:16.20.2-alpine as build-deps
 WORKDIR /usr/src/app
 COPY client/package.json client/package-lock.json ./
-RUN npm i
+RUN npm i -timeout=600000
 
 COPY client/ ./
-RUN npm run build
+RUN npm run build -timeout=600000
 
 # Stage 2 - the production environment
 FROM node:16.20.2-alpine
@@ -17,7 +17,7 @@ RUN chown -R node:node /usr/src/app/
 EXPOSE 4654
 
 COPY server/package.json server/package-lock.json ./
-RUN npm i --production
+RUN npm i --production -timeout=600000
 
 COPY --from=build-deps /usr/src/app/build /usr/src/app/public
 COPY /server ./
