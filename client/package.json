@@ -37,9 +37,9 @@
     "yaml": "^1.10.0"
   },
   "scripts": {
-    "start": "cross-env react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "cross-env react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "lint": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
     "lint:ci": "tsc --noEmit && eslint 'src/**/*.{js,jsx,ts,tsx}'"
