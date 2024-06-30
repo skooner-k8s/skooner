@@ -36,7 +36,7 @@ html {
 
 #shell {
 	display: flex;
-	min-height: calc(100vh - 55px);
+	min-height: calc(100vh - 55px - $footer-height);
 }
 
 #menu {

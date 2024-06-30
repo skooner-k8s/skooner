@@ -6,6 +6,13 @@ const k8s = require('@kubernetes/client-node');
 const {createProxyMiddleware} = require('http-proxy-middleware');
 const toString = require('stream-to-string');
 const {Issuer} = require('openid-client');
+const getCrypto = () =>
+    typeof globalThis.crypto?.getRandomValues === 'function'
+        ? globalThis.crypto
+        : // eslint-disable-next-line @typescript-eslint/no-var-requires
+        require('crypto').webcrypto;
+
+const crypto = getCrypto();
 
 const NODE_ENV = process.env.NODE_ENV;
 const DEBUG_VERBOSE = !!process.env.DEBUG_VERBOSE;
@@ -13,10 +20,58 @@ const OIDC_CLIENT_ID = process.env.OIDC_CLIENT_ID;
 const OIDC_SECRET = process.env.OIDC_SECRET;
 const OIDC_URL = process.env.OIDC_URL;
 const OIDC_SCOPES = process.env.OIDC_SCOPES || 'openid email';
+const OIDC_USE_PKCE = process.env.OIDC_USE_PKCE === "true" || false;
 const OIDC_METADATA = JSON.parse(process.env.OIDC_METADATA || '{}');
 const clientMetadata = Object.assign({client_id: OIDC_CLIENT_ID, client_secret: OIDC_SECRET}, OIDC_METADATA);
 
-console.log('OIDC_URL: ', OIDC_URL || 'None');
+/*
+    Code copied from https://stackoverflow.com/questions/63309409/creating-a-code-verifier-and-challenge-for-pkce-auth-on-spotify-api-in-reactjs
+ */
+
+// GENERATING CODE VERIFIER
+function dec2hex(dec) {
+    return ("0" + dec.toString(16)).substr(-2);
+}
+
+function generateCodeVerifier() {
+    var array = new Uint32Array(56 / 2);
+    crypto.getRandomValues(array);
+    return Array.from(array, dec2hex).join("");
+}
+
+// Generate code challenge from code verifier
+
+function sha256(plain) {
+    // returns promise ArrayBuffer
+    const encoder = new TextEncoder();
+    const data = encoder.encode(plain);
+    return crypto.subtle.digest("SHA-256", data);
+}
+
+function base64urlencode(a) {
+    var str = "";
+    var bytes = new Uint8Array(a);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        str += String.fromCharCode(bytes[i]);
+    }
+    return btoa(str)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+}
+
+async function generateCodeChallengeFromVerifier(v) {
+    var hashed = await sha256(v);
+    var base64encoded = base64urlencode(hashed);
+    return base64encoded;
+}
+
+/*
+    End of code copied for PKCE
+ */
+
+const codeVerifier = generateCodeVerifier()
 
 process.on('uncaughtException', err => console.error('Uncaught exception', err));
 
@@ -130,12 +185,30 @@ async function getOidcEndpoint() {
     if (!OIDC_URL) return;
 
     const provider = await getOidcProvider();
-    return provider.authorizationUrl({scope: OIDC_SCOPES});
+    let authParams = {
+        scope: OIDC_SCOPES,
+    }
+    if (OIDC_USE_PKCE) {
+        const codeChallenge = await generateCodeChallengeFromVerifier(codeVerifier)
+        authParams = {
+            ...authParams,
+            code_challenge: codeChallenge,
+            code_challenge_method: "S256"
+        }
+    }
+    return provider.authorizationUrl(authParams);
 }
 
 async function oidcAuthenticate(code, redirectUri) {
     const provider = await getOidcProvider();
-    const tokenSet = await provider.callback(redirectUri, {code}, {});
+    let authCheckParams = {}
+    if (OIDC_USE_PKCE) {
+        authCheckParams = {
+            ...authCheckParams,
+            code_verifier: codeVerifier
+        }
+    }
+    const tokenSet = await provider.callback(redirectUri, {code}, authCheckParams);
     return tokenSet.id_token;
 }
 
