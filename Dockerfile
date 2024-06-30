@@ -5,7 +5,7 @@ COPY client/package.json ./
 RUN npm i -timeout=600000
 
 COPY client/ ./
-RUN npm config set package-lock true; npm install util url --force; npm run build -timeout=600000
+RUN npm config set package-lock true; npm install util url stream-http --force; npm run build -timeout=600000
 
 # Stage 2 - the production environment
 FROM node:16.20.2-alpine
