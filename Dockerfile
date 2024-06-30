@@ -17,7 +17,7 @@ RUN chown -R node:node /usr/src/app/
 EXPOSE 4654
 
 COPY server/package.json ./
-RUN npm config set package-lock true; npm i --production -timeout=600000
+RUN npm config set package-lock true; npm install util --force; npm i --production -timeout=600000
 
 COPY --from=build-deps /usr/src/app/build /usr/src/app/public
 COPY /server ./
