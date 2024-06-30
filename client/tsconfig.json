@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "resolve":{
+      "fallback":{
+        "http": false,
+        "https": false,
+        "url": false,
+        "util": false
+      }
+    },
     "target": "es5",
     "lib": [
       "dom",
