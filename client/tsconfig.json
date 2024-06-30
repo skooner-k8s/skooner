@@ -19,6 +19,9 @@
     "noEmit": true,
     "jsx": "preserve"
   },
+  "angularCompilerOptions": {
+         "types" : ["node"]
+  },
   "include": [
     "src"
   ]
