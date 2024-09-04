@@ -36,7 +36,7 @@
     "inflight": "^1.0.6",
     "inherits": "^2.0.4",
     "isomorphic-ws": "^5.0.0",
-    "jose": "^4.11.0",
+    "jose": "^4.15.5",
     "js-yaml": "^4.1.0",
     "jsonpath-plus": "^7.2.0",
     "minipass": "^3.3.4",
