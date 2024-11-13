@@ -151,8 +151,8 @@ async function getOidc(req, res, next) {
 async function postOidc(req, res, next) {
     try {
         const body = await toString(req);
-        const {code, redirectUri} = JSON.parse(body);
-        const token = await oidcAuthenticate(code, redirectUri);
+        const {code, redirectUri, iss} = JSON.parse(body);
+        const token = await oidcAuthenticate(code, redirectUri, iss);
         res.json({token});
     } catch (err) {
         next(err);
@@ -208,7 +208,7 @@ async function getOidcEndpoint() {
     return provider.authorizationUrl(authParams);
 }
 
-async function oidcAuthenticate(code, redirectUri) {
+async function oidcAuthenticate(code, redirectUri, iss) {
     const provider = await getOidcProvider();
     let authCheckParams = {}
     if (OIDC_USE_PKCE) {
@@ -217,7 +217,9 @@ async function oidcAuthenticate(code, redirectUri) {
             code_verifier: codeVerifier
         }
     }
-    const tokenSet = await provider.callback(redirectUri, {code}, authCheckParams);
+    const tokenSet = iss != null ?
+        await provider.callback(redirectUri, {code, iss}, authCheckParams) :
+        await provider.callback(redirectUri, {code}, authCheckParams);
  
     if ( OIDC_USE_ACCESS_TOKEN ) {
         return tokenSet.access_token;
